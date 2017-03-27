@@ -1,0 +1,31 @@
+html, body{
+    background-color: #1b1b1b;
+}
+
+.ql-editor{
+    color: #FFF !important;
+}
+
+.ql-editor::-webkit-scrollbar {
+    background-color: transparent;
+}
+
+.ql-editor::-webkit-scrollbar-thumb {
+    background-color: #212121 !important;
+}
+
+.ql-editor *::selection {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.ql-tooltip{
+    background-color:#EFEFEF !important;
+}
+.ql-tooltip .ql-tooltip-arrow{
+    border-bottom: 6px solid #EFEFEF !important;
+}
+.ql-tooltip *{
+    color:#212121 !important;
+    stroke: #212121 !important;
+    fill: #212121;
+}

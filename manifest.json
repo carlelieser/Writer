@@ -1,0 +1,26 @@
+{
+    "manifest_version": 2,
+    "name": "Writer",
+    "short_name": "Writer",
+    "description": "Distraction-free writing.",
+    "version": "5.4",
+    "minimum_chrome_version": "38",
+    "offline_enabled": true,
+
+    "permissions": [
+        "https://www.google-analytics.com/",
+        "storage", "unlimitedStorage", {
+            "fileSystem": ["write", "retainEntries", "directory"]
+        }
+    ],
+
+    "icons": {
+        "128": "assets/icon-128.png"
+    },
+
+    "app": {
+        "background": {
+            "scripts": ["background.js"]
+        }
+    }
+}
