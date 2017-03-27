@@ -48,7 +48,8 @@ $(document).ready(function() {
     var $new = $('.new'),
         $open = $('.open'),
         $save = $('.save'),
-        $saveAs = $('.save-as');
+        $saveAs = $('.save-as'),
+        $print = $('.print');
 
     var beizer = $.bez([.55, 0, .1, 1]);
 
@@ -306,7 +307,7 @@ $(document).ready(function() {
                 _DOC.setContents(contents);
             }, 600);
         });
-		
+
         //make sure to apply
         //default font and font size
         $fontChildren.filter(function(){
@@ -318,7 +319,7 @@ $(document).ready(function() {
                 $optionContainer.hide();
             }, 200);
         });
-        
+
         $sizeChildren.filter(function(){
             return $(this).hasClass('active');
         }).each(function(){
@@ -328,7 +329,7 @@ $(document).ready(function() {
                 $optionContainer.hide();
             }, 200);
         });
-        
+
         $lineChildren.filter(function(){
             return $(this).hasClass('active');
         }).each(function(){
@@ -338,7 +339,7 @@ $(document).ready(function() {
                 $optionContainer.hide();
             }, 200);
         });
-        
+
         if ($(element).hasClass('document-active')) {
             this.editor.focus();
         }
@@ -913,6 +914,19 @@ $(document).ready(function() {
         closeModal($sideBar);
     });
 
+    //print document
+    $print.click(function(){
+        var copyString = '<div class="ql-editor-copy"></div>';
+        $('body').append(copyString);
+        var copy = $('.ql-editor-copy');
+        copy.html(qlEditor().html());
+        copy.css('font-family', qlEditor().css('font-family'));
+        copy.css('font-size', qlEditor().css('font-size'));
+        copy.css('line-height', qlEditor().css('line-height'));
+        window.print();
+        $('.ql-editor-copy').remove();
+    });
+
     //select document
     $(document).on('click', '.document-item', function() {
         var index = $(this).index();
@@ -1016,7 +1030,7 @@ $(document).ready(function() {
             selectThis(elemToFocus);
         }
     });
-    
+
     //change font
     $fontChildren.click(function(){
         var fontFam = $(this).text();
@@ -1050,7 +1064,7 @@ $(document).ready(function() {
         }
         changeSettings('theme', theme);
     });
-    
+
     //change line height
     $lineChildren.click(function(){
         var lineHeight = $(this).text(),
