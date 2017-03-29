@@ -974,8 +974,8 @@ $(document).ready(function() {
     //save as
     $saveAs.click(function() {
         var doc = getDoc(documentAct().index());
-        doc.save();
-
+        var name = doc.name;
+        ExportToDisk(name);
         closeModals();
     });
 
@@ -1432,7 +1432,7 @@ $(document).ready(function() {
     //get ctrl key or cmd key based on os
     function getCntKey(e) {
         if (getOS() == 'MacOS') {
-            return (getKey(e, 91) || getKey(e, 93));
+            return e.metaKey;
         } else {
             return e.ctrlKey;
         }
@@ -1461,22 +1461,22 @@ $(document).ready(function() {
         //new
         if (NEW) {
             e.preventDefault();
-            $('.new').click();
+            $new.click();
         }
 
         //open
         if (OPEN) {
-            $('.open').click();
+            $open.click();
         }
 
         //save
         if (SAVE) {
-            $('.save').click();
+            $save.click();
         }
 
         //save as
         if (SAVE_AS) {
-            $('.save-as').click();
+            $saveAs.click();
         }
 
         //print
