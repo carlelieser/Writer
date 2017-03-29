@@ -27,7 +27,7 @@ html, body {
     width: 70%;
     height: 6px;
     max-width: 600px;
-    top:50%;
+    top: 50%;
     left: 50%;
     position: absolute;
     transform: translate( -50%, -50%);
@@ -189,16 +189,11 @@ html, body {
 }
 
 .document-list::-webkit-scrollbar {
-    width: 8px;
+    width: 0px;
     background-color: transparent;
 }
 
-.document-list::-webkit-scrollbar-thumb {
-    border-radius: 25px;
-    background-color: #EFEFEF;
-}
-
-.settings-container{
+.settings-container {
     width: 400px;
     height: 100%;
     top: 0;
@@ -207,107 +202,102 @@ html, body {
     z-index: 300;
 }
 
-.settings-container .settings-list .settings-option{
-    width:100%;
-    float:left;
-    display:block;
+.settings-container .settings-list .settings-option {
+    width: 100%;
+    float: left;
+    display: block;
     font-family: 'Roboto';
-    font-size:14px;
+    font-size: 14px;
 }
 
-.settings-container .settings-list .hasToggle{
-    height:70px;
+.settings-container .settings-list .hasToggle {
+    height: 70px;
 }
 
-.settings-container .settings-list .noToggle{
-    height:auto;
+.settings-container .settings-list .noToggle {
+    height: auto;
     min-height: 80px;
 }
 
-.settings-container .settings-list .hasToggle .settings-title{
-    line-height:70px;
+.settings-container .settings-list .hasToggle .settings-title {
+    line-height: 70px;
 }
 
-.settings-container .settings-list .settings-option .settings-title{
+.settings-container .settings-list .settings-option .settings-title {
     height: 100%;
     padding-left: 60px;
-    display:inline-block;
-    color:rgba(0,0,0,0.8);
+    display: inline-block;
+    color: rgba(0, 0, 0, 0.8);
 }
 
-.settings-container .settings-list .settings-option .settings-title-second{
+.settings-container .settings-list .settings-option .settings-title-second {
     padding-left: 60px;
-    display:block;
-    color:rgba(0,0,0,0.8);
-    margin-top:10px;
+    display: block;
+    color: rgba(0, 0, 0, 0.8);
+    margin-top: 10px;
 }
 
-.settings-container .settings-list .settings-option .settings-description{
-    display:block;
+.settings-container .settings-list .settings-option .settings-description {
+    display: block;
     font-family: 'Roboto';
-    font-size:12px;
-    color:rgba(0,0,0,0.6);
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
     margin-top: 12px;
     margin-left: 60px;
-    padding-bottom:20px;
+    padding-bottom: 20px;
 }
 
 .settings-list::-webkit-scrollbar {
-    width: 8px;
+    width: 0px;
     background-color: transparent;
 }
 
-.settings-list::-webkit-scrollbar-thumb {
-    border-radius: 25px;
-    background-color: #EFEFEF;
-}
-
-.option{
-    width:100%;
+.option {
+    width: 100%;
     height: 0;
-    background-color:rgba(0,0,0,0.04);
-    margin-bottom:10px;
+    background-color: rgba(0, 0, 0, 0.04);
+    margin-bottom: 10px;
 }
 
-.option > div{
-    height:40px;
-    font-size:14px;
-    padding-left:60px;
-    box-sizing:border-box;
-    line-height:40px;
-    color:rgba(0,0,0,0.8);
+.option>div {
+    height: 40px;
+    font-size: 14px;
+    padding-left: 60px;
+    box-sizing: border-box;
+    line-height: 40px;
+    color: rgba(0, 0, 0, 0.8);
     transition: all .2s ease;
 }
 
-.option > .active{
-    background-color:#efecec;
+.option>.active {
+    background-color: #efecec;
 }
 
-.charter{
+.charter {
     font-family: 'Charter'
 }
 
-.courier{
+.courier {
     font-family: 'Courier'
 }
 
-.georgia{
+.georgia {
     font-family: 'Georgia';
 }
 
-.monospace{
+.monospace {
     font-family: monospace;
 }
 
-.times-new{
+.times-new {
     font-family: 'Times New Roman';
 }
 
-.sans-serif{
-    font-family: sans-serif;
+.roboto {
+    font-family: 'Roboto';
 }
 
-.font-size-options > div{
+.font-size-options>div {
     font-family: 'Roboto';
 }
 
@@ -329,24 +319,24 @@ html, body {
     height: 20px;
     border-radius: 100%;
     margin-top: -2px;
-    box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.1);
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
     transition: all .3s ease;
 }
 
-.toggle-inactive{
+.toggle-inactive {
     background-color: #dadada;
 }
 
-.toggle-inactive .toggle-circle{
+.toggle-inactive .toggle-circle {
     background-color: #a9a9a9;
     margin-left: 0px;
 }
 
-.toggle-active{
+.toggle-active {
     background-color: #15dac8;
 }
 
-.toggle-active .toggle-circle{
+.toggle-active .toggle-circle {
     background-color: #17a598;
     margin-left: 45px;
 }
@@ -360,6 +350,34 @@ html, body {
     background-color: #FFF;
     z-index: 200;
     overflow-x: hidden;
+}
+
+.sidebar .file-bg{
+    width:100%;
+    height:200px;
+    box-shadow: inset 0px -6px 8px 0px rgba(0,0,0,0.1);
+}
+
+.sidebar .file-bg .file-icon{
+    width:100px;
+    height:100px;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: 50px;
+    position:absolute;
+    border-radius:100%;
+    box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.1);
+}
+
+.sidebar .file-bg .file-icon .file-icon-extension{
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    position:absolute;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 18px;
+    font-family: 'Roboto';
+    letter-spacing: 2px;
 }
 
 .sidebar .divider {
@@ -390,23 +408,13 @@ html, body {
     line-height: 60px;
 }
 
-.sidebar-option .option-title {
-    font-family: 'Roboto';
-    font-size: 14px;
-}
-
 .sidebar-option:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
 .sidebar::-webkit-scrollbar {
-    width: 8px;
+    width: 0px;
     background-color: transparent;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-    border-radius: 25px;
-    background-color: #EFEFEF;
 }
 
 .bg {
@@ -491,37 +499,65 @@ html, body {
     padding-top: 1px;
 }
 
-@media print{
+.snackbar {
+    width: auto;
+    height: 24px;
+    line-height: 24px;
+    padding: 18px 24px;
+    background-color: #323232;
+    border-radius: 4px;
+    margin-left: 24px;
+    margin-bottom: 24px;
+    bottom: -100%;
+    left: 0;
+    position: absolute;
+    z-index: 50;
+    font-family: 'Roboto';
+    font-size: 14px;
+    color: #FFF;
+}
 
-    html, body{
+.snackbar .snackbar-doc-title {
+    width: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
+    color: #21e8c1;
+}
+
+@media print {
+    html, body {
         background-color: #FFF;
     }
-
-    .modal, .bg, .ql-editor{
-        display:none;
+    .modal, .bg, .ql-editor {
+        display: none;
     }
-
-    .ql-editor-copy{
-        color:#000;
+    .ql-editor-copy {
+        color: #000;
     }
-
-    .ql-editor-copy *{
+    .ql-editor-copy * {
         opacity: 1 !important;
     }
-
-    .ql-editor-copy br{
+    .ql-editor-copy br {
         display: none;
     }
 }
 
 @page {
-  margin: 25mm;
+    margin: 25mm;
 }
 
 @font-face {
     font-family: 'Roboto';
     font-style: normal;
     src: url('../fonts/roboto.ttf');
+}
+
+@font-face {
+    font-family: 'Roboto Med';
+    font-style: normal;
+    src: url('../fonts/roboto-med.ttf');
 }
 
 @font-face {

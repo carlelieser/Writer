@@ -44,6 +44,9 @@ $(document).ready(function() {
         $settingsButton = $('.open-settings'),
         $modalClose = $('.modal-close');
 
+    //file-bg
+    var $fileBG = $('.file-bg');
+
     //sidebar buttons
     var $new = $('.new'),
         $open = $('.open'),
@@ -51,11 +54,14 @@ $(document).ready(function() {
         $saveAs = $('.save-as'),
         $print = $('.print');
 
-    var beizer = $.bez([.55, 0, .1, 1]);
+    //snackbar
+    var $snackBar = $('.snackbar');
+
+    //cubic-beizer for .anim
+    var beizer = $.bez([.17, .67, .29, 1.01]);
 
     //useful for setting up chooseEntry
     var accepts = [{
-        mimeTypes: ['text/*'],
         extensions: [
             'html',
             'htm',
@@ -93,7 +99,7 @@ $(document).ready(function() {
         line: 'single'
     }
 
-    function changeSettings(key, val){
+    function changeSettings(key, val) {
         settings[key] = val;
     }
 
@@ -101,54 +107,55 @@ $(document).ready(function() {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    function loadSettings(config){
+    function loadSettings(config) {
         settings = config;
         for (var key in config) {
-          if (config.hasOwnProperty(key)) {
-              var value = config[key];
-              var excluded = ['font', 'size', 'theme'];
+            if (config.hasOwnProperty(key)) {
+                var value = config[key];
+                var excluded = ['font', 'size', 'theme'];
 
-              if(excluded.indexOf(key) > -1){
-                  var correspondingDropdown;
-                  if(key == 'size'){
-                      correspondingDropdown = '.font-' + key + '-options';
-                  }else{
-                      correspondingDropdown = '.' + key + '-options';
-                  }
+                if (excluded.indexOf(key) > -1) {
+                    var correspondingDropdown;
+                    if (key == 'size') {
+                        correspondingDropdown = '.font-' + key + '-options';
+                    } else {
+                        correspondingDropdown = '.' + key + '-options';
+                    }
 
-                  $(correspondingDropdown).children().removeClass('active');
+                    $(correspondingDropdown).children().removeClass('active');
 
-                  $(correspondingDropdown).children().filter(function(){
-                      return $(this).text() == capitalizeFirstLetter(value);
-                  }).each(function(){
-                      $(this).click();
-                      setTimeout(function(){
-                          //make sure all dropdowns are hidden
-                          //with height : 0
-                          $optionContainer.css('height', '0');
-                          $optionContainer.hide();
-                      }, 200);
-                  });
+                    $(correspondingDropdown).children().filter(function() {
+                        return $(this).text() == capitalizeFirstLetter(value);
+                    }).each(function() {
+                        $(this).click();
+                        setTimeout(function() {
+                            //make sure all dropdowns are hidden
+                            //with height : 0
+                            $optionContainer.css('height', '0');
+                            $optionContainer.hide();
+                        }, 200);
+                    });
 
-              }else{
-                  //convert value into active or inactive
-                  if(value === false){
-                      value = 'toggle-inactive';
-                  }else{
-                      value = 'toggle-active'
-                  }
+                } else {
+                    //convert value into active or inactive
+                    if (value === false) {
+                        value = 'toggle-inactive';
+                    } else {
+                        value = 'toggle-active'
+                    }
 
-                  if(value == 'toggle-active'){
-                      $('.' + key).click();
-                  }
+                    if (value == 'toggle-active') {
+                        $('.' + key).click();
+                    }
 
-                  if(key == 'focus' && value == 'toggle-inactive'){
-                      focusMode = false;
-                      $('.ql-editor *').css('opacity', '1');
-                  }
-              }
-          }
+                    if (key == 'focus' && value == 'toggle-inactive') {
+                        focusMode = false;
+                        $('.ql-editor *').css('opacity', '1');
+                    }
+                }
+            }
         }
+        $('.doc-active').click();
     }
 
     //the contents of an empty document item
@@ -157,7 +164,7 @@ $(document).ready(function() {
     var mainDocumentString = '<div class="document document-active"></div>';
 
     //hide elements
-    $('.sidebar, .settings-container, .document-container, .bg, .option').hide();
+    $('.sidebar, .settings-container, .document-container, .bg, .option, .snackbar').hide();
 
     var documents = [];
 
@@ -176,7 +183,7 @@ $(document).ready(function() {
         return $('.document-active');
     }
 
-    function replaceClass(element, classOne, classTwo){
+    function replaceClass(element, classOne, classTwo) {
         element.removeClass(classOne);
         element.addClass(classTwo);
     }
@@ -230,10 +237,11 @@ $(document).ready(function() {
         if (typeof fileEntry === 'string') {
             this.loadFileEntry(fileEntry);
         } else {
+            this.fileEntry = fileEntry;
             if (fileEntry === null || fileEntry === undefined || fileEntry === false) {
 
             } else {
-                this.fileEntry = fileEntry;
+                this.path = this.fileEntry.fullPath;
                 this.setName(fileEntry.name);
                 this.setSavedFileEntry(fileEntry);
             }
@@ -256,6 +264,7 @@ $(document).ready(function() {
         var thisDOC = this;
         chrome.fileSystem.restoreEntry(string, function(newFileEntry) {
             thisDOC.setFileEntry(newFileEntry);
+            thisDOC.path = thisDOC.fileEntry.fullPath;
         });
     }
 
@@ -305,36 +314,38 @@ $(document).ready(function() {
                     contents = editor.getContents();
                 }
                 _DOC.setContents(contents);
+
+                closeSnackBar();
             }, 600);
         });
 
         //make sure to apply
         //default font and font size
-        $fontChildren.filter(function(){
+        $fontChildren.filter(function() {
             return $(this).hasClass('active');
-        }).each(function(){
+        }).each(function() {
             $(this).click();
-            setTimeout(function(){
+            setTimeout(function() {
                 $optionContainer.css('height', '0');
                 $optionContainer.hide();
             }, 200);
         });
 
-        $sizeChildren.filter(function(){
+        $sizeChildren.filter(function() {
             return $(this).hasClass('active');
-        }).each(function(){
+        }).each(function() {
             $(this).click();
-            setTimeout(function(){
+            setTimeout(function() {
                 $optionContainer.css('height', '0');
                 $optionContainer.hide();
             }, 200);
         });
 
-        $lineChildren.filter(function(){
+        $lineChildren.filter(function() {
             return $(this).hasClass('active');
-        }).each(function(){
+        }).each(function() {
             $(this).click();
-            setTimeout(function(){
+            setTimeout(function() {
                 $optionContainer.css('height', '0');
                 $optionContainer.hide();
             }, 200);
@@ -343,6 +354,7 @@ $(document).ready(function() {
         if ($(element).hasClass('document-active')) {
             this.editor.focus();
         }
+
     }
 
     //returns editor in the DOM
@@ -384,6 +396,16 @@ $(document).ready(function() {
         setDocumentSize(lastDoc, size);
     }
 
+    function shadeRGBColor(color, percent) {
+        var f = color.split(","),
+            t = percent < 0 ? 0 : 255,
+            p = percent < 0 ? percent * -1 : percent,
+            R = parseInt(f[0].slice(4)),
+            G = parseInt(f[1]),
+            B = parseInt(f[2]);
+        return "rgb(" + (Math.round((t - R) * p) + R) + "," + (Math.round((t - G) * p) + G) + "," + (Math.round((t - B) * p) + B) + ")";
+    }
+
     Doc.prototype.show = function(index) {
         $documentList.children().removeClass('doc-active');
         this.docListItem.addClass('doc-active');
@@ -391,6 +413,35 @@ $(document).ready(function() {
         $mainContainer.children().eq(index).attr('class', 'document-' + index + ' document-active ql-container ql-bubble');
         this.editorDOM.scrollTop(this.scrollTop);
         this.setActive(true);
+
+        //change file-bg icon accordingly
+        var extension = getExtension(this.name);
+        if (this.name.indexOf('.') == -1){
+            extension = 'wtr';
+        }
+        switch (extension){
+            case 'wtr':
+                $fileBG.css('background-color', '#243e4a');
+                break;
+            case 'md':
+                $fileBG.css('background-color', '#2d335f');
+                break;
+            case 'html':
+                $fileBG.css('background-color', '#60da7e');
+                break;
+            case 'htm':
+                $fileBG.css('background-color', '#85da60');
+                break;
+            case 'docx':
+                $fileBD.css('background-color', '#1186e6');
+                break
+            case 'txt':
+            default:
+                $fileBG.css('background-color', '#787b76');
+                break;
+        }
+        $fileBG.find('.file-icon').css('background-color', shadeRGBColor($fileBG.css('background-color'), 0.1));
+        $fileBG.find('.file-icon-extension').text(extension.toUpperCase());
     }
 
     Doc.prototype.create = function(name, size, active) {
@@ -424,7 +475,7 @@ $(document).ready(function() {
         this.setFileEntry(savedFileEntry);
     }
 
-    Doc.prototype.loadFile = function(name, size, fileEntry){
+    Doc.prototype.loadFile = function(name, size, fileEntry) {
         this.setName(name);
         this.setSize(size);
         this.setFileEntry(fileEntry);
@@ -434,7 +485,6 @@ $(document).ready(function() {
     }
 
     Doc.prototype.save = function() {
-        console.log(this);
         var savedEntry = this.fileEntry;
         if (savedEntry) {
             exportToFileEntry(savedEntry);
@@ -485,14 +535,32 @@ $(document).ready(function() {
                         }
                     };
                     fileWriter.write(blob);
-
-                    doc.loadFile(writableFileEntry.name, writableFileEntry.size, writableFileEntry);
+                    doc.loadFile(writableFileEntry.name, blob.size, writableFileEntry);
+                    openSnackBar(false, false, writableFileEntry.name);
                 });
             });
         }
     }
 
     function ExportToDisk(name) {
+        if (name.indexOf('.') == -1) {
+            name += '.wtr';
+        }
+
+        //change description based on extension
+        var extension = getExtension(name);
+        var description = extension.toUpperCase() + ' File (*.' + extension + ')';
+
+        if (extension == 'wtr') {
+            description = 'Writer File (*.' + extension + ')';
+        }
+
+        if (extension == 'md') {
+            description = 'Markdown File (*.' + extension + ')';
+        }
+
+        accepts[0].description = description;
+
         chrome.fileSystem.chooseEntry({
             type: 'saveFile',
             suggestedName: name,
@@ -548,9 +616,9 @@ $(document).ready(function() {
     //on click and on keyup
     $(document).on('keyup', '.ql-editor', function(e) {
         var navKeys = [37, 38, 39, 40, 13];
-        if(navKeys.indexOf(e.keyCode) > -1){
+        if (navKeys.indexOf(e.keyCode) > -1) {
             editorScroll(true);
-        }else{
+        } else {
             editorScroll(false);
         }
         focusOnElem();
@@ -564,13 +632,13 @@ $(document).ready(function() {
     //focus on paragraphs
     //by greying out all other paragraphs
     function selectThis(element) {
-        if(element.get(0).nodeName.toLowerCase() == 'li'){
+        if (element.get(0).nodeName.toLowerCase() == 'li') {
             qlEditor().children().css('opacity', '0.6');
             element.parent().css('opacity', '1');
             element.parent().children().css('opacity', '0.6');
             element.css('opacity', '1');
             element.find('*').css('opacity', '1');
-        }else{
+        } else {
             qlEditor().children().css('opacity', '0.6');
             element.css('opacity', '1');
             element.find('*').css('opacity', '1');
@@ -635,14 +703,14 @@ $(document).ready(function() {
             var nodePos = getSelectionCoords();
             var endScroll = scroll + nodePos.y - editor.height() + 50;
 
-            if(key){
+            if (key) {
                 editor.stop().animate({
                     scrollTop: endScroll
                 }, 300, beizer, function() {
                     var doc = getDoc(documentAct().index());
                     doc.scrollTop = endScroll;
                 });
-            }else{
+            } else {
                 editor.filter(':not(:animated)').animate({
                     scrollTop: endScroll
                 }, 300, beizer, function() {
@@ -675,9 +743,9 @@ $(document).ready(function() {
 
     //actually focuses the element the cursor is under
     function focusOnElem() {
-        if(focusMode === false){
+        if (focusMode === false) {
 
-        }else{
+        } else {
             var nodeParent = getSelectionContainerElement();
             var name = nodeParent.nodeName.toLowerCase();
             var whiteList = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'blockquote', 'pre', 'li'];
@@ -719,7 +787,7 @@ $(document).ready(function() {
         } else {
             $bg.show().filter(':not(:animated)').animate({
                 opacity: '0.5'
-            }, 200, beizer, function(){
+            }, 200, beizer, function() {
                 element.show().filter(':not(:animated)').animate({
                     left: '0'
                 }, 200, beizer);
@@ -816,7 +884,7 @@ $(document).ready(function() {
     //create new document
     $new.click(function() {
         newDoc('untitled', '', '0 KB', false, true);
-        closeModal($sideBar);
+        closeModals();
     });
 
     function readAsArrayBuff(file, entry) {
@@ -824,20 +892,20 @@ $(document).ready(function() {
         reader.onload = function() {
             var content = this.result;
 
-            if(content.indexOf('<w:altChunk r:id="htmlChunk" />') > -1){
-                content = content.substring(content.lastIndexOf('<!DOCTYPE HTML><html><head></head><body>') + 15 , content.lastIndexOf('</body></html>')) ;
+            if (content.indexOf('<w:altChunk r:id="htmlChunk" />') > -1) {
+                content = content.substring(content.lastIndexOf('<!DOCTYPE HTML><html><head></head><body>') + 15, content.lastIndexOf('</body></html>'));
                 newDoc(file.name, content, file.size, entry, true);
-                closeModal($sideBar);
-            }else{
+                closeModals();
+            } else {
                 var secReader = new FileReader();
-                reader.onload = function(){
+                reader.onload = function() {
                     var content = this.result;
                     mammoth.convertToHtml({
                         arrayBuffer: content
                     }).then(function(result) {
                         content = result.value;
                         newDoc(file.name, content, file.size, entry, true);
-                        closeModal($sideBar);
+                        closeModals();
                     }).done();
                 }
                 reader.readAsArrayBuffer(file);
@@ -861,11 +929,24 @@ $(document).ready(function() {
                     renderer: renderer
                 });
                 newDoc(file.name, content, file.size, entry, true)
-                closeModal($sideBar);
+                closeModals();
+            } else {
+                newDoc(file.name, content, file.size, entry, true)
+                closeModals();
             }
         }
 
         reader.readAsText(file);
+    }
+
+    function checkForPath(path) {
+        for (var i = 0; i < documents.length; i++) {
+            if (documents[i].path == path) {
+                return true
+                break;
+            }
+        }
+        return false;
     }
 
     //open document
@@ -877,45 +958,55 @@ $(document).ready(function() {
         }, function(files) {
             files.forEach(function(value, index, array) {
                 var entry = value;
-                entry.file(function(file) {
-                    //handle files based on extension
-                    var extension = getExtension(file.name),
-                        content;
-                    switch (extension) {
-                        case 'md':
-                            readAsHTML(file, entry, true);
-                            break;
-                        case 'docx':
-                            readAsArrayBuff(file, entry);
-                            break;
-                        case 'html':
-                        case 'htm':
-                        case 'txt':
-                        case 'wtr':
-                        default:
-                            readAsHTML(file, entry, false);
-                            break;
-                    }
-                });
+                var path = entry.fullPath;
+                if (checkForPath(path) == true) {
+                    closeModals();
+                    openSnackBar(true, 'is already open.', entry.name);
+                } else {
+                    entry.file(function(file) {
+                        //handle files based on extension
+                        var extension = getExtension(file.name),
+                            content;
+
+                        switch (extension) {
+                            case 'md':
+                                readAsHTML(file, entry, true);
+                                break;
+                            case 'docx':
+                                readAsArrayBuff(file, entry);
+                                break;
+                            case 'html':
+                            case 'htm':
+                            case 'txt':
+                            case 'wtr':
+                            default:
+                                readAsHTML(file, entry, false);
+                                break;
+                        }
+                    });
+                }
             });
         });
     });
 
-    $save.click(function(){
+    //save
+    $save.click(function() {
         var doc = getDoc(documentAct().index());
         doc.save();
 
-        closeModal($sideBar);
+        closeModals();
     });
 
-    $saveAs.click(function(){
+    //save as
+    $saveAs.click(function() {
         var doc = getDoc(documentAct().index());
-        ExportToDisk(doc.name);
-        closeModal($sideBar);
+        doc.save();
+
+        closeModals();
     });
 
     //print document
-    $print.click(function(){
+    $print.click(function() {
         var copyString = '<div class="ql-editor-copy"></div>';
         $('body').append(copyString);
         var copy = $('.ql-editor-copy');
@@ -927,6 +1018,40 @@ $(document).ready(function() {
         $('.ql-editor-copy').remove();
     });
 
+    //set snackbar's bottom position to negative height
+    $snackBar.css('bottom', '-' + ($snackBar.height() + 100) + 'px');
+
+    var snackBarTime;
+    //open snackbar
+    function openSnackBar(message, real, name) {
+        if (message || real) {
+            $snackBar.children().first().text(name);
+            $snackBar.children('span').text(real);
+            $snackBar.show().stop().animate({
+                bottom: '0'
+            }, 500, beizer);
+            clearTimeout(snackBarTime);
+            snackBarTime = setTimeout(closeSnackBar, 5000);
+        } else {
+            $snackBar.children().first().text(name);
+            $snackBar.children('span').text('was saved.');
+            $snackBar.show().stop().animate({
+                bottom: '0'
+            }, 500, beizer);
+            clearTimeout(snackBarTime);
+            snackBarTime = setTimeout(closeSnackBar, 3000);
+        }
+    }
+
+    //close snackbar
+    function closeSnackBar() {
+        $snackBar.stop().animate({
+            bottom: '-' + ($snackBar.height() + 100) + 'px'
+        }, 500, beizer, function() {
+            $(this).hide();
+        });
+    }
+
     //select document
     $(document).on('click', '.document-item', function() {
         var index = $(this).index();
@@ -937,94 +1062,94 @@ $(document).ready(function() {
         closeModals();
     });
 
-    function isActive(element){
+    function isActive(element) {
         return element.hasClass('toggle-active');
     }
 
     //toggles
-    $toggle.click(function(){
+    $toggle.click(function() {
         var key = $(this).attr('name');
         //if active, make inactive
-        if(isActive($(this))){
+        if (isActive($(this))) {
             replaceClass($(this), 'toggle-active', 'toggle-inactive');
             changeSettings(key, false);
-        }else{
+        } else {
             replaceClass($(this), 'toggle-inactive', 'toggle-active');
             changeSettings(key, true);
         }
     });
 
-    $toggle.mousedown(function(){
+    $toggle.mousedown(function() {
         $(this).children().css('transform', 'scale(1.15, .85)');
         $(this).children().css('box-shadow', 'rgba(0, 0, 0, 0.1) 0px 0px 0px 8px');
     });
 
-    $(document).mouseup(function(){
+    $(document).mouseup(function() {
         $toggle.children().css('transform', 'none');
         $toggle.children().css('box-shadow', 'none');
     });
 
     var src = '/assets/settings/coffee.mp3';
     var audio = new Audio(src);
-    $coffeeMode.click(function(){
-        if(isActive($(this))){
+    $coffeeMode.click(function() {
+        if (isActive($(this))) {
             audio.play();
-        }else{
+        } else {
             audio.pause();
         }
     });
 
     //night mode
     //load stylesheet
-    function loadStyles(name){
+    function loadStyles(name) {
         var string = '<link type="text/css" rel="stylesheet" href="assets/settings/themes/' + name + '"/>';
-        if($('link[href="'+ name + '"]').length < 1){
+        if ($('link[href="' + name + '"]').length < 1) {
             $('head').append(string);
         }
     }
 
-    function removeStyles(name){
-        $('link[href="assets/settings/themes/'+ name + '"]').remove();
+    function removeStyles(name) {
+        $('link[href="assets/settings/themes/' + name + '"]').remove();
     }
 
-    $nightMode.click(function(){
-        if(isActive($(this)) === false){
+    $nightMode.click(function() {
+        if (isActive($(this)) === false) {
             removeStyles('night.css');
-        } else{
+        } else {
             loadStyles('night.css');
         }
     });
 
-    function fullScreen(){
+    function fullScreen() {
         var key = $fullScreen.attr('name');
         replaceClass($fullScreen, 'toggle-inactive', 'toggle-active');
         changeSettings(key, true);
     }
 
-    function undoFullScreen(){
+    function undoFullScreen() {
         var key = $fullScreen.attr('name');
         replaceClass($fullScreen, 'toggle-active', 'toggle-inactive');
         changeSettings(key, false);
     }
 
     //fullscreen mode
-    $fullScreen.click(function(){
-        if(chrome.app.window.current().isFullscreen()){
+    $fullScreen.click(function() {
+        if (chrome.app.window.current().isFullscreen()) {
             chrome.app.window.current().restore();
-        }else{
+        } else {
             chrome.app.window.current().fullscreen();
         }
     });
 
     //focus mode
     var focusMode;
-    $focus.click(function(){
-        if(isActive($(this)) === false){
+    $focus.click(function() {
+        if (isActive($(this)) === false) {
             focusMode = false;
             $('.ql-editor *').css('opacity', '1');
-        } else{
+        } else {
             focusMode = true;
-            if(elemToFocus === undefined){
+            if (elemToFocus === undefined) {
                 elemToFocus = qlEditor().children().first();
             }
             selectThis(elemToFocus);
@@ -1032,47 +1157,55 @@ $(document).ready(function() {
     });
 
     //change font
-    $fontChildren.click(function(){
+    $fontChildren.click(function() {
         var fontFam = $(this).text();
         $('.ql-editor').css('font-family', fontFam);
         changeSettings('font', fontFam);
     });
 
+    //convert font size to relative em
+    function convertSize(fontSize) {
+        var size = Number(fontSize.replace('px', ''));
+        var em = (size / 12) + 0.25;
+
+        return em + 'em';
+    }
+
     //change font size
-    $sizeChildren.click(function(){
+    $sizeChildren.click(function() {
         var fontSize = $(this).text();
-        $('.ql-editor').css('font-size', fontSize);
+        $('.ql-editor').css('font-size', convertSize(fontSize));
         changeSettings('size', fontSize);
     });
 
     //change theme
-    $themeChildren.click(function(){
+    $themeChildren.click(function() {
         var theme = $(this).text();
-        switch (theme){
+        switch (theme) {
             case 'Default':
                 removeStyles('dark.css');
                 removeStyles('turquoise.css');
-            break;
+                break;
             case 'Dark':
                 loadStyles('dark.css');
                 removeStyles('turquoise.css');
-            break;
+                break;
             case 'Turquoise':
                 loadStyles('turquoise.css');
                 removeStyles('dark.css');
-            break;
+                break;
         }
         changeSettings('theme', theme);
     });
 
     //change line height
-    $lineChildren.click(function(){
+    $lineChildren.click(function() {
         var lineHeight = $(this).text(),
             actualLine = lineHeight;
-        if(lineHeight == 'Single'){
+        if (lineHeight == 'Single') {
             actualLine = 1;
         }
-        if(lineHeight == 'Double'){
+        if (lineHeight == 'Double') {
             actualLine = 2;
         }
         $('.ql-editor').css('line-height', actualLine);
@@ -1080,35 +1213,41 @@ $(document).ready(function() {
     });
 
     //open dropdown
-    function openDropdown(dropdown){
+    function openDropdown(dropdown) {
         //hide other dropdowns
-        $optionContainer.stop().animate({ height : '0' }, 200, function(){
+        $optionContainer.stop().animate({
+            height: '0'
+        }, 200, function() {
             $(this).hide();
             //then open the current one
             var height = dropdown.children().length * 40 + 'px';
-            dropdown.stop().show().animate({ height: height }, 200);
+            dropdown.stop().show().animate({
+                height: height
+            }, 200);
         });
     }
 
     //close dropdown
-    function closeDropdown(dropdown){
-        dropdown.stop().animate({ height : '0' }, 200, function(){
+    function closeDropdown(dropdown) {
+        dropdown.stop().animate({
+            height: '0'
+        }, 200, function() {
             $(this).hide();
         });
     }
 
-    $settingsOption.click(function(){
-        if($(this).hasClass('noToggle')){
+    $settingsOption.click(function() {
+        if ($(this).hasClass('noToggle')) {
             var dropdown = $(this).children().last();
-            if(dropdown.is(':visible')){
+            if (dropdown.is(':visible')) {
                 closeDropdown(dropdown);
-            }else{
+            } else {
                 openDropdown(dropdown);
             }
         }
     });
 
-    $optionContainer.children().click(function(){
+    $optionContainer.children().click(function() {
         var dropdown = $(this).parent();
         dropdown.children().removeClass('active');
         $(this).addClass('active');
@@ -1149,8 +1288,17 @@ $(document).ready(function() {
         e.stopImmediatePropagation();
         e.stopPropagation();
         var input = $(this).parent().find('input');
+        var index = input.parent().index();
+        var title = input.val();
+        var doc = getDoc(index);
         if ($(this).text() == 'check') {
             makeReadOnly(input, $(this));
+            if (title == doc.name) {
+                //nothing
+            } else {
+                doc.setFileEntry(null);
+                doc.setName(title);
+            }
         } else {
             undoReadOnly(input, $(this));
         }
@@ -1162,11 +1310,15 @@ $(document).ready(function() {
         var doc = getDoc(index);
         var title = $(this).val();
 
-        doc.setName(title);
-
         if (e.keyCode == 13) {
             makeReadOnly($(this), $(this).parent());
             rotate($(this).parent().find('.document-edit').find('.material-icons'));
+            if (title == doc.name) {
+                //nothing
+            } else {
+                doc.setFileEntry(null);
+                doc.setName(title);
+            }
         }
     });
 
@@ -1177,9 +1329,11 @@ $(document).ready(function() {
         }
     });
 
-    function loadScreen(){
-        setTimeout(function(){
-            $loadingScreen.stop().animate({ top: '-100%' }, 600, function(){
+    function loadScreen() {
+        setTimeout(function() {
+            $loadingScreen.stop().animate({
+                top: '-100%'
+            }, 600, function() {
                 $(this).remove();
             });
         }, 500);
@@ -1211,25 +1365,31 @@ $(document).ready(function() {
                 loadScreen();
             } else {
                 var counter = 0;
-                data.forEach(function(value, index, array) {
-                    var thisData = data[index];
-                    var name = thisData.name;
-                    var content = thisData.contents;
-                    var size = thisData.size;
-                    var savedFileEntry = thisData.savedFileEntry;
-                    var active = thisData.isActive;
-                    newDoc(name, content, size, savedFileEntry, active);
+                if (data.length === 0) {
+                    newDoc('untitled', '', '0 KB', false, true);
+                    loadSettings(settings);
+                    loadScreen();
+                } else {
+                    data.forEach(function(value, index, array) {
+                        var thisData = data[index];
+                        var name = thisData.name;
+                        var content = thisData.contents;
+                        var size = thisData.size;
+                        var savedFileEntry = thisData.savedFileEntry;
+                        var active = thisData.isActive;
+                        newDoc(name, content, size, savedFileEntry, active);
 
-                    //manually focus on first elem
-                    documentAct().children().first().children().css('opacity', '0.6');
-                    documentAct().children().first().children().first().css('opacity', '1');
+                        //manually focus on first elem
+                        documentAct().children().first().children().css('opacity', '0.6');
+                        documentAct().children().first().children().first().css('opacity', '1');
 
-                    counter++;
-                    if(counter === array.length) {
-                        loadSettings(settings);
-                        loadScreen();
-                    }
-                });
+                        counter++;
+                        if (counter === array.length) {
+                            loadSettings(settings);
+                            loadScreen();
+                        }
+                    });
+                }
             }
         });
     }
@@ -1238,29 +1398,94 @@ $(document).ready(function() {
         saveData();
     });
 
-    document.addEventListener('scroll', function (event) {
+    document.addEventListener('scroll', function(event) {
         var doc = getDoc(documentAct().index());
         doc.scrollTop = qlEditor().scrollTop();
     }, true);
 
-    $(document).on('keyup', function(e){
+    function getOS() {
+        var OSName = 'Unknown OS';
+        var version = navigator.appVersion;
+
+        if (version.indexOf('Win') != -1) OSName = 'Windows';
+        if (version.indexOf('Mac') != -1) OSName = 'MacOS';
+        if (version.indexOf('X11') != -1) OSName = 'UNIX';
+        if (version.indexOf('Linux') != -1) OSName = 'Linux';
+
+        return OSName;
+    }
+
+    function getKey(e, numb) {
+        return (e.keyCode == numb);
+    }
+
+    //get ctrl key or cmd key based on os
+    function getCntKey(e) {
+        if (getOS() == 'MacOs') {
+            return (getKey(e, 91) || getKey(e, 93));
+        } else {
+            return e.ctrlKey;
+        }
+    }
+
+    function getShiftKey(e) {
+        return e.shiftKey;
+    }
+
+
+    $(document).on('keydown', function(e) {
+
+        //keys
+        var CTRL_KEY = getCntKey(e),
+            SHIFT_KEY = getShiftKey(e),
+            NEW = CTRL_KEY && getKey(e, 78),
+            OPEN = CTRL_KEY && getKey(e, 79),
+            SAVE = CTRL_KEY && !SHIFT_KEY && getKey(e, 83),
+            SAVE_AS = CTRL_KEY && SHIFT_KEY && getKey(e, 83),
+            PRINT = CTRL_KEY && getKey(e, 80),
+            FULLSCREEN = getKey(e, 122),
+            CLOSE = getKey(e, 27);
+
+        //new
+        if (NEW) {
+            $('.new').click();
+        }
+
+        //open
+        if (OPEN) {
+            $('.open').click();
+        }
+
+        //save
+        if (SAVE) {
+            $('.save').click();
+        }
+
+        //save as
+        if (SAVE_AS) {
+            $('.save-as').click();
+        }
+
+        //print
+        if (PRINT) {
+            $('.print').click();
+        }
 
         //fullscreen
-        if(e.keyCode == 122){
-            if(chrome.app.window.current().isFullscreen()){
+        if (FULLSCREEN) {
+            if (chrome.app.window.current().isFullscreen()) {
                 chrome.app.window.current().restore();
-                undoFullScreen();
-            }else{
+            } else {
                 chrome.app.window.current().fullscreen();
-                fullScreen();
             }
         }
 
         //close
-        if(e.keyCode == 27){
+        if (CLOSE) {
             e.preventDefault();
             window.close();
         }
+
     });
 
     chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {

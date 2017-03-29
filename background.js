@@ -3,8 +3,10 @@ chrome.app.runtime.onLaunched.addListener(function(launchData) {
     'index.html',
     {
         id: 'Writer',
-        width: 900,
-        height: 500,
+        width: Math.round(screen.width * 0.75),
+        height: Math.round(screen .height * 0.75),
+        left: Math.round(screen.width * 0.125),
+        top: Math.round(screen.height * 0.125),
         minWidth: 500,
         minHeight: 400,
         frame: 'none'

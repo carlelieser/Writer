@@ -22,27 +22,3 @@
 .active{
     background-color: rgba(0,0,0,0.2) !important;
 }
-
-.sidebar::-webkit-scrollbar {
-    background-color: transparent;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-    background-color: #213038 !important;
-}
-
-.document-list::-webkit-scrollbar {
-    background-color: transparent;
-}
-
-.document-list::-webkit-scrollbar-thumb {
-    background-color: #213038 !important;
-}
-
-.settings-list::-webkit-scrollbar {
-    background-color: transparent;
-}
-
-.settings-list::-webkit-scrollbar-thumb {
-    background-color: #213038 !important;
-}

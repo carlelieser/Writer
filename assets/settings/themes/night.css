@@ -21,11 +21,22 @@ html, body{
 .ql-tooltip{
     background-color:#EFEFEF !important;
 }
+
 .ql-tooltip .ql-tooltip-arrow{
     border-bottom: 6px solid #EFEFEF !important;
 }
+
 .ql-tooltip *{
     color:#212121 !important;
     stroke: #212121 !important;
     fill: #212121;
+}
+
+.snackbar {
+    background-color: #EFEFEF !important;
+    color:#000 !important;
+}
+
+.snackbar .snackbar-doc-title {
+    color: #616161 !important;
 }
