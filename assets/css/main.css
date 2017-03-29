@@ -1,4 +1,5 @@
-.html, body {
+.html,
+body {
     margin: 0;
     padding: 0;
 }
@@ -150,7 +151,8 @@
     background-color: rgba(0, 0, 0, 0.05);
 }
 
-.document-container .document-list .document-item div, .document-container .document-list .document-item input {
+.document-container .document-list .document-item div,
+.document-container .document-list .document-item input {
     line-height: 60px;
     display: inline-block;
     color: rgba(0, 0, 0, 0.7);
@@ -173,16 +175,19 @@
     cursor: default;
 }
 
-.document-item .material-icons, .document-size {
+.document-item .material-icons,
+.document-size {
     width: 20%;
     text-align: center;
 }
 
-.document-edit, .document-delete {
+.document-edit,
+.document-delete {
     width: 13%;
 }
 
-.document-edit .material-icons, .document-delete .material-icons {
+.document-edit .material-icons,
+.document-delete .material-icons {
     color: rgba(0, 0, 0, 0.6);
     width: 100%;
     transition: all .2s ease;
@@ -341,6 +346,73 @@
     margin-left: 45px;
 }
 
+.feedback-container {
+    width: 400px;
+    height: 100%;
+    top: 0;
+    left: -400px;
+    position: absolute;
+    z-index: 400;
+}
+
+.feedback-container input,
+.feedback-container textarea {
+    width: 350px;
+    height: 40px;
+    margin-left:20px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-family: 'Roboto';
+    font-size: 14px;
+    outline:0;
+    border:none;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    transition: all .3s ease-out;
+    resize:none;
+    background-color:transparent;
+}
+
+.feedback-container input:first-child{
+    margin-top:25px;
+}
+
+.feedback-container textarea{
+    padding-top:20px;
+    padding-bottom:20px;
+    margin-top: 5px !important;
+    height: 100px !important;
+    box-sizing:border-box;
+}
+.feedback-container input::-webkit-input-placeholder, .feedback-container textarea::-webkit-input-placeholder{
+    transition: all .3s ease-out;
+}
+
+.feedback-container input:focus, .feedback-container textarea:focus{
+    border-bottom: 1px solid #1abc9c;
+}
+
+.feedback-container input:focus::-webkit-input-placeholder, .feedback-container textarea:focus::-webkit-input-placeholder{
+    color:#1abc9c;
+    transform: translateY(-20px);
+    font-size: 11px;
+}
+
+.feedback-container .submit-button{
+    width: 380px;
+    height:50px;
+    margin-top: 10px;
+    margin-left:10px;
+    background-color: #1abc9c;
+    border:none;
+    outline:none;
+    border-radius: 2px;
+    font-family: 'Roboto Med';
+    font-size: 14px;
+    text-transform:uppercase;
+    color:#FFF;
+    cursor:pointer;
+}
+
 .sidebar {
     width: 250px;
     height: 100%;
@@ -350,18 +422,6 @@
     background-color: #FFF;
     z-index: 200;
     overflow-x: hidden;
-}
-
-.sidebar .file-icon-extension{
-    width:100%;
-    height:200px;
-    box-shadow: inset 0px -6px 8px 0px rgba(0,0,0,0.1);
-    line-height: 200px;
-    text-align: center;
-    color:#FFF;
-    font-size: 18px;
-    font-family: 'Roboto';
-    letter-spacing: 2px;
 }
 
 .sidebar .divider {
@@ -510,20 +570,21 @@
     color: #21e8c1;
 }
 
-.ql-editor-copy{
-    display:none;
+.ql-editor-copy {
+    display: none;
 }
 
 @media print {
-    html, body {
+    html,
+    body {
         background-color: #FFF;
     }
-    body{
-        display:none;
+    body {
+        display: none;
     }
     .ql-editor-copy {
         color: #000;
-        display:block;
+        display: block;
     }
     .ql-editor-copy * {
         opacity: 1 !important;
