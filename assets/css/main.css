@@ -1,4 +1,4 @@
-html, body {
+.html, body {
     margin: 0;
     padding: 0;
 }
@@ -414,7 +414,7 @@ html, body {
 }
 
 .sidebar-toggle {
-    width: 20px;
+    width: 40px;
     height: 100%;
     top: 0;
     left: 0;
@@ -514,7 +514,7 @@ html, body {
     html, body {
         background-color: #FFF;
     }
-    .modal, .bg, .ql-editor {
+    .modal, .bg, .ql-editor, .snackbar {
         display: none;
     }
     .ql-editor-copy {
