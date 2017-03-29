@@ -1328,7 +1328,7 @@ $(document).ready(function() {
         }
 
         //change file-bg icon accordingly
-        changeIconBG(doc);
+        changeIconBg(doc);
     });
 
     $(document).on('click', '.document-title', function(e) {
