@@ -982,7 +982,7 @@ $(document).ready(function() {
     //print document
     $print.click(function() {
         var copyString = '<div class="ql-editor-copy"></div>';
-        $('body').append(copyString);
+        $('html').append(copyString);
         var copy = $('.ql-editor-copy');
         copy.html(qlEditor().html());
         copy.css('font-family', qlEditor().css('font-family'));
