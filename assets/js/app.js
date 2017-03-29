@@ -989,7 +989,7 @@ $(document).ready(function() {
         copy.css('font-size', qlEditor().css('font-size'));
         copy.css('line-height', qlEditor().css('line-height'));
         window.print();
-        $('.ql-editor-copy').remove();
+        copy.remove();
     });
 
     //set snackbar's bottom position to negative height
@@ -1287,7 +1287,7 @@ $(document).ready(function() {
         switch (extension){
             case 'wtr':
                 extension = 'Writer';
-                $fileBG.css('background-color', '#243e4a');
+                $fileBG.css('background-color', '#274c5d');
                 break;
             case 'md':
                 extension = 'Markdown';
@@ -1311,6 +1311,7 @@ $(document).ready(function() {
         }
         $fileBG.text(extension.toUpperCase());
     }
+    
     $(document).on('keyup', '.document-title', function(e) {
         var index = $(this).parent().index();
         var doc = getDoc(index);
@@ -1447,16 +1448,19 @@ $(document).ready(function() {
         //keys
         var CTRL_KEY = getCntKey(e),
             SHIFT_KEY = getShiftKey(e),
-            NEW = CTRL_KEY && getKey(e, 78),
+            NEW = CTRL_KEY && !SHIFT_KEY && getKey(e, 78),
             OPEN = CTRL_KEY && getKey(e, 79),
             SAVE = CTRL_KEY && !SHIFT_KEY && getKey(e, 83),
             SAVE_AS = CTRL_KEY && SHIFT_KEY && getKey(e, 83),
             PRINT = CTRL_KEY && getKey(e, 80),
             FULLSCREEN = getKey(e, 122),
+            NIGHTMODE = CTRL_KEY && SHIFT_KEY && getKey(e, 78),
+            FOCUS = CTRL_KEY && SHIFT_KEY && getKey(e, 70),
             CLOSE = getKey(e, 27);
 
         //new
         if (NEW) {
+            e.preventDefault();
             $('.new').click();
         }
 
@@ -1488,7 +1492,17 @@ $(document).ready(function() {
                 chrome.app.window.current().fullscreen();
             }
         }
+        
+        //nightmode
+        if (NIGHTMODE){
+            e.preventDefault();
+            $('.night').click();
+        }
 
+        //focus
+        if (FOCUS){
+            $('.focus').click();
+        }
         //close
         if (CLOSE) {
             e.preventDefault();
