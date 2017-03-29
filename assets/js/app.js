@@ -45,7 +45,7 @@ $(document).ready(function() {
         $modalClose = $('.modal-close');
 
     //file-bg
-    var $fileBG = $('.file-bg');
+    var $fileBG = $('.file-icon-extension');
 
     //sidebar buttons
     var $new = $('.new'),
@@ -415,33 +415,7 @@ $(document).ready(function() {
         this.setActive(true);
 
         //change file-bg icon accordingly
-        var extension = getExtension(this.name);
-        if (this.name.indexOf('.') == -1){
-            extension = 'wtr';
-        }
-        switch (extension){
-            case 'wtr':
-                $fileBG.css('background-color', '#243e4a');
-                break;
-            case 'md':
-                $fileBG.css('background-color', '#2d335f');
-                break;
-            case 'html':
-                $fileBG.css('background-color', '#60da7e');
-                break;
-            case 'htm':
-                $fileBG.css('background-color', '#85da60');
-                break;
-            case 'docx':
-                $fileBD.css('background-color', '#1186e6');
-                break
-            case 'txt':
-            default:
-                $fileBG.css('background-color', '#787b76');
-                break;
-        }
-        $fileBG.find('.file-icon').css('background-color', shadeRGBColor($fileBG.css('background-color'), 0.1));
-        $fileBG.find('.file-icon-extension').text(extension.toUpperCase());
+        changeIconBg(this);
     }
 
     Doc.prototype.create = function(name, size, active) {
@@ -1305,6 +1279,38 @@ $(document).ready(function() {
         rotate($(this).find('.material-icons'))
     });
 
+    function changeIconBg(doc){
+        var extension = getExtension(doc.name);
+        if (doc.name.indexOf('.') == -1){
+            extension = 'wtr';
+        }
+        switch (extension){
+            case 'wtr':
+                extension = 'Writer';
+                $fileBG.css('background-color', '#243e4a');
+                break;
+            case 'md':
+                extension = 'Markdown';
+                $fileBG.css('background-color', '#2d335f');
+                break;
+            case 'html':
+                $fileBG.css('background-color', '#60da7e');
+                break;
+            case 'htm':
+                $fileBG.css('background-color', '#85da60');
+                break;
+            case 'docx':
+                extension = 'Word';
+                $fileBG.css('background-color', '#1186e6');
+                break
+            case 'txt':
+            default:
+                extension = 'Text';
+                $fileBG.css('background-color', '#787b76');
+                break;
+        }
+        $fileBG.text(extension.toUpperCase());
+    }
     $(document).on('keyup', '.document-title', function(e) {
         var index = $(this).parent().index();
         var doc = getDoc(index);
@@ -1320,6 +1326,9 @@ $(document).ready(function() {
                 doc.setName(title);
             }
         }
+
+        //change file-bg icon accordingly
+        changeIconBG(doc);
     });
 
     $(document).on('click', '.document-title', function(e) {
