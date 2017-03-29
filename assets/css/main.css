@@ -510,15 +510,20 @@
     color: #21e8c1;
 }
 
+.ql-editor-copy{
+    display:none;
+}
+
 @media print {
     html, body {
         background-color: #FFF;
     }
-    .modal, .bg, .ql-editor, .snackbar {
-        display: none;
+    body{
+        display:none;
     }
     .ql-editor-copy {
         color: #000;
+        display:block;
     }
     .ql-editor-copy * {
         opacity: 1 !important;
