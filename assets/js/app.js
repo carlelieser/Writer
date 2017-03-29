@@ -1431,7 +1431,7 @@ $(document).ready(function() {
 
     //get ctrl key or cmd key based on os
     function getCntKey(e) {
-        if (getOS() == 'MacOs') {
+        if (getOS() == 'MacOS') {
             return (getKey(e, 91) || getKey(e, 93));
         } else {
             return e.ctrlKey;
