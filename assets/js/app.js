@@ -37,15 +37,14 @@ $(document).ready(function() {
 
     //modals
     var $documentContainer = $('.document-container'),
-        $settingsContainer = $('.settings-container');
+        $settingsContainer = $('.settings-container'),
+        $feedBackContainer = $('.feedback-container');
 
     //modal triggers
     var $docButton = $('.open-documents'),
         $settingsButton = $('.open-settings'),
+        $feedback = $('.open-feedback'),
         $modalClose = $('.modal-close');
-
-    //file-bg
-    var $fileBG = $('.file-icon-extension');
 
     //sidebar buttons
     var $new = $('.new'),
@@ -314,8 +313,6 @@ $(document).ready(function() {
                     contents = editor.getContents();
                 }
                 _DOC.setContents(contents);
-
-                closeSnackBar();
             }, 600);
         });
 
@@ -413,9 +410,6 @@ $(document).ready(function() {
         $mainContainer.children().eq(index).attr('class', 'document-' + index + ' document-active ql-container ql-bubble');
         this.editorDOM.scrollTop(this.scrollTop);
         this.setActive(true);
-
-        //change file-bg icon accordingly
-        changeIconBg(this);
     }
 
     Doc.prototype.create = function(name, size, active) {
@@ -991,6 +985,13 @@ $(document).ready(function() {
         window.print();
         copy.remove();
     });
+    
+    //feedback
+    $feedback.click(function(){
+        openModal($feedBackContainer, function(){
+            $feedBackContainer.find('.feedback-email').focus();
+        });
+    });
 
     //set snackbar's bottom position to negative height
     $snackBar.css('bottom', '-' + ($snackBar.height() + 100) + 'px');
@@ -1003,26 +1004,27 @@ $(document).ready(function() {
             $snackBar.children('span').text(real);
             $snackBar.show().stop().animate({
                 bottom: '0'
-            }, 500, beizer);
-            clearTimeout(snackBarTime);
-            snackBarTime = setTimeout(closeSnackBar, 5000);
+            }, 500, beizer, function(){
+            	snackBarTime = setTimeout(closeSnackBar, 5000);
+            });
         } else {
             $snackBar.children().first().text(name);
             $snackBar.children('span').text('was saved.');
             $snackBar.show().stop().animate({
                 bottom: '0'
-            }, 500, beizer);
-            clearTimeout(snackBarTime);
-            snackBarTime = setTimeout(closeSnackBar, 3000);
+            }, 500, beizer, function(){
+            	snackBarTime = setTimeout(closeSnackBar, 3000);
+            });
         }
     }
 
     //close snackbar
     function closeSnackBar() {
-        $snackBar.stop().animate({
+        $snackBar.animate({
             bottom: '-' + ($snackBar.height() + 100) + 'px'
         }, 500, beizer, function() {
             $(this).hide();
+            clearTimeout(snackBarTime);
         });
     }
 
@@ -1278,39 +1280,6 @@ $(document).ready(function() {
         }
         rotate($(this).find('.material-icons'))
     });
-
-    function changeIconBg(doc){
-        var extension = getExtension(doc.name);
-        if (doc.name.indexOf('.') == -1){
-            extension = 'wtr';
-        }
-        switch (extension){
-            case 'wtr':
-                extension = 'Writer';
-                $fileBG.css('background-color', '#274c5d');
-                break;
-            case 'md':
-                extension = 'Markdown';
-                $fileBG.css('background-color', '#2d335f');
-                break;
-            case 'html':
-                $fileBG.css('background-color', '#60da7e');
-                break;
-            case 'htm':
-                $fileBG.css('background-color', '#85da60');
-                break;
-            case 'docx':
-                extension = 'Word';
-                $fileBG.css('background-color', '#1186e6');
-                break
-            case 'txt':
-            default:
-                extension = 'Text';
-                $fileBG.css('background-color', '#787b76');
-                break;
-        }
-        $fileBG.text(extension.toUpperCase());
-    }
     
     $(document).on('keyup', '.document-title', function(e) {
         var index = $(this).parent().index();
@@ -1327,9 +1296,6 @@ $(document).ready(function() {
                 doc.setName(title);
             }
         }
-
-        //change file-bg icon accordingly
-        changeIconBg(doc);
     });
 
     $(document).on('click', '.document-title', function(e) {
