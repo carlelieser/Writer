@@ -387,11 +387,17 @@
     vertical-align: middle;
 }
 
+.sidebar-option .option-title{
+    font-family: 'Roboto Med';
+}
+
 .sidebar-option .material-icons {
     width: 70px;
     height: 60px;
     text-align: center;
     line-height: 60px;
+    color:#000;
+    opacity: 0.54;
 }
 
 .sidebar-option:hover {
