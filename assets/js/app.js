@@ -68,8 +68,7 @@ $(document).ready(function() {
     var beizer = $.bez([.17, .67, .29, 1.01]);
 
     //useful for setting up chooseEntry
-    var accepts = [
-        {
+    var accepts = [{
             description: 'Writer Document (*.wtr)',
             extensions: [
                 'wtr'
@@ -311,7 +310,7 @@ $(document).ready(function() {
                 key: 'W',
                 shortKey: true,
                 handler: function(range, context) {
-                    if(context.format.align != 'left'){
+                    if (context.format.align != 'left') {
                         this.quill.formatLine(range, 'align', false);
                     }
                 }
@@ -320,9 +319,9 @@ $(document).ready(function() {
                 key: 'E',
                 shortKey: true,
                 handler: function(range, context) {
-                    if(context.format.align != 'center'){
+                    if (context.format.align != 'center') {
                         this.quill.formatLine(range, 'align', 'center', true);
-                    } else{
+                    } else {
                         this.quill.formatLine(range, 'align', false);
                     }
                 }
@@ -331,9 +330,9 @@ $(document).ready(function() {
                 key: 'R',
                 shortKey: true,
                 handler: function(range, context) {
-                    if(context.format.align != 'right'){
+                    if (context.format.align != 'right') {
                         this.quill.formatLine(range, 'align', 'right', true);
-                    } else{
+                    } else {
                         this.quill.formatLine(range, 'align', false);
                     }
                 }
@@ -374,6 +373,9 @@ $(document).ready(function() {
         this.editorDOM = $(element).children().first(); //should be ql-editor
 
         var editorDOM = this.editorDOM;
+        
+        //apply defaults
+        applyAll();
 
         if (settings.statistics == true) {
             calcStats(editorDOM.text());
@@ -399,11 +401,7 @@ $(document).ready(function() {
                 calcStats(editorDOM.text());
             }
         });
-
-        //make sure to apply
-        //defaults
-        applyAll();
-
+        
         if ($(element).hasClass('document-active')) {
             this.editor.focus();
         }
@@ -527,12 +525,64 @@ $(document).ready(function() {
     function isHTML(string) {
         return /<[\s\S]*>/i.test(string);
     }
+	
+    //extend string prototype
+    String.prototype.replaceAll = function(search, replacement) {
+        var target = this;
+        return target.replace(new RegExp(search, 'g'), replacement);
+    };
+    
+    function isEmpty(element){
+      return !$.trim(element.html())
+  	}
+    
+    function cleanDoc(string){
+        return string.replaceAll(' 0.6;"=""', '')
+              .replaceAll(' 1;"=""', '')
+              .replaceAll('=3D', '=')
+              .replaceAll('class="3D&quot;', 'class="')
+              .replaceAll('&quot;', '')
+    }
+    //convert nested lists
+    function cleanHTML(html) {
+        var htmlParent = $(document.createElement('div'));
+        htmlParent.addClass('htmlParent');
+        htmlParent.html(html);
+        
+        //correct empty tags
+        htmlParent.find('*').each(function(){
+            if(isEmpty($(this))){
+                $(this).html('<br/>');
+            }
+        });
+        
+        htmlParent.find('ol, ul').each(function(index) {
+            var nested = ($(this).parentsUntil(htmlParent).length);
+            
+            while ($(this).parent().attr('class') != 'htmlParent') {
+                $(this).children().attr('class', 'ql-indent-' + nested);
+            }
+            
+            //move children out of parent
+            //and delete parent
+            var cnt = $(this).contents();
+            $(this).replaceWith(cnt);
+        });
+        
+        htmlParent.find('li').wrapAll('<ol/>');
+        
+        var cleaned = cleanDoc(htmlParent.html());
+        console.log(cleaned);
+        
+        return cleaned;
+    }
 
     Doc.prototype.setEditorContents = function(content) {
         if (typeof content === 'object') {
             this.editor.setContents(content);
         } else if (isHTML(content)) {
-            this.editorDOM.html(content);
+            var clean = cleanHTML(content);
+            this.editorDOM.html(clean);
         } else {
             this.editor.setText(content);
         }
@@ -555,7 +605,7 @@ $(document).ready(function() {
         setDocumentSize($('.doc-active'), size);
     }
 
-    function strip(name){
+    function strip(name) {
         return name.slice(0, name.lastIndexOf('.'));
     }
 
@@ -569,20 +619,20 @@ $(document).ready(function() {
         }
     }
 
-    Doc.prototype.delete = function(){
+    Doc.prototype.delete = function() {
         var index = documents.indexOf(this);
         this.editorDOM.parent().remove();
         this.docListItem.remove();
         documents.splice(index, 1);
 
         //handle events
-        if(documents.length === 0){
+        if (documents.length === 0) {
             newDoc('untitled', '', '0 KB', false, true);
-        }else{
+        } else {
             //last
-            if(index - 1 == documents.length - 1){
+            if (index - 1 == documents.length - 1) {
                 $documentList.children().last().click();
-            }else{
+            } else {
                 $documentList.children().eq(index).click();
             }
         }
@@ -677,7 +727,7 @@ $(document).ready(function() {
         addDocument(file);
     }
 
-    function deleteDoc(doc){
+    function deleteDoc(doc) {
         doc.delete();
     }
 
@@ -722,7 +772,7 @@ $(document).ready(function() {
             element.css('opacity', '1');
             element.find('*').css('opacity', '1');
         } else {
-            qlEditor().children().css('opacity', '0.6');
+            qlEditor().find('*').css('opacity', '0.6');
             element.css('opacity', '1');
             element.find('*').css('opacity', '1');
         }
@@ -1200,6 +1250,26 @@ $(document).ready(function() {
 
     //night mode
     //load stylesheet
+    
+    //removes animations prior to adding stylesheet
+    //then immediately adds them back so as to not
+    //cause a delay
+    var animTimer;
+    
+    function removeAnim(){
+        $('.ql-editor').css('transition', 'none');
+        $('.ql-editor *').css('transition', 'none');
+        clearTimeout(animTimer);
+        animTimer = setTimeout(function(){
+                        addAnim();
+                    }, 200);
+    }
+    
+    function addAnim(){
+        $('.ql-editor').css('transition', 'all .2s ease');
+        $('.ql-editor *').css('transition', 'all .2s ease');
+    }
+    
     function loadStyles(name) {
         var string = '<link type="text/css" rel="stylesheet" href="assets/settings/themes/' + name + '"/>';
         if ($('link[href="' + name + '"]').length < 1) {
@@ -1212,6 +1282,7 @@ $(document).ready(function() {
     }
 
     $nightMode.click(function() {
+        removeAnim();
         if (isActive($(this)) === false) {
             removeStyles('night.css');
         } else {
@@ -1510,35 +1581,35 @@ $(document).ready(function() {
         }
     });
 
-    function openDelete(parent){
+    function openDelete(parent) {
         parent.css('transform', 'translateX(-220px)');
     }
 
-    function closeDelete(parent){
+    function closeDelete(parent) {
         parent.css('transform', 'translateX(0)');
     }
 
-    $(document).on('click', '.document-delete', function(e){
+    $(document).on('click', '.document-delete', function(e) {
 
         e.stopPropagation();
 
         var index = $(this).parent().index();
         var doc = getDoc(index);
-        if(doc.editorDOM.text().length === 0){
+        if (doc.editorDOM.text().length === 0) {
             deleteDoc(doc);
-        }else{
+        } else {
             openDelete($(this).parent());
         }
     });
 
-    $(document).on('click', '.delete-confirm', function(e){
+    $(document).on('click', '.delete-confirm', function(e) {
         e.stopPropagation();
         var index = $(this).parent().parent().index();
         var doc = getDoc(index);
         deleteDoc(doc);
     })
 
-    $(document).on('click', '.delete-cancel', function(e){
+    $(document).on('click', '.delete-cancel', function(e) {
         e.stopPropagation();
         var parent = $(this).parent().parent();
         closeDelete(parent);
