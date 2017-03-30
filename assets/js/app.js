@@ -169,7 +169,7 @@ $(document).ready(function() {
 
     //the contents of an empty document item
     //represented in html format
-    var newDocumentString = '<div class="document-item"><div class="material-icons">insert_drive_file</div><input readonly=true class="document-title" type="text"/><div class="document-size"></div><div class="document-edit"><div class="material-icons">edit</div></div><div class="document-delete"><div class="material-icons">delete</div></div></div>';
+    var newDocumentString = '<div class="document-item"><div class="material-icons">insert_drive_file</div><input readonly=true class="document-title" type="text"/><div class="document-size"></div><div class="document-edit"><div class="material-icons">edit</div></div><div class="document-delete"><div class="material-icons">delete</div></div><div class="delete-dialogue"><div class="delete-confirm">Delete</div><div class="delete-cancel">Cancel</div></div></div>';
     var mainDocumentString = '<div class="document document-active"></div>';
 
     //hide elements
@@ -309,6 +309,11 @@ $(document).ready(function() {
         this.editorDOM = $(element).children().first(); //should be ql-editor
 
         var editorDOM = this.editorDOM;
+
+        if (settings.statistics == true) {
+            calcStats(editorDOM.text());
+        }
+
         //only save data 600ms after user has stopped typing
         var timer;
         this.editor.on('text-change', function() {
@@ -494,6 +499,25 @@ $(document).ready(function() {
         }
     }
 
+    Doc.prototype.delete = function(){
+        var index = documents.indexOf(this);
+        this.editorDOM.parent().remove();
+        this.docListItem.remove();
+        documents.splice(index, 1);
+
+        //handle events
+        if(documents.length === 0){
+            newDoc('untitled', '', '0 KB', false, true);
+        }else{
+            //last
+            if(index - 1 == documents.length - 1){
+                $documentList.children().last().click();
+            }else{
+                $documentList.children().eq(index).click();
+            }
+        }
+    }
+
     function exportToFileEntry(fileEntry) {
         if (!fileEntry) {
             console.log('User cancelled saving.');
@@ -597,6 +621,10 @@ $(document).ready(function() {
         createDoc(file, name, size, active);
         loadDoc(file, name, content, size, savedFileEntry);
         addDocument(file);
+    }
+
+    function deleteDoc(doc){
+        doc.delete();
     }
 
     function getDoc(index) {
@@ -1008,13 +1036,11 @@ $(document).ready(function() {
 
     //print document
     $print.click(function() {
-        var copyString = '<div class="ql-editor-copy"></div>';
+        var html = qlEditor().html();
+        var copyString = '<div class="ql-editor" id="print"></div>';
         $('html').append(copyString);
-        var copy = $('.ql-editor-copy');
-        copy.html(qlEditor().html());
-        copy.css('font-family', qlEditor().css('font-family'));
-        copy.css('font-size', qlEditor().css('font-size'));
-        copy.css('line-height', qlEditor().css('line-height'));
+        var copy = $('#print');
+        copy.html(html);
         window.print();
         copy.remove();
     });
@@ -1428,6 +1454,40 @@ $(document).ready(function() {
             e.stopImmediatePropagation();
             e.stopPropagation();
         }
+    });
+
+    function openDelete(parent){
+        parent.css('transform', 'translateX(-220px)');
+    }
+
+    function closeDelete(parent){
+        parent.css('transform', 'translateX(0)');
+    }
+
+    $(document).on('click', '.document-delete', function(e){
+
+        e.stopPropagation();
+
+        var index = $(this).parent().index();
+        var doc = getDoc(index);
+        if(doc.editorDOM.text().length === 0){
+            deleteDoc(doc);
+        }else{
+            openDelete($(this).parent());
+        }
+    });
+
+    $(document).on('click', '.delete-confirm', function(e){
+        e.stopPropagation();
+        var index = $(this).parent().parent().index();
+        var doc = getDoc(index);
+        deleteDoc(doc);
+    })
+
+    $(document).on('click', '.delete-cancel', function(e){
+        e.stopPropagation();
+        var parent = $(this).parent().parent();
+        closeDelete(parent);
     });
 
     function loadScreen() {

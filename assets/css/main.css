@@ -1,5 +1,4 @@
-.html,
-body {
+.html, body {
     margin: 0;
     padding: 0;
 }
@@ -80,16 +79,16 @@ body {
     }
 }
 
-.modal:not(.sidebar){
-    width:400px;
-    height:100%;
-    top:0;
-    left:-400px;
-    position:absolute;
-    z-index:400;
+.modal:not(.sidebar) {
+    width: 400px;
+    height: 100%;
+    top: 0;
+    left: -400px;
+    position: absolute;
+    z-index: 400;
 }
 
-.modal{
+.modal {
     background-color: #FFF;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
@@ -140,6 +139,7 @@ body {
 .document-container .document-list .document-item {
     width: 100%;
     height: 60px;
+    transition:all .2s ease;
 }
 
 .document-container .document-list .document-item:hover {
@@ -150,8 +150,7 @@ body {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
-.document-container .document-list .document-item div,
-.document-container .document-list .document-item input {
+.document-container .document-list .document-item div, .document-container .document-list .document-item input {
     line-height: 60px;
     display: inline-block;
     color: rgba(0, 0, 0, 0.7);
@@ -174,19 +173,16 @@ body {
     cursor: default;
 }
 
-.document-item .material-icons,
-.document-size {
+.document-item .material-icons, .document-size {
     width: 20%;
     text-align: center;
 }
 
-.document-edit,
-.document-delete {
+.document-edit, .document-delete {
     width: 13%;
 }
 
-.document-edit .material-icons,
-.document-delete .material-icons {
+.document-edit .material-icons, .document-delete .material-icons {
     color: rgba(0, 0, 0, 0.6);
     width: 100%;
     transition: all .2s ease;
@@ -195,6 +191,26 @@ body {
 .document-list::-webkit-scrollbar {
     width: 0px;
     background-color: transparent;
+}
+
+.document-list .delete-dialogue {
+    width: 220px;
+    background-color: #f36969;
+    position: absolute;
+    height: 60px;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+    margin-left: 16px;
+}
+
+.delete-confirm, .delete-cancel {
+    width: 50%;
+    font-family: 'Roboto Med';
+    float: left;
+    display: inline-block;
+    text-align: center;
+    text-transform: uppercase;
 }
 
 .settings-container .settings-list .settings-option {
@@ -250,11 +266,11 @@ body {
 .option {
     width: 100%;
     height: 0;
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: rgba(0, 0, 0, 0.14);
     margin-bottom: 10px;
 }
 
-.option>div {
+.option > div {
     height: 40px;
     font-size: 14px;
     padding-left: 60px;
@@ -264,7 +280,11 @@ body {
     transition: all .2s ease;
 }
 
-.option>.active {
+.option > div:hover{
+    background-color:rgba(255, 255, 255, 0.1);
+}
+
+.option > .active {
     background-color: #efecec;
 }
 
@@ -443,12 +463,11 @@ body {
     overflow-y: auto;
     cursor: default;
     line-height: 2;
-    transition: all .3s ease;
+    transition: all .2s ease;
 }
 
 .ql-editor * {
     cursor: text;
-    transition: all .2s ease;
 }
 
 .ql-editor::-webkit-scrollbar {
@@ -513,39 +532,39 @@ body {
     display: inline-block;
 }
 
-.statistics-bar label{
-    color:rgba(0,0,0,0.6);
+.statistics-bar label {
+    color: rgba(0, 0, 0, 0.6);
 }
 
-.statistics-bar label:nth-of-type(2){
-    margin-left:5px;
-}
-
-.statistics-bar div{
+.statistics-bar label:nth-of-type(2) {
     margin-left: 5px;
 }
 
-.ql-editor-copy {
+.statistics-bar div {
+    margin-left: 5px;
+}
+
+#print{
     display: none;
 }
 
 @media print {
-    html,
-    body {
+    html, body {
         background-color: #FFF;
     }
     body {
         display: none;
     }
-    .ql-editor-copy {
-        color: #000;
+    #print {
         display: block;
+        padding: 0 !important;
+        color: #000;
     }
-    .ql-editor-copy * {
+    #print *{
         opacity: 1 !important;
     }
-    .ql-editor-copy br {
-        display: none;
+    #print br {
+        display: none !important;
     }
 }
 
