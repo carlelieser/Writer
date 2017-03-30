@@ -278,8 +278,45 @@ $(document).ready(function() {
     }
 
     Doc.prototype.createEditor = function(element) {
+        var bindings = {
+            alignLeft: {
+                key: 'W',
+                shortKey: true,
+                handler: function(range, context) {
+                    if(context.format.align != 'left'){
+                        this.quill.formatLine(range, 'align', false);
+                    }
+                }
+            },
+            alignCenter: {
+                key: 'E',
+                shortKey: true,
+                handler: function(range, context) {
+                    if(context.format.align != 'center'){
+                        this.quill.formatLine(range, 'align', 'center', true);
+                    } else{
+                        this.quill.formatLine(range, 'align', false);
+                    }
+                }
+            },
+            alignRight: {
+                key: 'R',
+                shortKey: true,
+                handler: function(range, context) {
+                    if(context.format.align != 'right'){
+                        this.quill.formatLine(range, 'align', 'right', true);
+                    } else{
+                        this.quill.formatLine(range, 'align', false);
+                    }
+                }
+            }
+
+        }
         this.editor = new Quill(element, {
             modules: {
+                keyboard: {
+                    bindings: bindings
+                },
                 toolbar: [
                     ['bold', 'italic', 'underline'],
                     [{
