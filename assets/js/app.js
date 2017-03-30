@@ -68,16 +68,44 @@ $(document).ready(function() {
     var beizer = $.bez([.17, .67, .29, 1.01]);
 
     //useful for setting up chooseEntry
-    var accepts = [{
-        extensions: [
-            'html',
-            'htm',
-            'txt',
-            'md',
-            'docx',
-            'wtr'
-        ]
-    }];
+    var accepts = [
+        {
+            description: 'Writer Document (*.wtr)',
+            extensions: [
+                'wtr'
+            ]
+        },
+        {
+            description: 'Word Document (*.docx)',
+            extensions: [
+                'docx'
+            ]
+        },
+        {
+            description: 'Markdown File (*.md)',
+            extensions: [
+                'md'
+            ]
+        },
+        {
+            description: 'HTML File (*.html)',
+            extensions: [
+                'html'
+            ]
+        },
+        {
+            description: 'HTM File (*.htm)',
+            extensions: [
+                'htm'
+            ]
+        },
+        {
+            description: 'Text File (*.txt)',
+            extensions: [
+                'txt'
+            ]
+        }
+    ];
 
     //default configuration
     var defaults = {
@@ -527,12 +555,17 @@ $(document).ready(function() {
         setDocumentSize($('.doc-active'), size);
     }
 
+    function strip(name){
+        return name.slice(0, name.lastIndexOf('.'));
+    }
+
     Doc.prototype.save = function() {
         var savedEntry = this.fileEntry;
+        var name = strip(this.name);
         if (savedEntry) {
             exportToFileEntry(savedEntry);
         } else {
-            ExportToDisk(this.name);
+            ExportToDisk(name);
         }
     }
 
@@ -565,6 +598,7 @@ $(document).ready(function() {
                     var doc = getDoc(documentAct().index());
                     var content;
                     var blob;
+
                     switch (extension) {
                         case 'html':
                         case 'htm':
@@ -605,24 +639,7 @@ $(document).ready(function() {
     }
 
     function ExportToDisk(name) {
-        if (name.indexOf('.') == -1) {
-            name += '.wtr';
-        }
-
-        //change description based on extension
-        var extension = getExtension(name);
-        var description = extension.toUpperCase() + ' File (*.' + extension + ')';
-
-        if (extension == 'wtr') {
-            description = 'Writer File (*.' + extension + ')';
-        }
-
-        if (extension == 'md') {
-            description = 'Markdown File (*.' + extension + ')';
-        }
-
-        accepts[0].description = description;
-
+        name = strip(name);
         chrome.fileSystem.chooseEntry({
             type: 'saveFile',
             suggestedName: name,

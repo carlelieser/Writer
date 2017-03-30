@@ -266,7 +266,7 @@
 .option {
     width: 100%;
     height: 0;
-    background-color: rgba(0, 0, 0, 0.14);
+    background-color: rgba(0, 0, 0, 0.04);
     margin-bottom: 10px;
 }
 
@@ -280,8 +280,8 @@
     transition: all .2s ease;
 }
 
-.option > div:hover{
-    background-color:rgba(255, 255, 255, 0.1);
+.option > div:not(.active):hover{
+    background-color:rgba(255, 255, 255, 0.34);
 }
 
 .option > .active {
@@ -474,6 +474,7 @@
 
 .ql-editor * {
     cursor: text;
+    transition: all .2s ease;
 }
 
 .ql-editor::-webkit-scrollbar {
@@ -564,13 +565,10 @@
     #print {
         display: block;
         padding: 0 !important;
-        color: #000;
     }
     #print *{
         opacity: 1 !important;
-    }
-    #print br {
-        display: none !important;
+        color: #000;
     }
 }
 
