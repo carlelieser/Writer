@@ -33,17 +33,22 @@ $(document).ready(function() {
     var $fontChildren = $('.font-options').children(),
         $sizeChildren = $('.font-size-options').children(),
         $themeChildren = $('.theme-options').children(),
-        $lineChildren = $('.line-options').children();
+        $lineChildren = $('.line-options').children(),
+        $marginChildren = $('.margin-options').children();
 
     //modals
     var $documentContainer = $('.document-container'),
         $settingsContainer = $('.settings-container'),
-        $feedBackContainer = $('.feedback-container');
+        $feedBackContainer = $('.feedback-container'),
+        $toolsContainer = $('.tools-container'),
+        $helpContainer = $('.help-container');
 
     //modal triggers
     var $docButton = $('.open-documents'),
         $settingsButton = $('.open-settings'),
         $feedback = $('.open-feedback'),
+        $tools = $('.open-tools'),
+        $help = $('.open-help'),
         $modalClose = $('.modal-close');
 
     //sidebar buttons
@@ -55,6 +60,9 @@ $(document).ready(function() {
 
     //snackbar
     var $snackBar = $('.snackbar');
+
+    //statistics
+    var $statisticsBar = $('.statistics-bar');
 
     //cubic-beizer for .anim
     var beizer = $.bez([.17, .67, .29, 1.01]);
@@ -81,7 +89,8 @@ $(document).ready(function() {
         font: 'Charter',
         size: '18px',
         theme: 'default',
-        line: 'single'
+        line: 'single',
+        margin: 'medium'
     }
 
     //this will dynamically change based
@@ -95,7 +104,8 @@ $(document).ready(function() {
         font: 'Charter',
         size: '18px',
         theme: 'default',
-        line: 'single'
+        line: 'single',
+        margin: 'medium'
     }
 
     function changeSettings(key, val) {
@@ -111,7 +121,7 @@ $(document).ready(function() {
         for (var key in config) {
             if (config.hasOwnProperty(key)) {
                 var value = config[key];
-                var excluded = ['font', 'size', 'theme'];
+                var excluded = ['font', 'size', 'theme', 'margin'];
 
                 if (excluded.indexOf(key) > -1) {
                     var correspondingDropdown;
@@ -314,10 +324,23 @@ $(document).ready(function() {
                 }
                 _DOC.setContents(contents);
             }, 600);
+
+            if (settings.statistics == true) {
+                calcStats(editorDOM.text());
+            }
         });
 
         //make sure to apply
-        //default font and font size
+        //defaults
+        applyAll();
+
+        if ($(element).hasClass('document-active')) {
+            this.editor.focus();
+        }
+
+    }
+
+    function applyAll() {
         $fontChildren.filter(function() {
             return $(this).hasClass('active');
         }).each(function() {
@@ -348,10 +371,15 @@ $(document).ready(function() {
             }, 200);
         });
 
-        if ($(element).hasClass('document-active')) {
-            this.editor.focus();
-        }
-
+        $marginChildren.filter(function() {
+            return $(this).hasClass('active');
+        }).each(function() {
+            $(this).click();
+            setTimeout(function() {
+                $optionContainer.css('height', '0');
+                $optionContainer.hide();
+            }, 200);
+        });
     }
 
     //returns editor in the DOM
@@ -385,6 +413,7 @@ $(document).ready(function() {
             $mainContainer.children().removeClass('document-active');
             $mainContainer.children().last().attr('class', 'document-' + lastDoc.index() + ' document-active ql-container ql-bubble');
             this.setActive(true);
+
         }
         //create editor
         this.createEditor('.document-' + lastDoc.index());
@@ -410,6 +439,10 @@ $(document).ready(function() {
         $mainContainer.children().eq(index).attr('class', 'document-' + index + ' document-active ql-container ql-bubble');
         this.editorDOM.scrollTop(this.scrollTop);
         this.setActive(true);
+
+        if (settings.statistics == true) {
+            calcStats(this.editorDOM.text());
+        }
     }
 
     Doc.prototype.create = function(name, size, active) {
@@ -985,12 +1018,22 @@ $(document).ready(function() {
         window.print();
         copy.remove();
     });
-    
+
     //feedback
-    $feedback.click(function(){
-        openModal($feedBackContainer, function(){
+    $feedback.click(function() {
+        openModal($feedBackContainer, function() {
             $feedBackContainer.find('.feedback-email').focus();
         });
+    });
+
+    //tools
+    $tools.click(function() {
+        openModal($toolsContainer);
+    });
+
+    //help
+    $help.click(function() {
+        openModal($helpContainer);
     });
 
     //set snackbar's bottom position to negative height
@@ -1004,16 +1047,16 @@ $(document).ready(function() {
             $snackBar.children('span').text(real);
             $snackBar.show().stop().animate({
                 bottom: '0'
-            }, 500, beizer, function(){
-            	snackBarTime = setTimeout(closeSnackBar, 5000);
+            }, 500, beizer, function() {
+                snackBarTime = setTimeout(closeSnackBar, 5000);
             });
         } else {
             $snackBar.children().first().text(name);
             $snackBar.children('span').text('was saved.');
             $snackBar.show().stop().animate({
                 bottom: '0'
-            }, 500, beizer, function(){
-            	snackBarTime = setTimeout(closeSnackBar, 3000);
+            }, 500, beizer, function() {
+                snackBarTime = setTimeout(closeSnackBar, 3000);
             });
         }
     }
@@ -1132,6 +1175,63 @@ $(document).ready(function() {
         }
     });
 
+    function cleanArray(actual) {
+        var newArray = new Array();
+        for (var i = 0; i < actual.length; i++) {
+            if (actual[i]) {
+                newArray.push(actual[i]);
+            }
+        }
+        return newArray;
+    }
+
+    function calcStats(text) {
+        var wordContainer = $('.words');
+        var charContainer = $('.chars');
+
+        var words = text.split(' ');
+        var chars = text.length;
+
+        words = cleanArray(words);
+        words = words.length;
+
+        if (text === '') {
+            words = 0;
+        }
+
+        wordContainer.text(words);
+        charContainer.text(chars);
+    }
+
+    //set statistics bottom to its height (negative)
+    $statisticsBar.css('bottom', '-' + ($statisticsBar.height() + 100) + 'px');
+
+    //open statistics
+    function openStatistics() {
+        calcStats(qlEditor().text());
+        $statisticsBar.show().stop().animate({
+            bottom: '0'
+        }, 300, beizer);
+    }
+
+    //close statistics
+    function closeStatistics() {
+        $statisticsBar.stop().animate({
+            bottom: '-' + ($statisticsBar.height() + 50) + 'px'
+        }, 300, beizer, function() {
+            $(this).hide();
+        });
+    }
+
+    //statistics
+    $statistics.click(function() {
+        if (isActive($(this)) === false) {
+            closeStatistics();
+        } else {
+            openStatistics();
+        }
+    });
+
     //change font
     $fontChildren.click(function() {
         var fontFam = $(this).text();
@@ -1186,6 +1286,31 @@ $(document).ready(function() {
         }
         $('.ql-editor').css('line-height', actualLine);
         changeSettings('line', lineHeight);
+    });
+
+    function setMargin(margin) {
+        $('.ql-editor').css('padding-left', margin);
+        $('.ql-editor').css('padding-right', margin);
+    }
+
+    $marginChildren.click(function() {
+        var margin = $(this).text(),
+            realMarg = margin;
+
+        switch (margin) {
+            case 'Small':
+                realMarg = '8%';
+                break;
+            case 'Medium':
+                realMarg = '18%';
+                break;
+            case 'Large':
+                realMarg = '26%';
+                break;
+        }
+
+        setMargin(realMarg);
+        changeSettings('margin', margin);
     });
 
     //open dropdown
@@ -1280,7 +1405,7 @@ $(document).ready(function() {
         }
         rotate($(this).find('.material-icons'))
     });
-    
+
     $(document).on('keyup', '.document-title', function(e) {
         var index = $(this).parent().index();
         var doc = getDoc(index);
@@ -1307,6 +1432,11 @@ $(document).ready(function() {
 
     function loadScreen() {
         setTimeout(function() {
+            //make sure to calculate statistics for
+            //current active editor before loadingScreen
+            if (settings.statistics == true) {
+                calcStats(qlEditor().text());
+            }
             $loadingScreen.stop().animate({
                 top: '-100%'
             }, 600, function() {
@@ -1408,21 +1538,27 @@ $(document).ready(function() {
         return e.shiftKey;
     }
 
+    function getAltKey(e) {
+        return e.altKey;
+    }
+
 
     $(document).on('keydown', function(e) {
 
         //keys
         var CTRL_KEY = getCntKey(e),
             SHIFT_KEY = getShiftKey(e),
+            ALT_KEY = getAltKey(e),
             NEW = CTRL_KEY && !SHIFT_KEY && getKey(e, 78),
             OPEN = CTRL_KEY && getKey(e, 79),
-            SAVE = CTRL_KEY && !SHIFT_KEY && getKey(e, 83),
-            SAVE_AS = CTRL_KEY && SHIFT_KEY && getKey(e, 83),
+            SAVE = CTRL_KEY && !SHIFT_KEY && !ALT_KEY && getKey(e, 83),
+            SAVE_AS = CTRL_KEY && SHIFT_KEY && !ALT_KEY && getKey(e, 83),
             PRINT = CTRL_KEY && getKey(e, 80),
             FULLSCREEN = getKey(e, 122),
             NIGHTMODE = CTRL_KEY && SHIFT_KEY && getKey(e, 78),
             FOCUS = CTRL_KEY && SHIFT_KEY && getKey(e, 70),
-            CLOSE = getKey(e, 27);
+            STATISTICS = CTRL_KEY && ALT_KEY && !SHIFT_KEY && getKey(e, 83);
+        CLOSE = getKey(e, 27);
 
         //new
         if (NEW) {
@@ -1447,7 +1583,7 @@ $(document).ready(function() {
 
         //print
         if (PRINT) {
-            $('.print').click();
+            $print.click();
         }
 
         //fullscreen
@@ -1458,17 +1594,23 @@ $(document).ready(function() {
                 chrome.app.window.current().fullscreen();
             }
         }
-        
+
         //nightmode
-        if (NIGHTMODE){
+        if (NIGHTMODE) {
             e.preventDefault();
-            $('.night').click();
+            $nightMode.click();
         }
 
         //focus
-        if (FOCUS){
-            $('.focus').click();
+        if (FOCUS) {
+            $focus.click();
         }
+
+        //statistics
+        if (STATISTICS) {
+            $statistics.click();
+        }
+
         //close
         if (CLOSE) {
             e.preventDefault();

@@ -40,3 +40,15 @@ html, body{
 .snackbar .snackbar-doc-title {
     color: #616161 !important;
 }
+
+.statistics-bar{
+    background-color: #2d2d2d !important;
+}
+
+.statistics-bar label{
+    color: rgba(255,255,255, 0.6) !important;
+}
+
+.statistics-bar div{
+    color: #FFF !important;
+}

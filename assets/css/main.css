@@ -27,7 +27,6 @@ body {
 .load-bar {
     width: 70%;
     height: 6px;
-    max-width: 600px;
     top: 50%;
     left: 50%;
     position: absolute;
@@ -81,7 +80,16 @@ body {
     }
 }
 
-.modal {
+.modal:not(.sidebar){
+    width:400px;
+    height:100%;
+    top:0;
+    left:-400px;
+    position:absolute;
+    z-index:400;
+}
+
+.modal{
     background-color: #FFF;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
@@ -127,15 +135,6 @@ body {
     position: absolute;
     margin-top: 100px;
     overflow-x: hidden;
-}
-
-.document-container {
-    width: 400px;
-    height: 100%;
-    top: 0;
-    left: -400px;
-    position: absolute;
-    z-index: 300;
 }
 
 .document-container .document-list .document-item {
@@ -196,15 +195,6 @@ body {
 .document-list::-webkit-scrollbar {
     width: 0px;
     background-color: transparent;
-}
-
-.settings-container {
-    width: 400px;
-    height: 100%;
-    top: 0;
-    left: -400px;
-    position: absolute;
-    z-index: 300;
 }
 
 .settings-container .settings-list .settings-option {
@@ -312,11 +302,10 @@ body {
     border-radius: 20px;
     display: inline-block;
     margin-top: 25px;
-    margin-right: 60px;
     cursor: pointer;
-    transition: all .3s ease;
     position: absolute;
-    left: 300px;
+    left: 280px;
+    transition: all .3s ease;
 }
 
 .toggle-circle {
@@ -344,73 +333,6 @@ body {
 .toggle-active .toggle-circle {
     background-color: #17a598;
     margin-left: 45px;
-}
-
-.feedback-container {
-    width: 400px;
-    height: 100%;
-    top: 0;
-    left: -400px;
-    position: absolute;
-    z-index: 400;
-}
-
-.feedback-container input,
-.feedback-container textarea {
-    width: 350px;
-    height: 40px;
-    margin-left:20px;
-    margin-top: 15px;
-    margin-bottom: 10px;
-    font-family: 'Roboto';
-    font-size: 14px;
-    outline:0;
-    border:none;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-    transition: all .3s ease-out;
-    resize:none;
-    background-color:transparent;
-}
-
-.feedback-container input:first-child{
-    margin-top:25px;
-}
-
-.feedback-container textarea{
-    padding-top:20px;
-    padding-bottom:20px;
-    margin-top: 5px !important;
-    height: 100px !important;
-    box-sizing:border-box;
-}
-.feedback-container input::-webkit-input-placeholder, .feedback-container textarea::-webkit-input-placeholder{
-    transition: all .3s ease-out;
-}
-
-.feedback-container input:focus, .feedback-container textarea:focus{
-    border-bottom: 1px solid #1abc9c;
-}
-
-.feedback-container input:focus::-webkit-input-placeholder, .feedback-container textarea:focus::-webkit-input-placeholder{
-    color:#1abc9c;
-    transform: translateY(-20px);
-    font-size: 11px;
-}
-
-.feedback-container .submit-button{
-    width: 380px;
-    height:50px;
-    margin-top: 10px;
-    margin-left:10px;
-    background-color: #1abc9c;
-    border:none;
-    outline:none;
-    border-radius: 2px;
-    font-family: 'Roboto Med';
-    font-size: 14px;
-    text-transform:uppercase;
-    color:#FFF;
-    cursor:pointer;
 }
 
 .sidebar {
@@ -521,6 +443,7 @@ body {
     overflow-y: auto;
     cursor: default;
     line-height: 2;
+    transition: all .3s ease;
 }
 
 .ql-editor * {
@@ -568,6 +491,38 @@ body {
     display: inline-block;
     vertical-align: middle;
     color: #21e8c1;
+}
+
+.statistics-bar {
+    width: auto;
+    height: 24px;
+    bottom: 0;
+    right: 0;
+    margin: 24px;
+    padding: 18px 24px;
+    border-radius: 3px;
+    position: absolute;
+    z-index: 50;
+    background-color: #EFEFEF;
+    line-height: 24px;
+    font-family: 'Roboto Med';
+    text-transform: uppercase;
+}
+
+.statistics-bar * {
+    display: inline-block;
+}
+
+.statistics-bar label{
+    color:rgba(0,0,0,0.6);
+}
+
+.statistics-bar label:nth-of-type(2){
+    margin-left:5px;
+}
+
+.statistics-bar div{
+    margin-left: 5px;
 }
 
 .ql-editor-copy {

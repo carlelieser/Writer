@@ -18,6 +18,13 @@
 
         <div class="sidebar-toggle"></div>
 
+        <div class="statistics-bar">
+            <label>Words</label>
+            <div class="words">0</div>
+            <label>Chars</label>
+            <div class="chars">0</div>
+        </div>
+
         <div class="snackbar">
             <div class="snackbar-doc-title"></div>
             <span></span>
@@ -25,7 +32,29 @@
 
         <div class="main-container">
         </div>
-        
+
+        <div class="tools-container modal">
+        	<div class="modal-title-container">
+            	<div class="modal-title">Tools</div>
+                <div class="modal-close">
+                	<div class="material-icons">close</div>
+                </div>
+            </div>
+            <div class="tools-content modal-content">
+            </div>
+        </div>
+
+        <div class="help-container modal">
+        	<div class="modal-title-container">
+            	<div class="modal-title">Help</div>
+                <div class="modal-close">
+                	<div class="material-icons">close</div>
+                </div>
+            </div>
+            <div class="help-content modal-content">
+            </div>
+        </div>
+
         <div class="feedback-container modal">
         	<div class="modal-title-container">
             	<div class="modal-title">Feedback</div>
@@ -34,10 +63,6 @@
                 </div>
             </div>
             <div class="feedback-content modal-content">
-                <input type="text" class="feedback-email" placeholder="Email"/>
-                <input type="text" class="feedback-subject" placeholder="Subject"/>
-                <textarea type="text" class="feedback-message" placeholder="Message"></textarea>
-                <button class="submit-button">Send</button>
             </div>
         </div>
 
@@ -87,6 +112,15 @@
                     <div class="settings-title">Focus</div>
                     <div class="toggle toggle-inactive focus" name="focus">
                         <div class="toggle-circle"></div>
+                    </div>
+                </div>
+                <div class="settings-option noToggle">
+                    <div class="settings-title-second">Margin</div>
+                    <div class="settings-description">Choose the default margin size.</div>
+                    <div class="option margin-options">
+                        <div class="small-margin">Small</div>
+                        <div class="medium-margin active">Medium</div>
+                        <div class="larg-margin">Large</div>
                     </div>
                 </div>
                 <div class="settings-option noToggle">
