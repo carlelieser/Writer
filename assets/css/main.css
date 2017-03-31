@@ -3,6 +3,60 @@
     padding: 0;
 }
 
+.user-profile{
+    width:100%;
+    height:170px;
+    background-color: #324f58;
+    background-size:cover;
+    background-repeat:no-repeat;
+    box-shadow: inset 0px -6px 5px 0px rgba(0,0,0,0.2);
+}
+
+.user-profile .user-image-container{
+    width:100%;
+    height: calc(100% - 60px);
+    float:left;
+    padding-top:30px;
+    padding-left:20px;
+    box-sizing: border-box;
+}
+
+.user-profile .user-image-container .user-image{
+    width:70px;
+    height:70px;
+    border-radius: 100%;
+    background-size:cover;
+    background-repeat:no-repeat;
+}
+
+.user-profile .user-info{
+    width:100%;
+    height:60px;
+    float:right;
+}
+
+.user-profile .user-info div{
+    width:100%;
+    display:block;
+    font-size: 14px;
+    padding-left: 20px;
+    box-sizing: border-box;
+}
+
+.user-profile .user-info .user-name{
+    height: 20px;
+    line-height: 20px;
+    font-family: 'Roboto Med';
+    opacity: 1;
+}
+
+.user-profile .user-info .user-email{
+    height: 40px;
+    line-height: 20px;
+    font-family: 'Roboto';
+    opacity: 0.84;
+}
+
 .top-bar {
     width: 100%;
     height: 30px;
@@ -281,7 +335,7 @@
 }
 
 .option > div:not(.active):hover{
-    background-color:rgba(255, 255, 255, 0.34);
+    background-color:rgba(255, 255, 255, 0.08);
 }
 
 .option > .active {
@@ -372,7 +426,7 @@
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-.sidebar-option {
+.sidebar-option, .file-option {
     width: 100%;
     height: 60px;
     line-height: 60px;
@@ -381,17 +435,17 @@
     color: rgba(0, 0, 0, 0.7);
 }
 
-.sidebar-option div {
+.sidebar-option div, .file-option div {
     display: inline-block;
     float: left;
     vertical-align: middle;
 }
 
-.sidebar-option .option-title{
+.sidebar-option .option-title, .file-option .option-title{
     font-family: 'Roboto Med';
 }
 
-.sidebar-option .material-icons {
+.sidebar-option .material-icons, .file-option .material-icons{
     width: 70px;
     height: 60px;
     text-align: center;
@@ -400,7 +454,7 @@
     opacity: 0.7;
 }
 
-.sidebar-option:hover {
+.sidebar-option:hover, .file-option:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
@@ -492,7 +546,7 @@
     padding-top: 1px;
 }
 
-.ql-editor p > *:not(strong),
+.ql-editor p > *,
 .ql-editor pre > *,
 .ql-editor blockquote > *,
 .ql-editor h1 > *,

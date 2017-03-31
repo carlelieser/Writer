@@ -76,6 +76,37 @@
             <div class="document-list modal-content"></div>
         </div>
 
+        <div class="file-container modal">
+            <div class="modal-title-container">
+            	<div class="modal-title">File</div>
+                <div class="modal-close">
+                	<div class="material-icons">close</div>
+                </div>
+            </div>
+            <div class="file-options modal-content">
+                <div class="file-option new">
+                    <div class="material-icons">note_add</div>
+                    <div class="option-title">New</div>
+                </div>
+                <div class="file-option open">
+                    <div class="material-icons">folder</div>
+                    <div class="option-title">Open</div>
+                </div>
+                <div class="file-option save">
+                    <div class="material-icons">save</div>
+                    <div class="option-title">Save</div>
+                </div>
+                <div class="file-option save-as">
+                    <div class="material-icons">file_download</div>
+                    <div class="option-title">Save As</div>
+                </div>
+                <div class="file-option print">
+                    <div class="material-icons">print</div>
+                    <div class="option-title">Print</div>
+                </div>
+            </div>
+        </div>
+
         <div class="settings-container modal">
             <div class="modal-title-container">
             	<div class="modal-title">Settings</div>
@@ -170,25 +201,22 @@
         </div>
 
         <div class="sidebar modal">
-            <div class="sidebar-option new">
-                <div class="material-icons">note_add</div>
-                <div class="option-title">New</div>
+            <div class="user-profile">
+                <div class="user-image-container">
+                    <div class="user-image"></div>
+                </div>
+                <div class="user-info">
+                    <div class="user-name"></div>
+                    <div class="user-email"></div>
+                </div>
             </div>
-            <div class="sidebar-option open">
-                <div class="material-icons">folder</div>
-                <div class="option-title">Open</div>
+            <div class="sidebar-option open-file">
+                <div class="material-icons">insert_drive_file</div>
+                <div class="option-title">File</div>
             </div>
-            <div class="sidebar-option save">
-                <div class="material-icons">save</div>
-                <div class="option-title">Save</div>
-            </div>
-            <div class="sidebar-option save-as">
-                <div class="material-icons">file_download</div>
-                <div class="option-title">Save As</div>
-            </div>
-            <div class="sidebar-option print">
-                <div class="material-icons">print</div>
-                <div class="option-title">Print</div>
+            <div class="sidebar-option open-edit">
+                <div class="material-icons">edit</div>
+                <div class="option-title">Edit</div>
             </div>
             <div class="sidebar-option open-tools">
                 <div class="material-icons">build</div>
@@ -216,12 +244,13 @@
         <div class="bg"></div>
 
         <script type="text/javascript" src="assets/libs/jquery.min.js"></script>
-        <script type="text/javascript" src="assets/libs/quill/quill.min.js"></script>
-        <script type="text/javascript" src="assets/libs/mammoth.browser.js"></script>
-        <script type="text/javascript" src="assets/libs/marked.js"></script>
         <script type="text/javascript" src="assets/libs/to-markdown.js"></script>
-        <script type="text/javascript" src="assets/libs/jquery.bez.min.js"></script>
+        <script type="text/javascript" src="assets/libs/marked.js"></script>
         <script type="text/javascript" src="assets/libs/html-docx.js"></script>
+        <script type="text/javascript" src="assets/libs/mammoth.browser.js"></script>
+        <script type="text/javascript" src="assets/libs/jquery.bez.min.js"></script>
+        <script type="text/javascript" src="assets/libs/quill/quill.min.js"></script>
+        <script type="text/javascript" src="assets/libs/vibrant.min.js"></script>
         <script type="text/javascript" src="assets/js/app.js"></script>
     </body>
 </html>

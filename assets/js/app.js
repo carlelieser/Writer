@@ -41,7 +41,8 @@ $(document).ready(function() {
         $settingsContainer = $('.settings-container'),
         $feedBackContainer = $('.feedback-container'),
         $toolsContainer = $('.tools-container'),
-        $helpContainer = $('.help-container');
+        $helpContainer = $('.help-container'),
+        $fileContainer = $('.file-container');
 
     //modal triggers
     var $docButton = $('.open-documents'),
@@ -49,6 +50,7 @@ $(document).ready(function() {
         $feedback = $('.open-feedback'),
         $tools = $('.open-tools'),
         $help = $('.open-help'),
+        $file = $('.open-file'),
         $modalClose = $('.modal-close');
 
     //sidebar buttons
@@ -137,6 +139,7 @@ $(document).ready(function() {
 
     function changeSettings(key, val) {
         settings[key] = val;
+        saveData();
     }
 
     function capitalizeFirstLetter(string) {
@@ -343,10 +346,10 @@ $(document).ready(function() {
                 key: '1',
                 shortKey: true,
                 altKey: true,
-                handler: function(range, context){
-                    if(context.format.header == 1){
+                handler: function(range, context) {
+                    if (context.format.header == 1) {
                         this.quill.formatLine(range, 'header', false);
-                    }else{
+                    } else {
                         this.quill.formatLine(range, 'header', 1, true);
                     }
                 }
@@ -355,10 +358,10 @@ $(document).ready(function() {
                 key: '2',
                 shortKey: true,
                 altKey: true,
-                handler: function(range, context){
-                    if(context.format.header == 2){
+                handler: function(range, context) {
+                    if (context.format.header == 2) {
                         this.quill.formatLine(range, 'header', false);
-                    }else{
+                    } else {
                         this.quill.formatLine(range, 'header', 2, true);
                     }
                 }
@@ -367,10 +370,10 @@ $(document).ready(function() {
                 key: '5',
                 shortKey: true,
                 altKey: true,
-                handler: function(range, context){
-                    if(context.format.blockquote){
+                handler: function(range, context) {
+                    if (context.format.blockquote) {
                         this.quill.formatLine(range, 'blockquote', false);
-                    }else{
+                    } else {
                         this.quill.formatLine(range, 'blockquote', true);
                     }
                 }
@@ -379,10 +382,10 @@ $(document).ready(function() {
                 key: '6',
                 shortKey: true,
                 altKey: true,
-                handler: function(range, context){
-                    if(context.format['code-block'] == true){
+                handler: function(range, context) {
+                    if (context.format['code-block'] == true) {
                         this.quill.formatLine(range, 'code-block', false);
-                    }else{
+                    } else {
                         this.quill.formatLine(range, 'code-block', true);
                     }
                 }
@@ -445,7 +448,8 @@ $(document).ready(function() {
                     contents = editor.getContents();
                 }
                 _DOC.setContents(contents);
-            }, 600);
+                saveData();
+            }, 2000);
             doc.changed = true;
             if (settings.statistics == true) {
                 calcStats(editorDOM.text());
@@ -562,6 +566,8 @@ $(document).ready(function() {
         if (settings.statistics == true) {
             calcStats(this.editorDOM.text());
         }
+
+        saveData();
     }
 
     Doc.prototype.create = function(name, size, active) {
@@ -583,17 +589,17 @@ $(document).ready(function() {
         return target.replace(new RegExp(search, 'g'), replacement);
     };
 
-    function isEmpty(element){
-      return !$.trim(element.html())
-  	}
+    function isEmpty(element) {
+        return !$.trim(element.html())
+    }
 
-    function cleanDoc(string){
+    function cleanDoc(string) {
         return string.replaceAll(' 0.6;"=""', '')
-              .replaceAll(' 1;"=""', '')
-              .replaceAll('=3D', '=')
-              .replaceAll('="3D', '="')
-              .replaceAll('class="3D&quot;', 'class="')
-              .replaceAll('&quot;', '')
+            .replaceAll(' 1;"=""', '')
+            .replaceAll('=3D', '=')
+            .replaceAll('="3D', '="')
+            .replaceAll('class="3D&quot;', 'class="')
+            .replaceAll('&quot;', '')
     }
 
     //convert nested lists
@@ -603,8 +609,8 @@ $(document).ready(function() {
         htmlParent.html(html);
 
         //correct empty tags
-        htmlParent.find('*').each(function(){
-            if(isEmpty($(this))){
+        htmlParent.find('*').each(function() {
+            if (isEmpty($(this))) {
                 $(this).html('<br/>');
             }
         });
@@ -613,25 +619,25 @@ $(document).ready(function() {
         htmlParent.find('ol, ul').each(function() {
             var indent = ($(this).parentsUntil(htmlParent).length - 1);
 
-            if(indent != -1){
+            if (indent != -1) {
                 $(this).children().not('ol').not('ul').attr('class', 'ql-indent-' + indent);
             }
 
-            if(!$(this).parent().is(htmlParent)){
+            if (!$(this).parent().is(htmlParent)) {
                 var cnt = $(this).contents();
                 $(this).replaceWith(cnt);
             }
 
         });
 
-        htmlParent.find('li').each(function(){
-            if($(this).find('li').length){
+        htmlParent.find('li').each(function() {
+            if ($(this).find('li').length) {
                 $(this).find('li').insertAfter($(this));
             }
         });
 
-        htmlParent.find('p').each(function(){
-            if($(this).parent().is('li')){
+        htmlParent.find('p').each(function() {
+            if ($(this).parent().is('li')) {
                 var cnt = $(this).contents();
                 $(this).replaceWith(cnt);
             }
@@ -673,9 +679,9 @@ $(document).ready(function() {
     }
 
     function strip(name) {
-        if(name.indexOf('.') == -1){
+        if (name.indexOf('.') == -1) {
             return name;
-        } else{
+        } else {
             return name.substr(0, name.lastIndexOf('.'));
         }
     }
@@ -979,7 +985,7 @@ $(document).ready(function() {
     //this excludes save warning dialogues and such
     function openModal(element, callback) {
 
-        if (element == $documentContainer){
+        if (element == $documentContainer) {
             calcDocSize();
         }
 
@@ -1006,7 +1012,7 @@ $(document).ready(function() {
         }
     }
 
-    function closeBg(){
+    function closeBg() {
         $bg.filter(':not(:animated)').animate({
             opacity: '0'
         }, 200, beizer, function() {
@@ -1025,7 +1031,9 @@ $(document).ready(function() {
         }, 200, beizer, function() {
             $(this).hide();
         });
-        if ($modal.filter(function(){ return $(this).is(':visible'); }).length == 1) {
+        if ($modal.filter(function() {
+                return $(this).is(':visible');
+            }).length == 1) {
             closeBg();
         } else {
             //do nothing
@@ -1051,19 +1059,21 @@ $(document).ready(function() {
         var extension = getExtension(doc.name);
         var content,
             blob;
-        switch (extension){
+        var index = documents.indexOf(doc);
+        var html = $('.document-' + index).find('.ql-editor').html();
+        switch (extension) {
             case 'html':
             case 'htm':
             case 'wtr':
-                content = qlEditor().html();
+                content = html;
                 blob = new Blob([content]);
                 break;
             case 'md':
-                content = toMarkdown(qlEditor().html());
+                content = toMarkdown(html);
                 blob = new Blob([content]);
                 break;
             case 'docx':
-                content = '<!DOCTYPE HTML><html><head></head><body>' + qlEditor().html() + '</body></html>';
+                content = '<!DOCTYPE HTML><html><head></head><body>' + html + '</body></html>';
                 blob = htmlDocx.asBlob(content);
                 break;
             case 'txt':
@@ -1076,7 +1086,7 @@ $(document).ready(function() {
         return Math.floor(blob.size / 1000);
     }
 
-    function calcDocSize(){
+    function calcDocSize() {
         $documentList.children().each(function() {
             var doc = getDoc($(this).index());
             var size = calcSize(doc);
@@ -1254,6 +1264,10 @@ $(document).ready(function() {
         copy.remove();
     });
 
+    $file.click(function(){
+        openModal($fileContainer);
+    });
+
     //feedback
     $feedback.click(function() {
         openModal($feedBackContainer, function() {
@@ -1361,16 +1375,16 @@ $(document).ready(function() {
     //cause a delay
     var animTimer;
 
-    function removeAnim(){
+    function removeAnim() {
         $('.ql-editor').css('transition', 'none');
         $('.ql-editor *').css('transition', 'none');
         clearTimeout(animTimer);
-        animTimer = setTimeout(function(){
-                        addAnim();
-                    }, 200);
+        animTimer = setTimeout(function() {
+            addAnim();
+        }, 200);
     }
 
-    function addAnim(){
+    function addAnim() {
         $('.ql-editor').css('transition', 'all .2s ease');
         $('.ql-editor *').css('transition', 'all .2s ease');
     }
@@ -1722,7 +1736,7 @@ $(document).ready(function() {
     });
 
     //override img clicks
-    $(document).on('click', '.ql-editor img', function(e){
+    $(document).on('click', '.ql-editor img', function(e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
     });
@@ -1751,8 +1765,61 @@ $(document).ready(function() {
         });
     }
 
+    function getImage(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+            var reader = new FileReader();
+            reader.onloadend = function() {
+                callback(reader.result);
+            }
+            reader.readAsDataURL(xhr.response);
+        };
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.send();
+    }
+
+    function idealTextColor(bgColor) {
+
+        var nThreshold = 105;
+        var components = bgColor;
+        var bgDelta = (components.r * 0.299) + (components.g * 0.587) + (components.b * 0.114);
+
+        return ((255 - bgDelta) < nThreshold) ? "#000000" : "#ffffff";
+    }
+
     //load data
     function loadData() {
+        chrome.identity.getAuthToken({
+            'interactive': true
+        }, function(token) {
+            $.get('https://www.googleapis.com/plus/v1/people/me?access_token=' + token, function(profile) {
+                console.log(profile);
+                var coverURL = profile.cover.coverPhoto.url;
+                var imageURL = profile.image.url;
+                var name = profile.displayName;
+                getImage(imageURL, function(data) {
+                    $('.user-image').css('background-image', 'url(' + data + ')');
+                    var img = document.createElement('img');
+                    img.setAttribute('src', data)
+                    img.addEventListener('load', function() {
+                        var vibrant = new Vibrant(img);
+                        var color = vibrant.DarkMutedSwatch.rgb;
+                        var realColor = color.join(',');
+                        var ideal = idealTextColor(color);
+                        $('.user-info').css('color', ideal);
+                    });
+                });
+                getImage(coverURL, function(data) {
+                    $('.user-profile').css('background-image', 'url(' + data + ')');
+                });
+
+                $('.user-name').text(name);
+            });
+            chrome.identity.getProfileUserInfo(function(info) {
+                $('.user-email').text(info.email);
+            })
+        });
         chrome.storage.local.get({
             settings: 'settings',
             data: 'documents'
@@ -1796,10 +1863,6 @@ $(document).ready(function() {
             }
         });
     }
-
-    $(window).mouseout(function() {
-        saveData();
-    });
 
     document.addEventListener('scroll', function(event) {
         var doc = getDoc(documentAct().index());
@@ -1916,14 +1979,14 @@ $(document).ready(function() {
         }
 
         //delete
-        if (DELETE){
-            if($documentContainer.is(':visible')){
+        if (DELETE) {
+            if ($documentContainer.is(':visible')) {
                 $('.doc-active').find('.delete-confirm').click();
-            }else{
+            } else {
                 var doc = getDoc(documentAct().index());
-                if(doc.changed){
+                if (doc.changed) {
                     openModal($documentContainer, $('.doc-active').find('.document-delete').click());
-                }else{
+                } else {
                     $('.doc-active').find('.document-delete').click();
                 }
             }

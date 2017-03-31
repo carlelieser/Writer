@@ -1,9 +1,9 @@
 
 .modal{
-    background-color: #1d1d1d !important;
+    background-color: #272727 !important;
 }
 
-.sidebar-option, .settings-title, .settings-title-second, .option > div, .material-icons, .active{
+.sidebar-option, .file-option, .settings-title, .settings-title-second, .option > div, .material-icons, .active{
     color: rgba(255, 255, 255, 0.8) !important;
     opacity: 1 !important;
 }
