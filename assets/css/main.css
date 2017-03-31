@@ -397,7 +397,7 @@
     text-align: center;
     line-height: 60px;
     color:#000;
-    opacity: 0.54;
+    opacity: 0.7;
 }
 
 .sidebar-option:hover {
@@ -490,6 +490,29 @@
 .ql-align {
     width: 26px !important;
     padding-top: 1px;
+}
+
+.ql-editor p > *:not(strong),
+.ql-editor pre > *,
+.ql-editor blockquote > *,
+.ql-editor h1 > *,
+.ql-editor h2 > *,
+.ql-editor h3 > *,
+.ql-editor h4 > *,
+.ql-editor h5 > *,
+.ql-editor h6 > *,
+.ql-editor strong > *,
+.ql-editor em > *,
+.ql-editor u > *{
+    opacity: 1 !important;
+}
+
+.ql-editor p{
+    display: block;
+    -webkit-margin-top: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
 }
 
 .snackbar {

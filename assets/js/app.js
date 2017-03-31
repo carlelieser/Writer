@@ -305,6 +305,8 @@ $(document).ready(function() {
     }
 
     Doc.prototype.createEditor = function(element) {
+        //adding Medium shortcuts
+        //as well as our own
         var bindings = {
             alignLeft: {
                 key: 'W',
@@ -334,6 +336,54 @@ $(document).ready(function() {
                         this.quill.formatLine(range, 'align', 'right', true);
                     } else {
                         this.quill.formatLine(range, 'align', false);
+                    }
+                }
+            },
+            makeHeadingOne: {
+                key: '1',
+                shortKey: true,
+                altKey: true,
+                handler: function(range, context){
+                    if(context.format.header == 1){
+                        this.quill.formatLine(range, 'header', false);
+                    }else{
+                        this.quill.formatLine(range, 'header', 1, true);
+                    }
+                }
+            },
+            makeHeadingTwo: {
+                key: '2',
+                shortKey: true,
+                altKey: true,
+                handler: function(range, context){
+                    if(context.format.header == 2){
+                        this.quill.formatLine(range, 'header', false);
+                    }else{
+                        this.quill.formatLine(range, 'header', 2, true);
+                    }
+                }
+            },
+            makeQuote: {
+                key: '5',
+                shortKey: true,
+                altKey: true,
+                handler: function(range, context){
+                    if(context.format.blockquote){
+                        this.quill.formatLine(range, 'blockquote', false);
+                    }else{
+                        this.quill.formatLine(range, 'blockquote', true);
+                    }
+                }
+            },
+            makeCode: {
+                key: '6',
+                shortKey: true,
+                altKey: true,
+                handler: function(range, context){
+                    if(context.format['code-block'] == true){
+                        this.quill.formatLine(range, 'code-block', false);
+                    }else{
+                        this.quill.formatLine(range, 'code-block', true);
                     }
                 }
             }
@@ -373,7 +423,7 @@ $(document).ready(function() {
         this.editorDOM = $(element).children().first(); //should be ql-editor
 
         var editorDOM = this.editorDOM;
-        
+
         //apply defaults
         applyAll();
 
@@ -396,14 +446,15 @@ $(document).ready(function() {
                 }
                 _DOC.setContents(contents);
             }, 600);
-
+            doc.changed = true;
             if (settings.statistics == true) {
                 calcStats(editorDOM.text());
             }
         });
-        
+
         if ($(element).hasClass('document-active')) {
-            this.editor.focus();
+            removeAnim();
+            editorDOM.children().first().focus();
         }
 
     }
@@ -525,55 +576,71 @@ $(document).ready(function() {
     function isHTML(string) {
         return /<[\s\S]*>/i.test(string);
     }
-	
+
     //extend string prototype
     String.prototype.replaceAll = function(search, replacement) {
         var target = this;
         return target.replace(new RegExp(search, 'g'), replacement);
     };
-    
+
     function isEmpty(element){
       return !$.trim(element.html())
   	}
-    
+
     function cleanDoc(string){
         return string.replaceAll(' 0.6;"=""', '')
               .replaceAll(' 1;"=""', '')
               .replaceAll('=3D', '=')
+              .replaceAll('="3D', '="')
               .replaceAll('class="3D&quot;', 'class="')
               .replaceAll('&quot;', '')
     }
+
     //convert nested lists
     function cleanHTML(html) {
         var htmlParent = $(document.createElement('div'));
         htmlParent.addClass('htmlParent');
         htmlParent.html(html);
-        
+
         //correct empty tags
         htmlParent.find('*').each(function(){
             if(isEmpty($(this))){
                 $(this).html('<br/>');
             }
         });
-        
-        htmlParent.find('ol, ul').each(function(index) {
-            var nested = ($(this).parentsUntil(htmlParent).length);
-            
-            while ($(this).parent().attr('class') != 'htmlParent') {
-                $(this).children().attr('class', 'ql-indent-' + nested);
+
+
+        htmlParent.find('ol, ul').each(function() {
+            var indent = ($(this).parentsUntil(htmlParent).length - 1);
+
+            if(indent != -1){
+                $(this).children().not('ol').not('ul').attr('class', 'ql-indent-' + indent);
             }
-            
-            //move children out of parent
-            //and delete parent
-            var cnt = $(this).contents();
-            $(this).replaceWith(cnt);
+
+            if(!$(this).parent().is(htmlParent)){
+                var cnt = $(this).contents();
+                $(this).replaceWith(cnt);
+            }
+
         });
-        
-        htmlParent.find('li').wrapAll('<ol/>');
-        
+
+        htmlParent.find('li').each(function(){
+            if($(this).find('li').length){
+                $(this).find('li').insertAfter($(this));
+            }
+        });
+
+        htmlParent.find('p').each(function(){
+            if($(this).parent().is('li')){
+                var cnt = $(this).contents();
+                $(this).replaceWith(cnt);
+            }
+        });
+
+        //remove tables
+        htmlParent.find('table').remove();
+
         var cleaned = cleanDoc(htmlParent.html());
-        console.log(cleaned);
-        
         return cleaned;
     }
 
@@ -606,7 +673,11 @@ $(document).ready(function() {
     }
 
     function strip(name) {
-        return name.slice(0, name.lastIndexOf('.'));
+        if(name.indexOf('.') == -1){
+            return name;
+        } else{
+            return name.substr(0, name.lastIndexOf('.'));
+        }
     }
 
     Doc.prototype.save = function() {
@@ -628,6 +699,7 @@ $(document).ready(function() {
         //handle events
         if (documents.length === 0) {
             newDoc('untitled', '', '0 KB', false, true);
+            closeModals();
         } else {
             //last
             if (index - 1 == documents.length - 1) {
@@ -681,6 +753,7 @@ $(document).ready(function() {
                         }
                     };
                     fileWriter.write(blob);
+                    doc.changed = false;
                     doc.loadFile(writableFileEntry.name, blob.size, writableFileEntry);
                     openSnackBar(false, false, writableFileEntry.name);
                 });
@@ -766,7 +839,7 @@ $(document).ready(function() {
     //by greying out all other paragraphs
     function selectThis(element) {
         if (element.get(0).nodeName.toLowerCase() == 'li') {
-            qlEditor().children().css('opacity', '0.6');
+            qlEditor().find('*').css('opacity', '0.6');
             element.parent().css('opacity', '1');
             element.parent().children().css('opacity', '0.6');
             element.css('opacity', '1');
@@ -905,6 +978,11 @@ $(document).ready(function() {
     //like settings, documents, .etc
     //this excludes save warning dialogues and such
     function openModal(element, callback) {
+
+        if (element == $documentContainer){
+            calcDocSize();
+        }
+
         //blur ql-editor
         qlEditor().blur();
         window.getSelection().removeAllRanges();
@@ -928,6 +1006,17 @@ $(document).ready(function() {
         }
     }
 
+    function closeBg(){
+        $bg.filter(':not(:animated)').animate({
+            opacity: '0'
+        }, 200, beizer, function() {
+            $(this).hide();
+            focusEditor(documentAct().index());
+            focusOnElem();
+            var editorScrollTop = getDoc(documentAct().index()).scrollTop;
+            documentAct().children().first().scrollTop(editorScrollTop);
+        });
+    }
     //left property should simply be the
     //negative of the width of the element
     function closeModal(element) {
@@ -936,23 +1025,17 @@ $(document).ready(function() {
         }, 200, beizer, function() {
             $(this).hide();
         });
-        if ($bg.is(':visible') && element.hasClass('sidebar')) {
-            $bg.filter(':not(:animated)').animate({
-                opacity: '0'
-            }, 200, beizer, function() {
-                $(this).hide();
-                focusEditor(documentAct().index());
-                focusOnElem();
-                var editorScrollTop = getDoc(documentAct().index()).scrollTop;
-                documentAct().children().first().scrollTop(editorScrollTop);
-            });
+        if ($modal.filter(function(){ return $(this).is(':visible'); }).length == 1) {
+            closeBg();
         } else {
-            //dont hide bg
+            //do nothing
         }
+
     }
 
     function closeModals() {
         closeModal($modal);
+        closeBg();
     }
 
     var elemToFocus;
@@ -965,24 +1048,46 @@ $(document).ready(function() {
     //convert html to blob
     //and retrieve size from blob (approximately) in KB
     function calcSize(doc) {
-        var contents = doc.editorDOM.html();
-        var blob = new Blob([contents]);
+        var extension = getExtension(doc.name);
+        var content,
+            blob;
+        switch (extension){
+            case 'html':
+            case 'htm':
+            case 'wtr':
+                content = qlEditor().html();
+                blob = new Blob([content]);
+                break;
+            case 'md':
+                content = toMarkdown(qlEditor().html());
+                blob = new Blob([content]);
+                break;
+            case 'docx':
+                content = '<!DOCTYPE HTML><html><head></head><body>' + qlEditor().html() + '</body></html>';
+                blob = htmlDocx.asBlob(content);
+                break;
+            case 'txt':
+            default:
+                content = doc.editor.getText();
+                blob = new Blob([content]);
+                break;
+        }
 
         return Math.floor(blob.size / 1000);
     }
 
+    function calcDocSize(){
+        $documentList.children().each(function() {
+            var doc = getDoc($(this).index());
+            var size = calcSize(doc);
+            doc.setSize(size + ' KB');
+            setDocumentSize($(this), size + ' KB');
+        });
+    }
+
     //open documents
     $docButton.click(function() {
-        openModal($documentContainer, function() {
-            //calculate and set size for
-            //each document
-            $documentList.children().each(function() {
-                var doc = getDoc($(this).index());
-                var size = calcSize(doc);
-                doc.setSize(size + ' KB');
-                setDocumentSize($(this), size + ' KB');
-            });
-        });
+        openModal($documentContainer);
     });
 
     //open settings
@@ -1250,12 +1355,12 @@ $(document).ready(function() {
 
     //night mode
     //load stylesheet
-    
+
     //removes animations prior to adding stylesheet
     //then immediately adds them back so as to not
     //cause a delay
     var animTimer;
-    
+
     function removeAnim(){
         $('.ql-editor').css('transition', 'none');
         $('.ql-editor *').css('transition', 'none');
@@ -1264,12 +1369,12 @@ $(document).ready(function() {
                         addAnim();
                     }, 200);
     }
-    
+
     function addAnim(){
         $('.ql-editor').css('transition', 'all .2s ease');
         $('.ql-editor *').css('transition', 'all .2s ease');
     }
-    
+
     function loadStyles(name) {
         var string = '<link type="text/css" rel="stylesheet" href="assets/settings/themes/' + name + '"/>';
         if ($('link[href="' + name + '"]').length < 1) {
@@ -1595,11 +1700,12 @@ $(document).ready(function() {
 
         var index = $(this).parent().index();
         var doc = getDoc(index);
-        if (doc.editorDOM.text().length === 0) {
-            deleteDoc(doc);
-        } else {
+        if (doc.changed) {
             openDelete($(this).parent());
+        } else {
+            deleteDoc(doc);
         }
+
     });
 
     $(document).on('click', '.delete-confirm', function(e) {
@@ -1613,6 +1719,12 @@ $(document).ready(function() {
         e.stopPropagation();
         var parent = $(this).parent().parent();
         closeDelete(parent);
+    });
+
+    //override img clicks
+    $(document).on('click', '.ql-editor img', function(e){
+        e.stopPropagation();
+        e.stopImmediatePropagation();
     });
 
     function loadScreen() {
@@ -1742,8 +1854,9 @@ $(document).ready(function() {
             FULLSCREEN = getKey(e, 122),
             NIGHTMODE = CTRL_KEY && SHIFT_KEY && getKey(e, 78),
             FOCUS = CTRL_KEY && SHIFT_KEY && getKey(e, 70),
-            STATISTICS = CTRL_KEY && ALT_KEY && !SHIFT_KEY && getKey(e, 83);
-        CLOSE = getKey(e, 27);
+            STATISTICS = CTRL_KEY && ALT_KEY && !SHIFT_KEY && getKey(e, 83),
+            DELETE = CTRL_KEY && ALT_KEY && getKey(e, 81),
+            CLOSE = getKey(e, 27);
 
         //new
         if (NEW) {
@@ -1800,6 +1913,20 @@ $(document).ready(function() {
         if (CLOSE) {
             e.preventDefault();
             window.close();
+        }
+
+        //delete
+        if (DELETE){
+            if($documentContainer.is(':visible')){
+                $('.doc-active').find('.delete-confirm').click();
+            }else{
+                var doc = getDoc(documentAct().index());
+                if(doc.changed){
+                    openModal($documentContainer, $('.doc-active').find('.document-delete').click());
+                }else{
+                    $('.doc-active').find('.document-delete').click();
+                }
+            }
         }
 
     });

@@ -40,7 +40,6 @@
   white-space: pre-wrap;
   word-wrap: break-word;
 }
-.ql-editor p,
 .ql-editor ol,
 .ql-editor ul,
 .ql-editor pre,
@@ -88,6 +87,7 @@
   text-align: right;
   white-space: nowrap;
   width: 1.2em;
+  line-height: normal;
 }
 .ql-editor li:not(.ql-direction-rtl)::before {
   margin-left: -1.5em;
