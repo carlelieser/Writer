@@ -1,207 +1,235 @@
 <!DOCTYPE HTML>
 <html>
-    <head>
-        <link type="text/css" rel="stylesheet" href="assets/libs/quill/quill.bubble.css"/>
-        <link type="text/css" rel="stylesheet" href="assets/css/main.css"/>
-    </head>
-    <body>
 
-        <div class="top-bar"></div>
+<head>
+    <link rel="preload" as="image" href="assets/icon-128.png">
+    <link type="text/css" rel="stylesheet" href="assets/libs/quill/quill.bubble.css" />
+    <link type="text/css" rel="stylesheet" href="assets/css/main.css" />
+</head>
 
-        <div class="loading-screen">
-            <div class="load-bar">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
+<body>
+
+    <div class="navigation-container">
+        <div class="nav-buttons">
+            <div class="close-window">
+                <div class="close-window-line"></div>
+                <div class="close-window-line"></div>
+            </div>
+            <div class="maximize-window">
+                <div class="maximize-square"></div>
+            </div>
+            <div class="minimize-window">
+                <div class="minimize-line"></div>
             </div>
         </div>
+    </div>
 
-        <div class="sidebar-toggle"></div>
+    <div class="top-bar"></div>
 
-        <div class="statistics-bar">
-            <label>Words</label>
-            <div class="words">0</div>
-            <label>Chars</label>
-            <div class="chars">0</div>
+    <div class="loading-screen">
+        <div class="loading-icon"></div>
+    </div>
+
+    <div class="install-screen">
+        <div class="install-bg">
         </div>
-
-        <div class="snackbar">
-            <div class="snackbar-doc-title"></div>
-            <span></span>
-        </div>
-
-        <div class="main-container">
-        </div>
-
-        <div class="tools-container modal">
-        	<div class="modal-title-container">
-            	<div class="modal-title">Tools</div>
-                <div class="modal-close">
-                	<div class="material-icons">close</div>
-                </div>
-            </div>
-            <div class="tools-content modal-content">
+        <div class="install-content">
+            <div class="install-icon"></div>
+            <div class="install-screen-button-container">
+                <div class="signin-button install-screen-button">Sign In With <div class="google-icon"></div></div>
+                <div class="continue-button install-screen-button">Continue</div>
             </div>
         </div>
+    </div>
 
-        <div class="help-container modal">
-        	<div class="modal-title-container">
-            	<div class="modal-title">Help</div>
-                <div class="modal-close">
-                	<div class="material-icons">close</div>
-                </div>
-            </div>
-            <div class="help-content modal-content">
+    <div class="sidebar-toggle"></div>
+
+    <div class="statistics-bar">
+        <label>Words</label>
+        <div class="words">0</div>
+        <label>Chars</label>
+        <div class="chars">0</div>
+    </div>
+
+    <div class="snackbar">
+        <div class="snackbar-doc-title"></div>
+        <span></span>
+    </div>
+
+    <div class="main-container">
+    </div>
+
+    <div class="tools-container modal">
+        <div class="modal-title-container">
+            <div class="modal-title">Tools</div>
+            <div class="modal-close">
+                <div class="material-icons">close</div>
             </div>
         </div>
+        <div class="tools-content modal-content">
+        </div>
+    </div>
 
-        <div class="feedback-container modal">
-        	<div class="modal-title-container">
-            	<div class="modal-title">Feedback</div>
-                <div class="modal-close">
-                	<div class="material-icons">close</div>
-                </div>
-            </div>
-            <div class="feedback-content modal-content">
+    <div class="help-container modal">
+        <div class="modal-title-container">
+            <div class="modal-title">Help</div>
+            <div class="modal-close">
+                <div class="material-icons">close</div>
             </div>
         </div>
-
-        <div class="document-container modal">
-            <div class="modal-title-container">
-            	<div class="modal-title">Documents</div>
-                <div class="modal-close">
-                	<div class="material-icons">close</div>
-                </div>
-            </div>
-            <div class="document-list modal-content"></div>
+        <div class="help-content modal-content">
         </div>
+    </div>
 
-        <div class="file-container modal">
-            <div class="modal-title-container">
-            	<div class="modal-title">File</div>
-                <div class="modal-close">
-                	<div class="material-icons">close</div>
-                </div>
-            </div>
-            <div class="file-options modal-content">
-                <div class="file-option new">
-                    <div class="material-icons">note_add</div>
-                    <div class="option-title">New</div>
-                </div>
-                <div class="file-option open">
-                    <div class="material-icons">folder</div>
-                    <div class="option-title">Open</div>
-                </div>
-                <div class="file-option save">
-                    <div class="material-icons">save</div>
-                    <div class="option-title">Save</div>
-                </div>
-                <div class="file-option save-as">
-                    <div class="material-icons">file_download</div>
-                    <div class="option-title">Save As</div>
-                </div>
-                <div class="file-option print">
-                    <div class="material-icons">print</div>
-                    <div class="option-title">Print</div>
-                </div>
+    <div class="feedback-container modal">
+        <div class="modal-title-container">
+            <div class="modal-title">Feedback</div>
+            <div class="modal-close">
+                <div class="material-icons">close</div>
             </div>
         </div>
+        <div class="feedback-content modal-content">
+        </div>
+    </div>
 
-        <div class="settings-container modal">
-            <div class="modal-title-container">
-            	<div class="modal-title">Settings</div>
-                <div class="modal-close">
-                	<div class="material-icons">close</div>
+    <div class="document-container modal">
+        <div class="modal-title-container">
+            <div class="modal-title">Documents</div>
+            <div class="modal-close">
+                <div class="material-icons">close</div>
+            </div>
+        </div>
+        <div class="document-list modal-content"></div>
+    </div>
+
+    <div class="file-container modal">
+        <div class="modal-title-container">
+            <div class="modal-title">File</div>
+            <div class="modal-close">
+                <div class="material-icons">close</div>
+            </div>
+        </div>
+        <div class="file-options modal-content">
+            <div class="file-option new">
+                <div class="material-icons">add</div>
+                <div class="option-title">New</div>
+            </div>
+            <div class="file-option open">
+                <div class="material-icons">folder</div>
+                <div class="option-title">Open</div>
+            </div>
+            <div class="file-option save">
+                <div class="material-icons">save</div>
+                <div class="option-title">Save</div>
+            </div>
+            <div class="file-option save-as">
+                <div class="material-icons">file_download</div>
+                <div class="option-title">Save As</div>
+            </div>
+            <div class="file-option print">
+                <div class="material-icons">print</div>
+                <div class="option-title">Print</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="settings-container modal">
+        <div class="modal-title-container">
+            <div class="modal-title">Settings</div>
+            <div class="modal-close">
+                <div class="material-icons">close</div>
+            </div>
+        </div>
+        <div class="settings-list modal-content">
+            <div class="settings-option hasToggle">
+                <div class="settings-title">Coffee Mode</div>
+                <div class="toggle toggle-inactive coffee" name="coffee">
+                    <div class="toggle-circle"></div>
                 </div>
             </div>
-            <div class="settings-list modal-content">
-                <div class="settings-option hasToggle">
-                    <div class="settings-title">Coffee Mode</div>
-                    <div class="toggle toggle-inactive coffee" name="coffee">
-                        <div class="toggle-circle"></div>
-                    </div>
+            <div class="settings-option hasToggle">
+                <div class="settings-title">Fullscreen Mode</div>
+                <div class="toggle toggle-inactive full" name="full">
+                    <div class="toggle-circle"></div>
                 </div>
-                <div class="settings-option hasToggle">
-                    <div class="settings-title">Fullscreen Mode</div>
-                    <div class="toggle toggle-inactive full" name="full">
-                        <div class="toggle-circle"></div>
-                    </div>
+            </div>
+            <div class="settings-option hasToggle">
+                <div class="settings-title">Night Mode</div>
+                <div class="toggle toggle-inactive night" name="night">
+                    <div class="toggle-circle"></div>
                 </div>
-                <div class="settings-option hasToggle">
-                    <div class="settings-title">Night Mode</div>
-                    <div class="toggle toggle-inactive night" name="night">
-                        <div class="toggle-circle"></div>
-                    </div>
+            </div>
+            <div class="settings-option hasToggle">
+                <div class="settings-title">Statistics</div>
+                <div class="toggle toggle-inactive statistics" name="statistics">
+                    <div class="toggle-circle"></div>
                 </div>
-                <div class="settings-option hasToggle">
-                    <div class="settings-title">Statistics</div>
-                    <div class="toggle toggle-inactive statistics" name="statistics">
-                        <div class="toggle-circle"></div>
-                    </div>
+            </div>
+            <div class="settings-option hasToggle">
+                <div class="settings-title">Focus</div>
+                <div class="toggle toggle-inactive focus" name="focus">
+                    <div class="toggle-circle"></div>
                 </div>
-                <div class="settings-option hasToggle">
-                    <div class="settings-title">Focus</div>
-                    <div class="toggle toggle-inactive focus" name="focus">
-                        <div class="toggle-circle"></div>
-                    </div>
+            </div>
+            <div class="settings-option noToggle">
+                <div class="settings-title-second">Theme</div>
+                <div class="settings-description">Choose a theme.</div>
+                <div class="option theme-options">
+                    <div class="theme-option default-theme active">Default</div>
+                    <div class="theme-option dark-theme">Dark</div>
+                    <div class="theme-option turquoise-theme">Turquoise</div>
                 </div>
-                <div class="settings-option noToggle">
-                    <div class="settings-title-second">Margin</div>
-                    <div class="settings-description">Choose the default margin size.</div>
-                    <div class="option margin-options">
-                        <div class="small-margin">Small</div>
-                        <div class="medium-margin active">Medium</div>
-                        <div class="larg-margin">Large</div>
-                    </div>
+            </div>
+            <div class="settings-option noToggle">
+                <div class="settings-title-second">Font</div>
+                <div class="settings-description">Choose the default font.</div>
+                <div class="option font-options">
+                    <div class="font-option charter active">Charter</div>
+                    <div class="font-option courier">Courier</div>
+                    <div class="font-option georgia">Georgia</div>
+                    <div class="font-option monospace">Monospace</div>
+                    <div class="font-option roboto">Roboto</div>
+                    <div class="font-option times-new">Times New Roman</div>
                 </div>
-                <div class="settings-option noToggle">
-                    <div class="settings-title-second">Theme</div>
-                    <div class="settings-description">Choose a theme.</div>
-                    <div class="option theme-options">
-                        <div class="theme-option default-theme active">Default</div>
-                        <div class="theme-option dark-theme">Dark</div>
-                        <div class="theme-option turquoise-theme">Turquoise</div>
-                    </div>
+            </div>
+            <div class="settings-option noToggle">
+                <div class="settings-title-second">Font Size</div>
+                <div class="settings-description">Choose the default font size.</div>
+                <div class="option font-size-options">
+                    <div class="font-size-option">12px</div>
+                    <div class="font-size-option">14px</div>
+                    <div class="font-size-option">16px</div>
+                    <div class="font-size-option active">18px</div>
+                    <div class="font-size-option">24px</div>
+                    <div class="font-size-option">30px</div>
                 </div>
-                <div class="settings-option noToggle">
-                    <div class="settings-title-second">Font</div>
-                    <div class="settings-description">Choose the default font.</div>
-                    <div class="option font-options">
-                        <div class="font-option charter active">Charter</div>
-                        <div class="font-option courier">Courier</div>
-                        <div class="font-option georgia">Georgia</div>
-                        <div class="font-option monospace">Monospace</div>
-                        <div class="font-option roboto">Roboto</div>
-                        <div class="font-option times-new">Times New Roman</div>
-                    </div>
+            </div>
+            <div class="settings-option noToggle">
+                <div class="settings-title-second">Line Height</div>
+                <div class="settings-description">Choose the default line height.</div>
+                <div class="option line-options">
+                    <div class="line-option">Single</div>
+                    <div class="line-option">1.15</div>
+                    <div class="line-option">1.5</div>
+                    <div class="line-option active">Double</div>
                 </div>
-                <div class="settings-option noToggle">
-                    <div class="settings-title-second">Font Size</div>
-                    <div class="settings-description">Choose the default font size.</div>
-                    <div class="option font-size-options">
-                        <div class="font-size-option">12px</div>
-                        <div class="font-size-option">14px</div>
-                        <div class="font-size-option">16px</div>
-                        <div class="font-size-option active">18px</div>
-                        <div class="font-size-option">24px</div>
-                        <div class="font-size-option">30px</div>
-                    </div>
-                </div>
-                <div class="settings-option noToggle">
-                    <div class="settings-title-second">Line Height</div>
-                    <div class="settings-description">Choose the default line height.</div>
-                    <div class="option line-options">
-                        <div class="line-option">Single</div>
-                        <div class="line-option">1.15</div>
-                        <div class="line-option">1.5</div>
-                        <div class="line-option active">Double</div>
-                    </div>
+            </div>
+            <div class="settings-option noToggle">
+                <div class="settings-title-second">Margin</div>
+                <div class="settings-description">Choose the default margin size.</div>
+                <div class="option margin-options">
+                    <div class="small-margin">Small</div>
+                    <div class="medium-margin active">Medium</div>
+                    <div class="larg-margin">Large</div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="sidebar modal">
-            <div class="user-profile">
+    <div class="sidebar modal">
+        <div class="user-profile">
+            <div class="user-profile-bg"></div>
+            <div class="user-profile-body">
                 <div class="user-image-container">
                     <div class="user-image"></div>
                 </div>
@@ -210,47 +238,45 @@
                     <div class="user-email"></div>
                 </div>
             </div>
-            <div class="sidebar-option open-file">
-                <div class="material-icons">insert_drive_file</div>
-                <div class="option-title">File</div>
-            </div>
-            <div class="sidebar-option open-edit">
-                <div class="material-icons">edit</div>
-                <div class="option-title">Edit</div>
-            </div>
-            <div class="sidebar-option open-tools">
-                <div class="material-icons">build</div>
-                <div class="option-title">Tools</div>
-            </div>
-            <div class="sidebar-option open-documents">
-                <div class="material-icons">library_books</div>
-                <div class="option-title">Documents</div>
-            </div>
-            <div class="divider"></div>
-            <div class="sidebar-option open-settings">
-                <div class="material-icons">settings</div>
-                <div class="option-title">Settings</div>
-            </div>
-            <div class="sidebar-option open-feedback">
-                <div class="material-icons">feedback</div>
-                <div class="option-title">Send Feedback</div>
-            </div>
-            <div class="sidebar-option open-help">
-                <div class="material-icons">help</div>
-                <div class="option-title">Help</div>
-            </div>
         </div>
+        <div class="sidebar-option open-file">
+            <div class="material-icons">insert_drive_file</div>
+            <div class="option-title">File</div>
+        </div>
+        <div class="sidebar-option open-tools">
+            <div class="material-icons">build</div>
+            <div class="option-title">Tools</div>
+        </div>
+        <div class="sidebar-option open-documents">
+            <div class="material-icons">library_books</div>
+            <div class="option-title">Documents</div>
+        </div>
+        <div class="divider"></div>
+        <div class="sidebar-option open-settings">
+            <div class="material-icons">settings</div>
+            <div class="option-title">Settings</div>
+        </div>
+        <div class="sidebar-option open-feedback">
+            <div class="material-icons">feedback</div>
+            <div class="option-title">Send Feedback</div>
+        </div>
+        <div class="sidebar-option open-help">
+            <div class="material-icons">help</div>
+            <div class="option-title">Help</div>
+        </div>
+    </div>
 
-        <div class="bg"></div>
+    <div class="bg"></div>
 
-        <script type="text/javascript" src="assets/libs/jquery.min.js"></script>
-        <script type="text/javascript" src="assets/libs/to-markdown.js"></script>
-        <script type="text/javascript" src="assets/libs/marked.js"></script>
-        <script type="text/javascript" src="assets/libs/html-docx.js"></script>
-        <script type="text/javascript" src="assets/libs/mammoth.browser.js"></script>
-        <script type="text/javascript" src="assets/libs/jquery.bez.min.js"></script>
-        <script type="text/javascript" src="assets/libs/quill/quill.min.js"></script>
-        <script type="text/javascript" src="assets/libs/vibrant.min.js"></script>
-        <script type="text/javascript" src="assets/js/app.js"></script>
-    </body>
+    <script type="text/javascript" src="assets/libs/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/libs/to-markdown.js"></script>
+    <script type="text/javascript" src="assets/libs/marked.js"></script>
+    <script type="text/javascript" src="assets/libs/html-docx.js"></script>
+    <script type="text/javascript" src="assets/libs/mammoth.browser.js"></script>
+    <script type="text/javascript" src="assets/libs/jquery.bez.min.js"></script>
+    <script type="text/javascript" src="assets/libs/quill/quill.min.js"></script>
+    <script type="text/javascript" src="assets/libs/vibrant.min.js"></script>
+    <script type="text/javascript" src="assets/js/app.js"></script>
+</body>
+
 </html>

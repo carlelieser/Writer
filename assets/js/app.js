@@ -7,6 +7,7 @@ $(document).ready(function() {
     //define global variables
     var $documentList = $('.document-list'),
         $mainContainer = $('.main-container'),
+        $navBar = $('.navigation-container'),
         $sideBar = $('.sidebar'),
         $sideToggle = $('.sidebar-toggle'),
         $settings = $('.settings-container'),
@@ -15,7 +16,8 @@ $(document).ready(function() {
 
     //loading screen
     var $loadingScreen = $('.loading-screen');
-
+    //install screen
+    var $installScreen = $('.install-screen');
     //setting toggles
     var $toggle = $('.toggle');
 
@@ -390,8 +392,8 @@ $(document).ready(function() {
                     }
                 }
             }
-
         }
+        
         this.editor = new Quill(element, {
             modules: {
                 keyboard: {
@@ -659,6 +661,8 @@ $(document).ready(function() {
         } else {
             this.editor.setText(content);
         }
+
+        this.editor.history.clear();
     }
 
     Doc.prototype.load = function(name, content, size, savedFileEntry) {
@@ -762,6 +766,7 @@ $(document).ready(function() {
                     doc.changed = false;
                     doc.loadFile(writableFileEntry.name, blob.size, writableFileEntry);
                     openSnackBar(false, false, writableFileEntry.name);
+                    saveData();
                 });
             });
         }
@@ -833,12 +838,21 @@ $(document).ready(function() {
         } else {
             editorScroll(false);
         }
+        closeNavBar();
         focusOnElem();
     })
 
     $(document).on('click select', '.ql-editor', function() {
         editorScroll();
         focusOnElem();
+    });
+
+    $('.top-bar').mouseenter(function() {
+        openNavBar();
+    });
+
+    $(document).on('mouseenter', '.ql-editor', function() {
+        closeNavBar();
     });
 
     //focus on paragraphs
@@ -1050,6 +1064,7 @@ $(document).ready(function() {
     //open sidebar
     $sideToggle.click(function() {
         elemToFocus = $(getSelectionContainerElement());
+        openNavBar();
         openModal($sideBar);
     });
 
@@ -1264,7 +1279,7 @@ $(document).ready(function() {
         copy.remove();
     });
 
-    $file.click(function(){
+    $file.click(function() {
         openModal($fileContainer);
     });
 
@@ -1750,10 +1765,10 @@ $(document).ready(function() {
             }
             $loadingScreen.stop().animate({
                 top: '-100%'
-            }, 600, function() {
+            }, 800, beizer, function() {
                 $(this).remove();
             });
-        }, 500);
+        }, 1000);
     }
 
     //remember user data using the Chrome API
@@ -1788,81 +1803,129 @@ $(document).ready(function() {
         return ((255 - bgDelta) < nThreshold) ? "#000000" : "#ffffff";
     }
 
-    //load data
-    function loadData() {
+
+    function getToken(callback) {
         chrome.identity.getAuthToken({
             'interactive': true
         }, function(token) {
-            $.get('https://www.googleapis.com/plus/v1/people/me?access_token=' + token, function(profile) {
-                console.log(profile);
-                var coverURL = profile.cover.coverPhoto.url;
-                var imageURL = profile.image.url;
-                var name = profile.displayName;
-                getImage(imageURL, function(data) {
-                    $('.user-image').css('background-image', 'url(' + data + ')');
-                    var img = document.createElement('img');
-                    img.setAttribute('src', data)
-                    img.addEventListener('load', function() {
-                        var vibrant = new Vibrant(img);
-                        var color = vibrant.DarkMutedSwatch.rgb;
-                        var realColor = color.join(',');
-                        var ideal = idealTextColor(color);
-                        $('.user-info').css('color', ideal);
-                    });
-                });
-                getImage(coverURL, function(data) {
-                    $('.user-profile').css('background-image', 'url(' + data + ')');
-                });
-
-                $('.user-name').text(name);
-            });
-            chrome.identity.getProfileUserInfo(function(info) {
-                $('.user-email').text(info.email);
-            })
-        });
-        chrome.storage.local.get({
-            settings: 'settings',
-            data: 'documents'
-        }, function(item) {
-            var settings = item.settings,
-                data = item.data;
-
-            console.log(item);
-
-            if (settings == 'settings' || data == 'documents') {
-                newDoc('untitled', '', '0 KB', false, true);
-                loadSettings(defaults);
+            current_token = token;
+            if (chrome.runtime.lastError) {
                 loadScreen();
+                $installScreen.show();
+                chrome.storage.local.set({
+                    installed: false
+                });
             } else {
-                var counter = 0;
-                if (data.length === 0) {
-                    newDoc('untitled', '', '0 KB', false, true);
-                    loadSettings(settings);
-                    loadScreen();
-                } else {
-                    data.forEach(function(value, index, array) {
-                        var thisData = data[index];
-                        var name = thisData.name;
-                        var content = thisData.contents;
-                        var size = thisData.size;
-                        var savedFileEntry = thisData.savedFileEntry;
-                        var active = thisData.isActive;
-                        newDoc(name, content, size, savedFileEntry, active);
+                $.get('https://www.googleapis.com/plus/v1/people/me?access_token=' + token, function(profile) {
+                    console.log(profile);
+                    var coverURL = profile.cover.coverPhoto.url;
+                    var imageURL = profile.image.url;
+                    var name = profile.displayName;
+                    getImage(imageURL, function(data) {
+                        $('.user-image').css('background-image', 'url(' + data + ')');
+                        var img = document.createElement('img');
+                        img.setAttribute('src', data)
+                        img.addEventListener('load', function() {
+                            var vibrant = new Vibrant(img);
+                            var color = vibrant.DarkMutedSwatch.rgb;
+                            var realColor = color.join(',');
+                            var ideal = idealTextColor(color);
+                            $('.user-info').css('color', ideal);
 
-                        //manually focus on first elem
-                        documentAct().children().first().children().css('opacity', '0.6');
-                        documentAct().children().first().children().first().css('opacity', '1');
+                            chrome.storage.local.set({
+                                installed: true
+                            });
 
-                        counter++;
-                        if (counter === array.length) {
-                            loadSettings(settings);
-                            loadScreen();
-                        }
+                            if (callback) {
+                                $installScreen.stop().animate({
+                                    top: '-100%'
+                                }, 800, beizer, function() {
+                                    $(this).remove();
+                                });
+                                callback();
+                            }
+
+                        });
                     });
-                }
+                    getImage(coverURL, function(data) {
+                        $('.user-profile').css('background-image', 'url(' + data + ')');
+                    });
+
+                    $('.user-name').text(name);
+                    chrome.identity.getProfileUserInfo(function(info) {
+                        $('.user-email').text(info.email);
+                    })
+                }).fail(function() {
+                    chrome.identity.removeCachedAuthToken({
+                        token: current_token
+                    }, function() {});
+                });
             }
         });
     }
+    //load data
+    var current_token;
+
+    function loadData(callback) {
+        chrome.storage.local.get({
+            installed: 'installed '
+        }, function(ist) {
+            var installed = ist.installed;
+            if (installed == 'installed' || installed === false) {
+                loadScreen();
+                $installScreen.show();
+            } else {
+                getToken(callback);
+            }
+        });
+    }
+
+    $('.signin-button').click(function() {
+        getToken(realLoad);
+    });
+
+    $('.continue-button').click(function() {
+        $installScreen.stop().animate({
+            top: '-100%'
+        }, 400, beizer, function() {
+            $(this).remove();
+            focusEditor(0);
+        });
+
+        chrome.storage.local.set({
+            installed: true
+        });
+    });
+
+    //open navigation bar
+    function openNavBar() {
+        clearTimeout(navTimeout);
+        $navBar.stop().animate({
+            top: '0'
+        }, 400, beizer);
+        $mainContainer.css('margin-top', '30px');
+        $mainContainer.css('height', 'calc(100% - 30px)');
+        $modal.css('margin-top', '30px');
+        $modal.css('height', 'calc(100% - 30px)');
+    }
+
+    //close navigation bar
+    var navTimeout;
+
+    function closeNavBar() {
+        clearTimeout(navTimeout);
+        navTimeout = setTimeout(function() {
+            $navBar.stop().animate({
+                top: '-30px'
+            }, 400, beizer);
+            $mainContainer.css('margin-top', '0px');
+            $mainContainer.css('height', '100%');
+            $modal.css('margin-top', '0px');
+            $modal.css('height', '100%');
+        }, 1000);
+    }
+
+    openNavBar();
 
     document.addEventListener('scroll', function(event) {
         var doc = getDoc(documentAct().index());
@@ -1910,7 +1973,7 @@ $(document).ready(function() {
             SHIFT_KEY = getShiftKey(e),
             ALT_KEY = getAltKey(e),
             NEW = CTRL_KEY && !SHIFT_KEY && getKey(e, 78),
-            OPEN = CTRL_KEY && getKey(e, 79),
+            OPEN = CTRL_KEY && !SHIFT_KEY && getKey(e, 79),
             SAVE = CTRL_KEY && !SHIFT_KEY && !ALT_KEY && getKey(e, 83),
             SAVE_AS = CTRL_KEY && SHIFT_KEY && !ALT_KEY && getKey(e, 83),
             PRINT = CTRL_KEY && getKey(e, 80),
@@ -2003,6 +2066,66 @@ $(document).ready(function() {
         }
     });
 
-    loadData();
+    function realLoad() {
+        chrome.storage.local.get({
+            settings: 'settings',
+            data: 'documents'
+        }, function(item) {
+            var settings = item.settings,
+                data = item.data;
 
+            console.log(item);
+
+            if (settings == 'settings' || data == 'documents') {
+                newDoc('untitled', '', '0 KB', false, true);
+                loadSettings(defaults);
+                loadScreen();
+            } else {
+                var counter = 0;
+                if (data.length === 0) {
+                    newDoc('untitled', '', '0 KB', false, true);
+                    loadSettings(settings);
+                    loadScreen();
+                } else {
+                    data.forEach(function(value, index, array) {
+                        var thisData = data[index];
+                        var name = thisData.name;
+                        var content = thisData.contents;
+                        var size = thisData.size;
+                        var savedFileEntry = thisData.savedFileEntry;
+                        var active = thisData.isActive;
+                        newDoc(name, content, size, savedFileEntry, active);
+
+                        //manually focus on first elem
+                        documentAct().children().first().children().css('opacity', '0.6');
+                        documentAct().children().first().children().first().css('opacity', '1');
+
+                        counter++;
+                        if (counter === array.length) {
+                            loadSettings(settings);
+                            loadScreen();
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    loadData(realLoad);
+
+    $('.close-window').click(function() {
+        chrome.app.window.current().close();
+    });
+
+    $('.maximize-window').click(function() {
+        if (chrome.app.window.current().isMaximized()) {
+            chrome.app.window.current().restore();
+        } else {
+            chrome.app.window.current().maximize();
+        }
+    });
+
+    $('.minimize-window').click(function() {
+        chrome.app.window.current().minimize();
+    });
 });

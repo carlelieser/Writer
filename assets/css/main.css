@@ -1,56 +1,143 @@
-.html, body {
+html, body {
     margin: 0;
     padding: 0;
 }
 
-.user-profile{
-    width:100%;
-    height:170px;
-    background-color: #324f58;
-    background-size:cover;
-    background-repeat:no-repeat;
-    box-shadow: inset 0px -6px 5px 0px rgba(0,0,0,0.2);
+.navigation-container {
+    width: 100%;
+    height: 30px;
+    background-color: #FFF;
+    top: 0;
+    left: 0;
+    position: absolute;
+    z-index: 99999;
+    -webkit-app-region: drag;
 }
 
-.user-profile .user-image-container{
-    width:100%;
+.navigation-container .nav-buttons {
+    float: right;
+    -webkit-app-region: no-drag;
+}
+
+.navigation-container .nav-buttons>div {
+    width: 50px;
+    height: 30px;
+    float: right;
+    transition: all .2s ease;
+}
+
+.navigation-container .nav-buttons>div:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.navigation-container .nav-buttons>div:first-child:hover {
+    background-color: #e84435;
+}
+
+.navigation-container .nav-buttons>div:hover .close-window-line {
+    background-color: #FFF;
+}
+
+.navigation-container .nav-buttons .close-window .close-window-line {
+    width: 1px;
+    height: 13px;
+    margin: 8px 24px;
+    position: absolute;
+    background-color: #000;
+}
+
+.navigation-container .nav-buttons .close-window .close-window-line:first-child {
+    transform: rotate(45deg);
+}
+
+.navigation-container .nav-buttons .close-window .close-window-line:last-child {
+    transform: rotate(-45deg);
+}
+
+.navigation-container .nav-buttons .maximize-window .maximize-square {
+    width: 8px;
+    height: 8px;
+    border: 1px solid #000;
+    margin: 10px auto;
+}
+
+.navigation-container .nav-buttons .minimize-window .minimize-line {
+    width: 12px;
+    height: 1px;
+    background-color: #000;
+    margin: 15px auto;
+}
+
+.user-profile {
+    width: 100%;
+    height: 170px;
+    background-color: #324f58;
+    background-size: cover;
+    background-repeat: no-repeat;
+    box-shadow: inset 0px -6px 5px 0px rgba(0, 0, 0, 0.2);
+}
+
+.user-profile .user-profile-bg {
+    width: 100%;
+    height: 170px;
+    background-color: #000;
+    opacity: 0.3;
+    top: 0;
+    left: 0;
+    position: absolute;
+    z-index: 0;
+}
+
+.user-profile .user-profile-body {
+    width: 100%;
+    height: 170px;
+    top: 0;
+    left: 0;
+    position: absolute;
+    z-index: 100;
+}
+
+.user-profile .user-image-container {
+    width: 100%;
     height: calc(100% - 60px);
-    float:left;
-    padding-top:30px;
-    padding-left:20px;
+    float: left;
+    padding-top: 30px;
+    padding-left: 20px;
     box-sizing: border-box;
 }
 
-.user-profile .user-image-container .user-image{
-    width:70px;
-    height:70px;
+.user-profile .user-image-container .user-image {
+    width: 70px;
+    height: 70px;
     border-radius: 100%;
-    background-size:cover;
-    background-repeat:no-repeat;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
-.user-profile .user-info{
-    width:100%;
-    height:60px;
-    float:right;
+.user-profile .user-info {
+    width: 100%;
+    height: 60px;
+    float: right;
 }
 
-.user-profile .user-info div{
-    width:100%;
-    display:block;
+.user-profile .user-info div {
+    width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
     font-size: 14px;
     padding-left: 20px;
     box-sizing: border-box;
 }
 
-.user-profile .user-info .user-name{
+.user-profile .user-info .user-name {
     height: 20px;
     line-height: 20px;
     font-family: 'Roboto Med';
     opacity: 1;
 }
 
-.user-profile .user-info .user-email{
+.user-profile .user-info .user-email {
     height: 40px;
     line-height: 20px;
     font-family: 'Roboto';
@@ -59,78 +146,120 @@
 
 .top-bar {
     width: 100%;
-    height: 30px;
+    height: 50px;
     top: 0;
     left: 0;
     z-index: 600;
     position: absolute;
-    -webkit-app-region: drag;
 }
 
-.loading-screen {
+.loading-screen{
+    width: 100%;
+    height: 100%;
+    top:0;
+    left:0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position:absolute;
+    z-index: 9999999;
+    background-color: #363f4c;
+}
+
+.loading-screen .loading-icon{
+    width: 200px;
+    height: 200px;
+    background-image: url('../icon-128.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: absolute;
+}
+
+.install-screen {
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
     position: absolute;
-    background-color: #202833;
-    z-index: 500;
+    background-color: #FFF;
+    background-image: url('../loading/wallpaper.jpg');
+    background-size:cover;
+    background-repeat: no-repeat;
+    z-index: 999999;
+    display:none;
 }
 
-.load-bar {
-    width: 70%;
-    height: 6px;
-    top: 50%;
-    left: 50%;
-    position: absolute;
-    transform: translate( -50%, -50%);
-    background-color: #fdba2c;
-    border-radius: 20px;
-}
-
-.bar {
-    content: "";
-    display: inline;
-    position: absolute;
-    width: 0;
+.install-screen .install-bg{
+    width:100%;
     height: 100%;
-    left: 50%;
+    top:0;
+    left:0;
+    position:absolute;
+    background-color:#000;
+    opacity: 0.5;
+    z-index:0;
+}
+
+.install-screen .install-content{
+    width: 100%;
+    height: 100%;
+    top:0;
+    left:0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position:absolute;
+    z-index: 100;
+}
+
+.install-screen .install-icon{
+    width: 200px;
+    height: 200px;
+    margin-top: -80px;
+    background-image: url('../icon-128.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: absolute;
+}
+
+.install-screen .install-screen-button-container{
+    margin-top: 180px;
+    width: 150px;
+}
+
+.install-screen .install-screen-button {
     text-align: center;
+    margin-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 50px;
+    font-family: 'Roboto Med';
+    font-size: 14px;
+    line-height: 50px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    color: #404040;
+    background-color: #fbfbfb;
+    box-shadow: -1px 2px 7px 0px rgba(0,0,0,0.4);
 }
 
-.bar:nth-child(1) {
-    background-color: #da4733;
-    border-radius: 20px;
-    animation: loading 3s linear infinite;
+.google-icon{
+    width: 30px;
+    height:50px;
+    float:right;
+    background-image: url('../loading/logo.png');
+    background-size: 25px;
+    background-position:center;
+    background-repeat: no-repeat;
+}
+.install-screen .install-screen-button:nth-child(1){
+    width:150px;
+    margin-left: -20px;
 }
 
-.bar:nth-child(2) {
-    background-color: #3b78e7;
-    border-radius: 20px;
-    animation: loading 3s linear 1s infinite;
-}
-
-.bar:nth-child(3) {
-    background-color: #fdba2c;
-    border-radius: 20px;
-    animation: loading 3s linear 2s infinite;
-}
-
-@keyframes loading {
-    from {
-        left: 50%;
-        width: 0;
-        z-index: 100;
-    }
-    33.3333% {
-        left: 0;
-        width: 100%;
-        z-index: 10;
-    }
-    to {
-        left: 0;
-        width: 100%;
-    }
+.install-screen .install-screen-button:nth-child(2){
+    width:80px;
+    margin-left: 15px;
 }
 
 .modal:not(.sidebar) {
@@ -143,7 +272,7 @@
 }
 
 .modal {
-    background-color: #FFF;
+    background-color: #F9F9F9;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
@@ -190,10 +319,14 @@
     overflow-x: hidden;
 }
 
+.modal-content::-webkit-scrollbar{
+    width: 0px;
+}
+
 .document-container .document-list .document-item {
     width: 100%;
     height: 60px;
-    transition:all .2s ease;
+    transition: all .2s ease;
 }
 
 .document-container .document-list .document-item:hover {
@@ -306,7 +439,8 @@
     display: block;
     font-family: 'Roboto';
     font-size: 12px;
-    color: rgba(0, 0, 0, 0.6);
+    color: #000;
+    opacity: 0.6;
     margin-top: 12px;
     margin-left: 60px;
     padding-bottom: 20px;
@@ -324,7 +458,7 @@
     margin-bottom: 10px;
 }
 
-.option > div {
+.option>div {
     height: 40px;
     font-size: 14px;
     padding-left: 60px;
@@ -334,12 +468,12 @@
     transition: all .2s ease;
 }
 
-.option > div:not(.active):hover{
-    background-color:rgba(255, 255, 255, 0.08);
+.option>div:not(.active):hover {
+    background-color: rgb(217, 217, 217);
 }
 
-.option > .active {
-    background-color: #efecec;
+.option>.active {
+    background-color: #d4dad9;
 }
 
 .charter {
@@ -441,16 +575,16 @@
     vertical-align: middle;
 }
 
-.sidebar-option .option-title, .file-option .option-title{
+.sidebar-option .option-title, .file-option .option-title {
     font-family: 'Roboto Med';
 }
 
-.sidebar-option .material-icons, .file-option .material-icons{
+.sidebar-option .material-icons, .file-option .material-icons {
     width: 70px;
     height: 60px;
     text-align: center;
     line-height: 60px;
-    color:#000;
+    color: #000;
     opacity: 0.7;
 }
 
@@ -492,6 +626,7 @@
     left: 0;
     position: absolute;
     z-index: 0;
+    transition: all .2s ease;
 }
 
 .main-container>div {
@@ -516,7 +651,7 @@
     height: 100%;
     font-size: 18px;
     font-family: 'Charter';
-    padding-top: 80px;
+    padding-top: 60px;
     padding-left: 18%;
     padding-right: 18%;
     padding-bottom: 150px;
@@ -546,22 +681,11 @@
     padding-top: 1px;
 }
 
-.ql-editor p > *,
-.ql-editor pre > *,
-.ql-editor blockquote > *,
-.ql-editor h1 > *,
-.ql-editor h2 > *,
-.ql-editor h3 > *,
-.ql-editor h4 > *,
-.ql-editor h5 > *,
-.ql-editor h6 > *,
-.ql-editor strong > *,
-.ql-editor em > *,
-.ql-editor u > *{
+.ql-editor p>*, .ql-editor pre>*, .ql-editor blockquote>*, .ql-editor h1>*, .ql-editor h2>*, .ql-editor h3>*, .ql-editor h4>*, .ql-editor h5>*, .ql-editor h6>*, .ql-editor strong>*, .ql-editor em>*, .ql-editor u>* {
     opacity: 1 !important;
 }
 
-.ql-editor p{
+.ql-editor p {
     display: block;
     -webkit-margin-top: 1em;
     -webkit-margin-after: 1em;
@@ -628,7 +752,7 @@
     margin-left: 5px;
 }
 
-#print{
+#print {
     display: none;
 }
 
@@ -643,7 +767,7 @@
         display: block;
         padding: 0 !important;
     }
-    #print *{
+    #print * {
         opacity: 1 !important;
         color: #000;
     }

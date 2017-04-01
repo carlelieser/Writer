@@ -2,6 +2,22 @@ html, body{
     background-color: #1b1b1b;
 }
 
+.navigation-container{
+    background-color:#313131 !important;
+}
+
+.navigation-container .close-window-line{
+    background-color: #FFF !important;
+}
+
+.navigation-container .maximize-square{
+    border: 1px solid #FFF !important;
+}
+
+.navigation-container .minimize-line{
+    background-color: #FFF !important;
+}
+
 .ql-editor{
     color: #FFF !important;
 }
