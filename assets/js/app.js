@@ -1889,7 +1889,7 @@ $(document).ready(function() {
             top: '-100%'
         }, 400, beizer, function() {
             $(this).remove();
-            focusEditor(0);
+            realLoad();
         });
 
         chrome.storage.local.set({
