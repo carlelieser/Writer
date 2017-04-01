@@ -393,7 +393,7 @@ $(document).ready(function() {
                 }
             }
         }
-        
+
         this.editor = new Quill(element, {
             modules: {
                 keyboard: {
@@ -1868,7 +1868,7 @@ $(document).ready(function() {
 
     function loadData(callback) {
         chrome.storage.local.get({
-            installed: 'installed '
+            installed: 'installed'
         }, function(ist) {
             var installed = ist.installed;
             if (installed == 'installed' || installed === false) {
