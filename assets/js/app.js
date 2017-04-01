@@ -1875,7 +1875,7 @@ $(document).ready(function() {
                 loadScreen();
                 $installScreen.show();
             } else {
-                getToken(callback);
+                realLoad();
             }
         });
     }
