@@ -1592,13 +1592,13 @@ $(document).ready(function() {
         //hide other dropdowns
         $optionContainer.stop().animate({
             height: '0'
-        }, 200, function() {
+        }, 400, function() {
             $(this).hide();
             //then open the current one
             var height = dropdown.children().length * 40 + 'px';
             dropdown.stop().show().animate({
                 height: height
-            }, 200);
+            }, 400, beizer);
         });
     }
 
@@ -1606,7 +1606,7 @@ $(document).ready(function() {
     function closeDropdown(dropdown) {
         dropdown.stop().animate({
             height: '0'
-        }, 200, function() {
+        }, 400, beizer, function() {
             $(this).hide();
         });
     }

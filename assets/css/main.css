@@ -788,6 +788,10 @@ html, body {
     margin-left: 5px;
 }
 
+.margin-options{
+    margin-bottom:0px !important;
+}
+
 #print {
     display: none;
 }
