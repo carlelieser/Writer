@@ -433,7 +433,7 @@ $(document).ready(function() {
         applyAll();
 
         if (settings.statistics == true) {
-            calcStats(editorDOM.text());
+            calcStats(editor.getText());
         }
 
         //only save data 600ms after user has stopped typing
@@ -454,7 +454,7 @@ $(document).ready(function() {
             }, 2000);
             doc.changed = true;
             if (settings.statistics == true) {
-                calcStats(editorDOM.text());
+                calcStats(doc.editor.getText());
             }
         });
 
@@ -566,7 +566,7 @@ $(document).ready(function() {
         this.setActive(true);
 
         if (settings.statistics == true) {
-            calcStats(this.editorDOM.text());
+            calcStats(this.editor.getText());
         }
 
         saveData();
@@ -1460,25 +1460,13 @@ $(document).ready(function() {
         }
     });
 
-    function cleanArray(actual) {
-        var newArray = new Array();
-        for (var i = 0; i < actual.length; i++) {
-            if (actual[i]) {
-                newArray.push(actual[i]);
-            }
-        }
-        return newArray;
-    }
-
     function calcStats(text) {
         var wordContainer = $('.words');
         var charContainer = $('.chars');
 
-        var words = text.split(' ');
+        var regex = /\s+/gi;
+        var words = text.trim().replace(regex, ' ').split(' ').length;
         var chars = text.length;
-
-        words = cleanArray(words);
-        words = words.length;
 
         if (text === '') {
             words = 0;
@@ -1493,7 +1481,8 @@ $(document).ready(function() {
 
     //open statistics
     function openStatistics() {
-        calcStats(qlEditor().text());
+        var doc = getDoc(documentAct().index());
+        calcStats(doc.editor.getText());
         $statisticsBar.show().stop().animate({
             bottom: '0'
         }, 300, beizer);
@@ -1761,7 +1750,8 @@ $(document).ready(function() {
             //make sure to calculate statistics for
             //current active editor before loadingScreen
             if (settings.statistics == true) {
-                calcStats(qlEditor().text());
+                var doc = getDoc(documentAct().index());
+                calcStats(doc.editor.getText());
             }
             $loadingScreen.stop().animate({
                 top: '-100%'
