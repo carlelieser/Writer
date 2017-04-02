@@ -720,6 +720,16 @@ $(document).ready(function() {
         }
     }
 
+    //strips away style tags
+    //outputs clean html
+    function cleanStyles(html){
+        var temp = $(document.createElement('div'));
+            temp.html(html);
+
+        temp.find('*').removeAttr('style');
+        return temp.html();
+    }
+
     function exportToFileEntry(fileEntry) {
         if (!fileEntry) {
             console.log('User cancelled saving.');
@@ -735,15 +745,15 @@ $(document).ready(function() {
                         case 'html':
                         case 'htm':
                         case 'wtr':
-                            content = qlEditor().html();
+                            content = cleanStyles(qlEditor().html());
                             blob = new Blob([content]);
                             break;
                         case 'md':
-                            content = toMarkdown(qlEditor().html());
+                            content = toMarkdown(cleanStyles(qlEditor().html()));
                             blob = new Blob([content]);
                             break;
                         case 'docx':
-                            content = '<!DOCTYPE HTML><html><head></head><body>' + qlEditor().html() + '</body></html>';
+                            content = '<!DOCTYPE HTML><html><head></head><body>' + cleanStyles(qlEditor().html()) + '</body></html>';
                             blob = htmlDocx.asBlob(content);
                             break;
                         case 'txt':
