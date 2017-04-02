@@ -1803,18 +1803,31 @@ $(document).ready(function() {
         return ((255 - bgDelta) < nThreshold) ? "#000000" : "#ffffff";
     }
 
+    function revokeToken() {
+        chrome.identity.removeCachedAuthToken({
+            token: current_token
+        }, function() {});
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://accounts.google.com/o/oauth2/revoke?token=' +
+            current_token);
+        xhr.send();
+    }
 
-    function getToken(callback) {
+    function getToken(install, callback) {
         chrome.identity.getAuthToken({
             'interactive': true
         }, function(token) {
             current_token = token;
             if (chrome.runtime.lastError) {
-                loadScreen();
-                $installScreen.show();
-                chrome.storage.local.set({
-                    installed: false
-                });
+                if (install === false) {
+                    revokeToken();
+                } else {
+                    loadScreen();
+                    $installScreen.show();
+                    chrome.storage.local.set({
+                        installed: false
+                    });
+                }
             } else {
                 $.get('https://www.googleapis.com/plus/v1/people/me?access_token=' + token, function(profile) {
                     console.log(profile);
@@ -1832,8 +1845,17 @@ $(document).ready(function() {
                             var ideal = idealTextColor(color);
                             $('.user-info').css('color', ideal);
 
+                            $('.fallback-signin').hide();
+                            $('.sign-out').css({
+                                backgroundColor: 'rgb(' + realColor + ')',
+                                color: ideal
+                            });
+                            $('.sign-out .material-icons').css('color', ideal);
+                            $('.user-profile-body').show();
+
                             chrome.storage.local.set({
-                                installed: true
+                                installed: true,
+                                signIn: true
                             });
 
                             if (callback) {
@@ -1856,32 +1878,41 @@ $(document).ready(function() {
                         $('.user-email').text(info.email);
                     })
                 }).fail(function() {
-                    chrome.identity.removeCachedAuthToken({
-                        token: current_token
-                    }, function() {});
+                    revokeToken();
                 });
             }
         });
     }
+
     //load data
     var current_token;
 
     function loadData(callback) {
         chrome.storage.local.get({
-            installed: 'installed'
+            installed: 'installed',
+            signIn: 'signIn'
         }, function(ist) {
             var installed = ist.installed;
-            if (installed == 'installed' || installed === false) {
+            var signIn = ist.signIn;
+            if (installed == 'installed' || installed === false || signIn == 'signIn') {
                 loadScreen();
                 $installScreen.show();
             } else {
-                realLoad();
+                if (signIn == false) {
+                    realLoad();
+                } else {
+                    getToken(false, realLoad);
+                }
             }
         });
     }
 
     $('.signin-button').click(function() {
-        getToken(realLoad);
+        getToken(true, realLoad);
+    });
+
+    $('.fallback-signin').click(function() {
+        getToken(false);
     });
 
     $('.continue-button').click(function() {
@@ -2064,6 +2095,50 @@ $(document).ready(function() {
         if (message.full) {
             fullScreen();
         }
+    });
+
+    $('.sign-out').css({
+        height: '0',
+        display: 'none'
+    });
+
+    function openSignOut() {
+        $('.arrow-down .material-icons').css('transform', 'rotate(180deg)');
+        $('.sign-out').show().stop().animate({
+            height: '60px'
+        }, 200, beizer);
+    }
+
+    function closeSignOut() {
+        $('.arrow-down .material-icons').css('transform', 'rotate(0deg)');
+        $('.sign-out').stop().animate({
+            height: '0px'
+        }, 200, beizer, function() {
+            $(this).hide();
+        });
+    }
+
+    function applySignOut() {
+        $('.user-profile').css('background-image', 'url(../assets/sidebar/fallback.png)');
+        $('.user-profile-body').hide();
+        $('.fallback-signin').show();
+    }
+
+    $('.arrow-down').click(function() {
+        if ($('.sign-out').is(':visible')) {
+            closeSignOut();
+        } else {
+            openSignOut();
+        }
+    });
+
+    $('.sign-out').click(function() {
+        revokeToken();
+        closeSignOut();
+        applySignOut();
+        chrome.storage.local.set({
+            signIn: false
+        });
     });
 
     function realLoad() {

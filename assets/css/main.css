@@ -71,6 +71,7 @@ html, body {
 .user-profile {
     width: 100%;
     height: 170px;
+    background-image: url('../sidebar/fallback.png');
     background-color: #324f58;
     background-size: cover;
     background-repeat: no-repeat;
@@ -106,6 +107,36 @@ html, body {
     box-sizing: border-box;
 }
 
+.user-profile .fallback-signin {
+    height: 50px;
+    font-family: 'Roboto Med';
+    font-size: 14px;
+    position: absolute;
+    left: 50%;
+    margin-left: -80px;
+    margin-top: 62px;
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    color: #404040;
+    background-color: #fbfbfb;
+    box-shadow: -1px 2px 7px 0px rgba(0, 0, 0, 0.2);
+    line-height: 50px;
+    z-index: 150;
+}
+
+.user-profile .user-profile-body .user-info .arrow-down{
+    float: right;
+    width: 88px;
+    height: 50px;
+    margin-top: -55px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 28px;
+}
+
 .user-profile .user-image-container .user-image {
     width: 70px;
     height: 70px;
@@ -120,7 +151,7 @@ html, body {
     float: right;
 }
 
-.user-profile .user-info div {
+.user-profile .user-info > div {
     width: 250px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -144,6 +175,10 @@ html, body {
     opacity: 0.84;
 }
 
+.arrow-down .material-icons{
+    transition: all .2s ease;
+}
+
 .top-bar {
     width: 100%;
     height: 50px;
@@ -153,20 +188,20 @@ html, body {
     position: absolute;
 }
 
-.loading-screen{
+.loading-screen {
     width: 100%;
     height: 100%;
-    top:0;
-    left:0;
+    top: 0;
+    left: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    position:absolute;
+    position: absolute;
     z-index: 9999999;
     background-color: #363f4c;
 }
 
-.loading-screen .loading-icon{
+.loading-screen .loading-icon {
     width: 200px;
     height: 200px;
     background-image: url('../icon-128.png');
@@ -183,36 +218,36 @@ html, body {
     position: absolute;
     background-color: #FFF;
     background-image: url('../loading/wallpaper.jpg');
-    background-size:cover;
+    background-size: cover;
     background-repeat: no-repeat;
     z-index: 999999;
-    display:none;
+    display: none;
 }
 
-.install-screen .install-bg{
-    width:100%;
-    height: 100%;
-    top:0;
-    left:0;
-    position:absolute;
-    background-color:#000;
-    opacity: 0.5;
-    z-index:0;
-}
-
-.install-screen .install-content{
+.install-screen .install-bg {
     width: 100%;
     height: 100%;
-    top:0;
-    left:0;
+    top: 0;
+    left: 0;
+    position: absolute;
+    background-color: #000;
+    opacity: 0.5;
+    z-index: 0;
+}
+
+.install-screen .install-content {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    position:absolute;
+    position: absolute;
     z-index: 100;
 }
 
-.install-screen .install-icon{
+.install-screen .install-icon {
     width: 200px;
     height: 200px;
     margin-top: -80px;
@@ -222,7 +257,7 @@ html, body {
     position: absolute;
 }
 
-.install-screen .install-screen-button-container{
+.install-screen .install-screen-button-container {
     margin-top: 180px;
     width: 150px;
 }
@@ -240,25 +275,26 @@ html, body {
     text-transform: uppercase;
     color: #404040;
     background-color: #fbfbfb;
-    box-shadow: -1px 2px 7px 0px rgba(0,0,0,0.4);
+    box-shadow: -1px 2px 7px 0px rgba(0, 0, 0, 0.4);
 }
 
-.google-icon{
+.google-icon {
     width: 30px;
-    height:50px;
-    float:right;
+    height: 50px;
+    float: right;
     background-image: url('../loading/logo.png');
     background-size: 25px;
-    background-position:center;
+    background-position: center;
     background-repeat: no-repeat;
 }
-.install-screen .install-screen-button:nth-child(1){
-    width:150px;
+
+.install-screen .install-screen-button:nth-child(1) {
+    width: 150px;
     margin-left: -20px;
 }
 
-.install-screen .install-screen-button:nth-child(2){
-    width:80px;
+.install-screen .install-screen-button:nth-child(2) {
+    width: 80px;
     margin-left: 15px;
 }
 
@@ -319,7 +355,7 @@ html, body {
     overflow-x: hidden;
 }
 
-.modal-content::-webkit-scrollbar{
+.modal-content::-webkit-scrollbar {
     width: 0px;
 }
 
