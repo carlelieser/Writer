@@ -36,7 +36,9 @@
         <div class="install-content">
             <div class="install-icon"></div>
             <div class="install-screen-button-container">
-                <div class="signin-button install-screen-button">Sign In With <div class="google-icon"></div></div>
+                <div class="signin-button install-screen-button">Sign In With
+                    <div class="google-icon"></div>
+                </div>
                 <div class="continue-button install-screen-button">Continue</div>
             </div>
         </div>
@@ -59,14 +61,38 @@
     <div class="main-container">
     </div>
 
-    <div class="tools-container modal">
+    <div class="details-container modal">
         <div class="modal-title-container">
-            <div class="modal-title">Tools</div>
+            <div class="modal-title">Details</div>
             <div class="modal-close">
                 <div class="material-icons">close</div>
             </div>
         </div>
-        <div class="tools-content modal-content">
+        <div class="details-content modal-content">
+            <div class="details-file-name">
+                <div class="details-title">Name</div>
+                <div class="details-amount file-name-details">untitled</div>
+            </div>
+            <div class="est-time-count">
+                <div class="details-title">Est. Reading Time</div>
+                <div class="details-amount est-time-amount">0 Min</div>
+            </div>
+            <div class="paragraph-count">
+                <div class="details-title">Paragraphs</div>
+                <div class="details-amount paragraph-amount">0</div>
+            </div>
+            <div class="word-count">
+                <div class="details-title">Words</div>
+                <div class="details-amount word-amount">0</div>
+            </div>
+            <div class="character-count">
+                <div class="details-title">Characters</div>
+                <div class="details-amount character-amount">0</div>
+            </div>
+            <div class="character-without-spaces-count">
+                <div class="details-title">Characters excluding spaces</div>
+                <div class="details-amount characters-without-spaces-amount">0</div>
+            </div>
         </div>
     </div>
 
@@ -78,6 +104,54 @@
             </div>
         </div>
         <div class="help-content modal-content">
+            <div class="command-container">
+                <div class="command-title">Shortcuts Help</div>
+                <div class="command">&#8984; + ? / CTRL + ?</div>
+            </div>
+            <div class="command-container">
+                <div class="command-title">Bold</div>
+                <div class="command">&#8984; + B / CTRL + B</div>
+            </div>
+            <div class="command-container">
+                <div class="command-title">Italics</div>
+                <div class="command">&#8984; + I / CTRL + I</div>
+            </div>
+            <div class="command-container">
+                <div class="command-title">Underline</div>
+                <div class="command">&#8984; + U / CTRL + U</div>
+            </div>
+            <div class="command-container">
+                <div class="command-title">Heading 1</div>
+                <div class="command">&#8984; + ALT + 1 / CTRL + ALT + 1</div>
+            </div>
+            <div class="command-container">
+                <div class="command-title">Heading 2</div>
+                <div class="command">&#8984; + ALT + 2 / CTRL + ALT + 2</div>
+            </div>
+            <div class="command-container">
+                <div class="command-title">Quote</div>
+                <div class="command">&#8984; + ALT + 5 / CTRL + ALT + 5</div>
+            </div>
+            <div class="command-container">
+                <div class="command-title">Numbered List</div>
+                <div class="command">1. + SPACE</div>
+            </div>
+            <div class="command-container">
+                <div class="command-title">Code Block</div>
+                <div class="command">&#8984; + ALT + 6 / CTRL + ALT + 6</div>
+            </div>
+            <div class="command-container">
+                <div class="command-title">Align Left</div>
+                <div class="command">&#8984; + W / CTRL + W</div>
+            </div>
+            <div class="command-container">
+                <div class="command-title">Align Center</div>
+                <div class="command">&#8984; + E / CTRL + E</div>
+            </div>
+            <div class="command-container">
+                <div class="command-title">Align Right</div>
+                <div class="command">&#8984; + R / CTRL + R</div>
+            </div>
         </div>
     </div>
 
@@ -89,6 +163,31 @@
             </div>
         </div>
         <div class="feedback-content modal-content">
+            <form>
+
+                <div class="group">
+                    <input class="feedback-email" type="email" required name="email">
+                    <span class="bar"></span>
+                    <label>Email</label>
+                </div>
+
+                <div class="group">
+                    <input class="feedback-subject" type="text" required name="subject">
+                    <span class="bar"></span>
+                    <label>Subject</label>
+                </div>
+
+                <div class="group">
+                    <textarea class="feedback-message" required></textarea name="message">
+                    <span class="bar"></span>
+                    <label>Message</label>
+                </div>
+
+                <div class="group">
+                    <button class="submit-button">Submit</button>
+                </div>
+
+            </form>
         </div>
     </div>
 
@@ -198,8 +297,8 @@
                 <div class="option font-size-options">
                     <div class="font-size-option">12px</div>
                     <div class="font-size-option">14px</div>
-                    <div class="font-size-option">16px</div>
-                    <div class="font-size-option active">18px</div>
+                    <div class="font-size-option active">16px</div>
+                    <div class="font-size-option">18px</div>
                     <div class="font-size-option">24px</div>
                     <div class="font-size-option">30px</div>
                 </div>
@@ -229,7 +328,9 @@
     <div class="sidebar modal">
         <div class="user-profile">
             <div class="user-profile-bg"></div>
-            <div class="fallback-signin">Sign In With<div class="google-icon"></div></div>
+            <div class="fallback-signin">Sign In With
+                <div class="google-icon"></div>
+            </div>
             <div class="user-profile-body">
                 <div class="user-image-container">
                     <div class="user-image"></div>
@@ -237,7 +338,9 @@
                 <div class="user-info">
                     <div class="user-name"></div>
                     <div class="user-email"></div>
-                    <div class="arrow-down"><div class="material-icons">arrow_drop_down</div></div>
+                    <div class="arrow-down">
+                        <div class="material-icons">arrow_drop_down</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -249,13 +352,13 @@
             <div class="material-icons">insert_drive_file</div>
             <div class="option-title">File</div>
         </div>
-        <div class="sidebar-option open-tools">
-            <div class="material-icons">build</div>
-            <div class="option-title">Tools</div>
-        </div>
         <div class="sidebar-option open-documents">
             <div class="material-icons">library_books</div>
             <div class="option-title">Documents</div>
+        </div>
+        <div class="sidebar-option open-details">
+            <div class="material-icons">info</div>
+            <div class="option-title">Details</div>
         </div>
         <div class="divider"></div>
         <div class="sidebar-option open-settings">

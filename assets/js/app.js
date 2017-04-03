@@ -22,6 +22,7 @@ $(document).ready(function() {
 
     //loading screen
     var $loadingScreen = $('.loading-screen');
+
     //install screen
     var $installScreen = $('.install-screen');
     //setting toggles
@@ -48,7 +49,7 @@ $(document).ready(function() {
     var $documentContainer = $('.document-container'),
         $settingsContainer = $('.settings-container'),
         $feedBackContainer = $('.feedback-container'),
-        $toolsContainer = $('.tools-container'),
+        $detailsContainer = $('.details-container'),
         $helpContainer = $('.help-container'),
         $fileContainer = $('.file-container');
 
@@ -56,7 +57,7 @@ $(document).ready(function() {
     var $docButton = $('.open-documents'),
         $settingsButton = $('.open-settings'),
         $feedback = $('.open-feedback'),
-        $tools = $('.open-tools'),
+        $details = $('.open-details'),
         $help = $('.open-help'),
         $file = $('.open-file'),
         $modalClose = $('.modal-close');
@@ -124,7 +125,7 @@ $(document).ready(function() {
         statistics: false,
         focus: true,
         font: 'Charter',
-        size: '18px',
+        size: '16px',
         theme: 'default',
         line: 'single',
         margin: 'medium'
@@ -139,7 +140,7 @@ $(document).ready(function() {
         statistics: false,
         focus: true,
         font: 'Charter',
-        size: '18px',
+        size: '16px',
         theme: 'default',
         line: 'single',
         margin: 'medium'
@@ -784,6 +785,10 @@ $(document).ready(function() {
                             blob = htmlDocx.asBlob(content);
                             writeToWriter(fileWriter, doc, blob, writableFileEntry);
                             break;
+                        case 'pdf':
+                            blob = pdfBlob;
+                            writeToWriter(fileWriter, doc, blob, writableFileEntry);
+                            break;
                         case 'txt':
                         default:
                             content = doc.editor.getText();
@@ -1321,13 +1326,106 @@ $(document).ready(function() {
     //feedback
     $feedback.click(function() {
         openModal($feedBackContainer, function() {
+            $feedBackContainer.find('.feedback-email').val($('.user-email').text());
             $feedBackContainer.find('.feedback-email').focus();
         });
     });
 
-    //tools
-    $tools.click(function() {
-        openModal($toolsContainer);
+    $('.submit-button').click(function() {
+        var email = $('.feedback-email').val();
+        var subject = $('.feedback-subject').val();
+        var message = $('.feedback-message').val();
+        var url = "mailto:writerchromeapp@gmail.com?subject=" + subject + '&body=' + message;
+        var link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.click();
+    });
+
+    function getTime(text) {
+        var words = getWords(text);
+        return Math.round(words / 200) + ' Min';
+    }
+
+    function getParagraphs(text) {
+        return text.replace(/\n$/gm, '').split(/\n/).length;
+    }
+
+    function getWords(text) {
+        var words = text.trim().replace(/\s+/gi, ' ').split(' ');
+        if (words[0] === '' && words.length == 1) {
+            words = 0;
+        } else {
+            words = words.length;
+        }
+        return words;
+    }
+
+    function getCharacters(text) {
+        return text.length - 1;
+    }
+
+    function getCharsExSpaces(text) {
+        if (text.match(/[\S]/g) === null) {
+            return 0;
+        } else {
+            return text.match(/[\S]/g).length;
+        }
+    }
+
+    //determine document details
+    function getDocDetails(doc, callback) {
+        var text = doc.editor.getText();
+        var details = {
+            name: doc.name,
+            time: getTime(text),
+            paragraphs: getParagraphs(text),
+            words: getWords(text),
+            chars: getCharacters(text),
+            charsExSpaces: getCharsExSpaces(text)
+        }
+
+        setDocDetails(details, callback);
+    }
+
+    function setDocDetails(details, callback) {
+        var counter = 0;
+        for (var key in details) {
+            if (details.hasOwnProperty(key)) {
+                var value = details[key];
+
+                switch (key) {
+                    case 'name':
+                        $('.file-name-details').text(value);
+                        break;
+                    case 'time':
+                        $('.est-time-amount').text(value);
+                        break;
+                    case 'paragraphs':
+                        $('.paragraph-amount').text(value);
+                        break;
+                    case 'words':
+                        $('.word-amount').text(value);
+                        break;
+                    case 'chars':
+                        $('.character-amount').text(value);
+                        break;
+                    case 'charsExSpaces':
+                        $('.characters-without-spaces-amount').text(value);
+                        break;
+                }
+                counter++;
+                if (counter === details.length) {
+                    callback();
+                }
+            }
+        }
+    }
+
+    //details
+    $details.click(function() {
+        var doc = getDoc(documentAct().index());
+        getDocDetails(doc, openModal($detailsContainer));
     });
 
     //help
@@ -1500,11 +1598,12 @@ $(document).ready(function() {
         var charContainer = $('.chars');
 
         var regex = /\s+/gi;
-        var words = text.trim().replace(regex, ' ').split(' ').length;
-        var chars = text.length;
-
-        if (text === '') {
+        var words = text.trim().replace(regex, ' ').split(' ');
+        var chars = text.length - 1;
+        if (words[0] === '' && words.length == 1) {
             words = 0;
+        } else {
+            words = words.length;
         }
 
         wordContainer.text(words);
@@ -2031,6 +2130,7 @@ $(document).ready(function() {
             FOCUS = CTRL_KEY && SHIFT_KEY && getKey(e, 70),
             STATISTICS = CTRL_KEY && ALT_KEY && !SHIFT_KEY && getKey(e, 83),
             DELETE = CTRL_KEY && ALT_KEY && getKey(e, 81),
+            HELP = CTRL_KEY && getKey(e, 191),
             CLOSE = getKey(e, 27);
 
         //new
@@ -2090,6 +2190,16 @@ $(document).ready(function() {
             window.close();
         }
 
+        if (HELP) {
+            if ($helpContainer.is(':visible')) {
+                closeNavBar();
+                closeModal($helpContainer);
+            } else {
+                openNavBar();
+                openModal($helpContainer);
+            }
+        }
+
         //delete
         if (DELETE) {
             if ($documentContainer.is(':visible')) {
@@ -2104,6 +2214,12 @@ $(document).ready(function() {
             }
         }
 
+    });
+
+    //autoresize textarea
+    $('.feedback-message').on('keydown keyup change', function() {
+        $(this).css('height', 'auto');
+        $(this).css('height', this.scrollHeight + 'px');
     });
 
     chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {

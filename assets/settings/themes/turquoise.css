@@ -1,10 +1,10 @@
 
 .modal{
-    background-color: #245857 !important;
+    background-color: #286f6e !important;
 }
 
 .navigation-container{
-    background-color: #2f6d6c !important;
+    background-color: #338e8d  !important;
 }
 
 .navigation-container .close-window-line{
@@ -19,7 +19,7 @@
     background-color: #FFF !important;
 }
 
-.sidebar-option, .file-option, .edit-option, .settings-title, .settings-title-second, .option > div, .material-icons, .active{
+.sidebar-option, .file-option, .settings-title, .settings-title-second, .option > div, .material-icons, .active{
     color: rgba(255, 255, 255, 0.8) !important;
     opacity: 1 !important;
 }
@@ -37,9 +37,37 @@
 }
 
 .active{
-    background-color: rgba(0,0,0,0.2) !important;
+    background-color: rgb(64, 206, 193) !important;
+}
+
+.option{
+    background-color:rgb(44, 123, 122) !important;
 }
 
 .option>div:not(.active):hover {
-    background-color: rgb(64, 206, 193) !important;
+    background-color: rgba(187, 187, 187, 0.2) !important;
+}
+
+.snackbar{
+    background-color: #245857 !important;
+}
+
+.toggle-active{
+    background-color: #1cd4d1 !important;
+}
+
+.toggle-active .toggle-circle{
+    background-color: #2e9695 !important;
+}
+
+.details-amount, .command, .feedback-email, .feedback-subject, .feedback-message{
+    color:rgb(255, 255, 255) !important;
+}
+
+.details-title, .command-title{
+    color: rgba(255,255,255, 0.7) !important;
+}
+
+.feedback-content label{
+    color:rgba(255,255,255,0.6) !important;
 }

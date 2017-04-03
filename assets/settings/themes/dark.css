@@ -19,7 +19,7 @@
     background-color: #FFF !important;
 }
 
-.sidebar-option, .file-option, .edit-option, .settings-title, .settings-title-second, .option > div, .material-icons, .active{
+.sidebar-option, .file-option, .settings-title, .settings-title-second, .option > div, .material-icons, .active{
     color: rgba(255, 255, 255, 0.8) !important;
     opacity: 1 !important;
 }
@@ -37,9 +37,33 @@
 }
 
 .active{
-    background-color: rgba(0,0,0,0.2) !important;
+    background-color: rgba(136, 136, 136, 0.2) !important;
+}
+
+.option{
+    background-color: rgb(53, 53, 53) !important;
 }
 
 .option>div:not(.active):hover {
     background-color: #313131 !important;
+}
+
+.snackbar{
+    background-color: #313131 !important;
+}
+
+.toggle-active{
+    background-color: #3a3a3a !important;
+}
+
+.toggle-active .toggle-circle{
+    background-color: #525252 !important;
+}
+
+.details-amount, .command, .feedback-email, .feedback-subject, .feedback-message{
+    color:rgb(255, 255, 255) !important;
+}
+
+.details-title, .command-title{
+    color: rgba(255,255,255, 0.7) !important;
 }

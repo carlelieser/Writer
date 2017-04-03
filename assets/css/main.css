@@ -365,12 +365,12 @@ html, body {
     transition: all .2s ease;
 }
 
-.document-container .document-list .document-item:hover {
+.document-container .document-list .document-item:not(.doc-active):hover {
     background-color: rgba(99, 99, 99, 0.05);
 }
 
 .doc-active {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: #1ddb99;
 }
 
 .document-container .document-list .document-item div, .document-container .document-list .document-item input {
@@ -418,7 +418,7 @@ html, body {
 
 .document-list .delete-dialogue {
     width: 220px;
-    background-color: #f34e4e;
+    background-color: #f35262;
     position: absolute;
     height: 60px;
     padding-left: 20px;
@@ -434,6 +434,138 @@ html, body {
     display: inline-block;
     text-align: center;
     text-transform: uppercase;
+}
+
+.details-container .details-content>div, .help-container .help-content>div {
+    width: 100%;
+    height: 60px;
+    display: block;
+    float: left;
+    font-family: 'Roboto';
+    font-size: 14px;
+    line-height: 60px;
+}
+
+.details-container .details-content>div>.details-title, .help-container .help-content>div>.command-title {
+    float: left;
+    padding-left: 40px;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.details-container .details-content>div>.details-amount, .help-container .help-content>div>.command {
+    float: right;
+    padding-right: 60px;
+    text-align: right;
+    color: #000;
+}
+
+.feedback-container .feedback-content .group {
+    position: relative;
+    margin-left: 20px;
+    margin-top: 40px;
+}
+
+.feedback-container .feedback-content textarea{
+    height: 58px;
+}
+.feedback-container .feedback-content input, .feedback-container .feedback-content textarea {
+    font-size: 16px;
+    display: block;
+    width: 300px;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: transparent;
+    padding-top: 5px;
+    padding-bottom: 15px;
+    resize:none;
+    font-family: 'Roboto';
+}
+
+.feedback-container .feedback-content input:focus, .feedback-container .feedback-content textarea:focus{
+    outline: none;
+}
+
+.feedback-content form {
+    padding-left: 15px;
+}
+
+.feedback-container .feedback-content label {
+    color: #999;
+    font-size: 16px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 0px;
+    top: 5px;
+    transition: 0.2s ease all;
+}
+
+
+/* active state */
+
+.feedback-container .feedback-content input:focus, .feedback-container .feedback-content input:valid,
+.feedback-container .feedback-content textarea:focus,
+.feedback-container .feedback-content textarea:valid {
+    border-bottom: 1px solid transparent;
+}
+
+.feedback-container .feedback-content input:focus~label,
+.feedback-container .feedback-content textarea:focus~label,
+.feedback-container .feedback-content textarea:valid~label,
+ .feedback-container .feedback-content input:valid~label {
+    top: -18px;
+    font-size: 12px;
+    color: #51ad9a;
+}
+
+
+/* BOTTOM BARS ================================= */
+
+.feedback-container .feedback-content .bar {
+    position: relative;
+    display: block;
+    width: 300px;
+}
+
+.feedback-container .feedback-content .bar:before, .bar:after {
+    content: '';
+    height: 2px;
+    width: 0;
+    bottom: 1px;
+    position: absolute;
+    background: #52ae9e;
+    transition: 0.2s ease all;
+}
+
+.feedback-container .feedback-content .bar:before {
+    left: 50%;
+}
+
+.feedback-container .feedback-content .bar:after {
+    right: 50%;
+}
+
+
+/* active state */
+
+.feedback-container .feedback-content input:focus~.bar:before, .feedback-container .feedback-content input:focus~.bar:after, .feedback-container .feedback-content textarea:focus~.bar:before, .feedback-container .feedback-content textarea:focus~.bar:after {
+    width: 50%;
+}
+
+.submit-button{
+    width: 300px;
+    height: 50px;
+    background-color: #21d6b2;
+    text-transform: uppercase;
+    font-family: 'Roboto Med';
+    font-size: 14px;
+    text-align: center;
+    line-height: 50px;
+    border: none;
+    border-radius: 2px;
+    box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.2);
+    color: rgba(0,0,0,0.7);
+    outline:none;
 }
 
 .settings-container .settings-list .settings-option {
@@ -490,7 +622,7 @@ html, body {
 .option {
     width: 100%;
     height: 0;
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: rgb(245, 245, 245);
     margin-bottom: 10px;
 }
 
@@ -500,16 +632,16 @@ html, body {
     padding-left: 60px;
     box-sizing: border-box;
     line-height: 40px;
-    color: rgba(0, 0, 0, 0.8);
+    color: rgba(0, 0, 0, 0.7);
     transition: all .2s ease;
 }
 
 .option>div:not(.active):hover {
-    background-color: rgb(217, 217, 217);
+    background-color: rgb(53, 243, 177);
 }
 
 .option>.active {
-    background-color: #d4dad9;
+    background-color: #1ddb99;
 }
 
 .charter {
@@ -571,11 +703,11 @@ html, body {
 }
 
 .toggle-active {
-    background-color: #15dac8;
+    background-color: #1ddb99;
 }
 
 .toggle-active .toggle-circle {
-    background-color: #17a598;
+    background-color: #238c67;
     margin-left: 45px;
 }
 
@@ -717,7 +849,7 @@ html, body {
     padding-top: 1px;
 }
 
-.ql-editor p>*, .ql-editor pre>*, .ql-editor blockquote>*, .ql-editor h1>*, .ql-editor h2>*, .ql-editor h3>*, .ql-editor h4>*, .ql-editor h5>*, .ql-editor h6>*, .ql-editor strong>*, .ql-editor em>*, .ql-editor u>* {
+.ql-editor p>*, .ql-editor pre>*, .ql-editor blockquote>*, .ql-editor h1>*, .ql-editor h2>*, .ql-editor h3>*, .ql-editor h4>*, .ql-editor h5>*, .ql-editor h6>*, .ql-editor strong>*, .ql-editor em>*, .ql-editor u>*, .ql-editor ol>*, .ql-editor ul>*, .ql-editor li>* {
     opacity: 1 !important;
 }
 
@@ -726,7 +858,7 @@ html, body {
     height: 24px;
     line-height: 24px;
     padding: 18px 24px;
-    background-color: #323232;
+    background-color: #1c3338;
     border-radius: 4px;
     margin-left: 24px;
     margin-bottom: 24px;
