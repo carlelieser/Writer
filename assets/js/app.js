@@ -2049,6 +2049,7 @@ $(document).ready(function() {
             });
         }else{
             //load page normally
+            $installScreen.hide();
             realLoad();
         }
     }
@@ -2067,7 +2068,7 @@ $(document).ready(function() {
                 loadScreen();
                 $installScreen.show();
             } else {
-                if (signIn == false) {
+                if (signIn === false) {
                     realLoad();
                 } else {
                     getToken(false, realLoad);
