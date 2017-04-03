@@ -2094,7 +2094,8 @@ $(document).ready(function() {
         });
 
         chrome.storage.local.set({
-            installed: true
+            installed: true,
+            signIn: false
         });
     });
 
