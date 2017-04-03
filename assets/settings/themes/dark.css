@@ -36,6 +36,10 @@
     color: rgba(255, 255, 255, 0.6) !important;
 }
 
+.doc-active{
+    background-color:#585858 !important;
+}
+
 .active{
     background-color: rgba(136, 136, 136, 0.2) !important;
 }
