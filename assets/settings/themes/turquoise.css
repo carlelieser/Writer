@@ -24,6 +24,10 @@
     opacity: 1 !important;
 }
 
+.doc-active{
+    background-color:#388e8d !important;
+}
+
 .document-title, .modal-title{
     color: rgba(255, 255, 255, 1) !important;
 }
