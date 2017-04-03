@@ -127,7 +127,7 @@ html, body {
     z-index: 150;
 }
 
-.user-profile .user-profile-body .user-info .arrow-down{
+.user-profile .user-profile-body .user-info .arrow-down {
     float: right;
     width: 88px;
     height: 50px;
@@ -151,7 +151,7 @@ html, body {
     float: right;
 }
 
-.user-profile .user-info > div {
+.user-profile .user-info>div {
     width: 250px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -175,7 +175,7 @@ html, body {
     opacity: 0.84;
 }
 
-.arrow-down .material-icons{
+.arrow-down .material-icons {
     transition: all .2s ease;
 }
 
@@ -198,7 +198,7 @@ html, body {
     justify-content: center;
     position: absolute;
     z-index: 9999999;
-    background-color: #2a3c3a;
+    background: linear-gradient(to bottom, #0b3640 0%, #14414c 100%);
 }
 
 .loading-screen .loading-icon {
@@ -418,7 +418,7 @@ html, body {
 
 .document-list .delete-dialogue {
     width: 220px;
-    background-color: #f36969;
+    background-color: #f34e4e;
     position: absolute;
     height: 60px;
     padding-left: 20px;
@@ -687,7 +687,7 @@ html, body {
     height: 100%;
     font-size: 18px;
     font-family: 'Charter';
-    padding-top: 60px;
+    padding-top: 80px;
     padding-left: 18%;
     padding-right: 18%;
     padding-bottom: 150px;
@@ -719,14 +719,6 @@ html, body {
 
 .ql-editor p>*, .ql-editor pre>*, .ql-editor blockquote>*, .ql-editor h1>*, .ql-editor h2>*, .ql-editor h3>*, .ql-editor h4>*, .ql-editor h5>*, .ql-editor h6>*, .ql-editor strong>*, .ql-editor em>*, .ql-editor u>* {
     opacity: 1 !important;
-}
-
-.ql-editor p {
-    display: block;
-    -webkit-margin-top: 1em;
-    -webkit-margin-after: 1em;
-    -webkit-margin-start: 0px;
-    -webkit-margin-end: 0px;
 }
 
 .snackbar {
@@ -788,8 +780,8 @@ html, body {
     margin-left: 5px;
 }
 
-.margin-options{
-    margin-bottom:0px !important;
+.margin-options {
+    margin-bottom: 0px !important;
 }
 
 #print {

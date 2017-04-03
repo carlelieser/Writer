@@ -4,6 +4,12 @@
 // Made with <3
 $(document).ready(function() {
 
+    require.config({
+        paths: {
+            'upndown': '/assets/libs/upndown/lib/upndown.bundle.min'
+        }
+    });
+
     //define global variables
     var $documentList = $('.document-list'),
         $mainContainer = $('.main-container'),
@@ -174,7 +180,7 @@ $(document).ready(function() {
                             //with height : 0
                             $optionContainer.css('height', '0');
                             $optionContainer.hide();
-                        }, 200);
+                        }, 400);
                     });
 
                 } else {
@@ -605,6 +611,7 @@ $(document).ready(function() {
     }
 
     //convert nested lists
+    //make sure blockquotes dont have paragraph tags inside them
     function cleanHTML(html) {
         var htmlParent = $(document.createElement('div'));
         htmlParent.addClass('htmlParent');
@@ -639,7 +646,7 @@ $(document).ready(function() {
         });
 
         htmlParent.find('p').each(function() {
-            if ($(this).parent().is('li')) {
+            if ($(this).parent().is('li') || $(this).parent().is('blockquote')) {
                 var cnt = $(this).contents();
                 $(this).replaceWith(cnt);
             }
@@ -665,19 +672,20 @@ $(document).ready(function() {
         this.editor.history.clear();
     }
 
-    Doc.prototype.load = function(name, content, size, savedFileEntry) {
+    Doc.prototype.load = function(name, content, size, savedFileEntry, changed) {
         this.setName(name);
         this.setContents(content);
         this.setEditorContents(content);
         this.setSize(size);
         this.setFileEntry(savedFileEntry);
+        this.changed = changed;
     }
 
-    Doc.prototype.loadFile = function(name, size, fileEntry) {
+    Doc.prototype.loadFile = function(name, size, fileEntry, changed) {
         this.setName(name);
         this.setSize(size);
         this.setFileEntry(fileEntry);
-
+        this.changed = changed;
         setDocumentTitle($('.doc-active'), name);
         setDocumentSize($('.doc-active'), size);
     }
@@ -708,7 +716,7 @@ $(document).ready(function() {
 
         //handle events
         if (documents.length === 0) {
-            newDoc('untitled', '', '0 KB', false, true);
+            newDoc('untitled', '', '0 KB', false, true, false);
             closeModals();
         } else {
             //last
@@ -722,12 +730,19 @@ $(document).ready(function() {
 
     //strips away style tags
     //outputs clean html
-    function cleanStyles(html){
+    function cleanStyles(html) {
         var temp = $(document.createElement('div'));
-            temp.html(html);
+        temp.html(html);
 
         temp.find('*').removeAttr('style');
         return temp.html();
+    }
+
+    function writeToWriter(fileWriter, doc, blob, entry) {
+        fileWriter.write(blob);
+        doc.loadFile(entry.name, blob.size, entry, false);
+        openSnackBar(false, false, entry.name);
+        saveData();
     }
 
     function exportToFileEntry(fileEntry) {
@@ -747,19 +762,33 @@ $(document).ready(function() {
                         case 'wtr':
                             content = cleanStyles(qlEditor().html());
                             blob = new Blob([content]);
+                            writeToWriter(fileWriter, doc, blob, writableFileEntry);
                             break;
                         case 'md':
-                            content = toMarkdown(cleanStyles(qlEditor().html()));
-                            blob = new Blob([content]);
+                            require(['upndown'], function(upndown) {
+                                var und = new upndown();
+                                und.convert(cleanStyles(qlEditor().html()), function(err, markdown) {
+                                    if (err) {
+                                        console.log(err);
+                                    } else {
+                                        content = markdown;
+                                        console.log(content);
+                                        blob = new Blob([content]);
+                                        writeToWriter(fileWriter, doc, blob, writableFileEntry);
+                                    }
+                                });
+                            });
                             break;
                         case 'docx':
                             content = '<!DOCTYPE HTML><html><head></head><body>' + cleanStyles(qlEditor().html()) + '</body></html>';
                             blob = htmlDocx.asBlob(content);
+                            writeToWriter(fileWriter, doc, blob, writableFileEntry);
                             break;
                         case 'txt':
                         default:
                             content = doc.editor.getText();
                             blob = new Blob([content]);
+                            writeToWriter(fileWriter, doc, blob, writableFileEntry);
                             break;
                     }
                     var truncated = false;
@@ -772,11 +801,6 @@ $(document).ready(function() {
                             return;
                         }
                     };
-                    fileWriter.write(blob);
-                    doc.changed = false;
-                    doc.loadFile(writableFileEntry.name, blob.size, writableFileEntry);
-                    openSnackBar(false, false, writableFileEntry.name);
-                    saveData();
                 });
             });
         }
@@ -814,10 +838,10 @@ $(document).ready(function() {
         doc.load(name, content, size, savedFileEntry);
     }
 
-    function newDoc(name, content, size, savedFileEntry, active) {
+    function newDoc(name, content, size, savedFileEntry, active, changed) {
         var file = new Doc();
         createDoc(file, name, size, active);
-        loadDoc(file, name, content, size, savedFileEntry);
+        loadDoc(file, name, content, size, savedFileEntry, changed);
         addDocument(file);
     }
 
@@ -1086,6 +1110,7 @@ $(document).ready(function() {
             blob;
         var index = documents.indexOf(doc);
         var html = $('.document-' + index).find('.ql-editor').html();
+        var size;
         switch (extension) {
             case 'html':
             case 'htm':
@@ -1156,7 +1181,7 @@ $(document).ready(function() {
 
     //create new document
     $new.click(function() {
-        newDoc('untitled', '', '0 KB', false, true);
+        newDoc('untitled', '', '0 KB', false, true, false);
         closeModals();
     });
 
@@ -1167,7 +1192,7 @@ $(document).ready(function() {
 
             if (content.indexOf('<w:altChunk r:id="htmlChunk" />') > -1) {
                 content = content.substring(content.lastIndexOf('<!DOCTYPE HTML><html><head></head><body>') + 15, content.lastIndexOf('</body></html>'));
-                newDoc(file.name, content, file.size, entry, true);
+                newDoc(file.name, content, file.size, entry, true, false);
                 closeModals();
             } else {
                 var secReader = new FileReader();
@@ -1177,7 +1202,7 @@ $(document).ready(function() {
                         arrayBuffer: content
                     }).then(function(result) {
                         content = result.value;
-                        newDoc(file.name, content, file.size, entry, true);
+                        newDoc(file.name, content, file.size, entry, true, false);
                         closeModals();
                     }).done();
                 }
@@ -1188,23 +1213,23 @@ $(document).ready(function() {
         reader.readAsText(file);
     }
 
+    function convertNewLines(text) {
+        return text.replace(/\n\n  \n\n\n/g, '<p><p>');
+    }
+
     function readAsHTML(file, entry, markdown) {
         var reader = new FileReader();
         reader.onload = function() {
             var content = this.result;
 
             if (markdown) {
-                var renderer = new marked.Renderer();
-                renderer.paragraph = function(text) {
-                    return '<p>' + text + '</p><br>';
-                }
-                content = marked(content, {
-                    renderer: renderer
-                });
-                newDoc(file.name, content, file.size, entry, true)
+                content = convertNewLines(content);
+                content = marked(content);
+                content = cleanHTML(content);
+                newDoc(file.name, content, file.size, entry, true, false)
                 closeModals();
             } else {
-                newDoc(file.name, content, file.size, entry, true)
+                newDoc(file.name, content, file.size, entry, true, false)
                 closeModals();
             }
         }
@@ -1599,17 +1624,10 @@ $(document).ready(function() {
 
     //open dropdown
     function openDropdown(dropdown) {
-        //hide other dropdowns
-        $optionContainer.stop().animate({
-            height: '0'
-        }, 400, function() {
-            $(this).hide();
-            //then open the current one
-            var height = dropdown.children().length * 40 + 'px';
-            dropdown.stop().show().animate({
-                height: height
-            }, 400, beizer);
-        });
+        var height = dropdown.children().length * 40 + 'px';
+        dropdown.stop().show().animate({
+            height: height
+        }, 400, beizer);
     }
 
     //close dropdown
@@ -1768,7 +1786,7 @@ $(document).ready(function() {
             }, 800, beizer, function() {
                 $(this).remove();
             });
-        }, 1000);
+        }, 800);
     }
 
     //remember user data using the Chrome API
@@ -2152,13 +2170,13 @@ $(document).ready(function() {
             console.log(item);
 
             if (settings == 'settings' || data == 'documents') {
-                newDoc('untitled', '', '0 KB', false, true);
+                newDoc('untitled', '', '0 KB', false, true, false);
                 loadSettings(defaults);
                 loadScreen();
             } else {
                 var counter = 0;
                 if (data.length === 0) {
-                    newDoc('untitled', '', '0 KB', false, true);
+                    newDoc('untitled', '', '0 KB', false, true, false);
                     loadSettings(settings);
                     loadScreen();
                 } else {
@@ -2169,7 +2187,8 @@ $(document).ready(function() {
                         var size = thisData.size;
                         var savedFileEntry = thisData.savedFileEntry;
                         var active = thisData.isActive;
-                        newDoc(name, content, size, savedFileEntry, active);
+                        var changed = thisData.changed;
+                        newDoc(name, content, size, savedFileEntry, active, changed);
 
                         //manually focus on first elem
                         documentAct().children().first().children().css('opacity', '0.6');

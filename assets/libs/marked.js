@@ -781,11 +781,11 @@ Renderer.prototype.code = function(code, lang, escaped) {
     + escape(lang, true)
     + '">'
     + (escaped ? code : escape(code, true))
-    + '\n</code></pre>\n';
+    + '\n</code></pre>';
 };
 
 Renderer.prototype.blockquote = function(quote) {
-  return '<blockquote>\n' + quote + '</blockquote>\n';
+  return '<blockquote>' + quote + '</blockquote>';
 };
 
 Renderer.prototype.html = function(html) {
@@ -802,7 +802,7 @@ Renderer.prototype.heading = function(text, level, raw) {
     + text
     + '</h'
     + level
-    + '>\n';
+    + '>';
 };
 
 Renderer.prototype.hr = function() {
@@ -811,15 +811,15 @@ Renderer.prototype.hr = function() {
 
 Renderer.prototype.list = function(body, ordered) {
   var type = ordered ? 'ol' : 'ul';
-  return '<' + type + '>\n' + body + '</' + type + '>\n';
+  return '<' + type + '>' + body + '</' + type + '>';
 };
 
 Renderer.prototype.listitem = function(text) {
-  return '<li>' + text + '</li>\n';
+  return '<li>' + text + '</li>';
 };
 
 Renderer.prototype.paragraph = function(text) {
-  return '<p>' + text + '</p>\n';
+  return '<p>' + text + '</p>';
 };
 
 Renderer.prototype.table = function(header, body) {
