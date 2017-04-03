@@ -15,7 +15,8 @@
             "fileSystem": ["write", "retainEntries", "directory"]
         },
         "clipboardWrite",
-        "clipboardRead"
+        "clipboardRead",
+        "<all_urls>"
     ],
     "oauth2": {
         "client_id": "682910087350-6o4lqn9drao9o38c9jp57furcfge1lnd.apps.googleusercontent.com",

@@ -834,6 +834,10 @@ html, body {
     transition: all .2s ease;
 }
 
+.ql-editor img{
+    display:none;
+}
+
 .ql-editor::-webkit-scrollbar {
     width: 8px;
     background-color: transparent;
@@ -849,7 +853,7 @@ html, body {
     padding-top: 1px;
 }
 
-.ql-editor p>*, .ql-editor pre>*, .ql-editor blockquote>*, .ql-editor h1>*, .ql-editor h2>*, .ql-editor h3>*, .ql-editor h4>*, .ql-editor h5>*, .ql-editor h6>*, .ql-editor strong>*, .ql-editor em>*, .ql-editor u>*, .ql-editor ol>*, .ql-editor ul>*, .ql-editor li>* {
+.ql-editor p>*, .ql-editor pre>*, .ql-editor blockquote>*, .ql-editor h1>*, .ql-editor h2>*, .ql-editor h3>*, .ql-editor h4>*, .ql-editor h5>*, .ql-editor h6>*, .ql-editor strong>*, .ql-editor em>*, .ql-editor u>*, .ql-editor ol, .ql-editor ul, .ql-editor li>* {
     opacity: 1 !important;
 }
 
@@ -858,7 +862,7 @@ html, body {
     height: 24px;
     line-height: 24px;
     padding: 18px 24px;
-    background-color: #1c3338;
+    background-color: #313131;
     border-radius: 4px;
     margin-left: 24px;
     margin-bottom: 24px;

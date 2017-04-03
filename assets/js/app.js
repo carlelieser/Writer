@@ -848,6 +848,7 @@ $(document).ready(function() {
         createDoc(file, name, size, active);
         loadDoc(file, name, content, size, savedFileEntry, changed);
         addDocument(file);
+        loadImages();
     }
 
     function deleteDoc(doc) {
@@ -1231,10 +1232,10 @@ $(document).ready(function() {
                 content = convertNewLines(content);
                 content = marked(content);
                 content = cleanHTML(content);
-                newDoc(file.name, content, file.size, entry, true, false)
+                newDoc(file.name, content, file.size, entry, true, false);
                 closeModals();
             } else {
-                newDoc(file.name, content, file.size, entry, true, false)
+                newDoc(file.name, content, file.size, entry, true, false);
                 closeModals();
             }
         }
@@ -1330,6 +1331,51 @@ $(document).ready(function() {
             $feedBackContainer.find('.feedback-email').focus();
         });
     });
+
+    function createDataURL(response, node) {
+        var reader = new FileReader();
+
+        reader.onload = function() {
+            var data = this.result;
+            if (node != undefined) {
+                node.attr('src', data);
+            }
+        }
+
+        reader.readAsDataURL(response);
+    }
+
+    function requestXML(url, node) {
+        if (url.indexOf('data:') == -1) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url);
+            xhr.responseType = 'blob';
+            xhr.onload = function() {
+                createDataURL(xhr.response, node);
+            }.bind(this);
+            xhr.send();
+        }
+        node.show();
+    }
+
+    function loadImages() {
+        qlEditor().find('img').each(function() {
+            if ($(this).attr('src') === undefined) {
+                //ignore image if src is undefined
+            } else {
+                var url = $(this).attr('src');
+                requestXML(url, $(this));
+            }
+        });
+    }
+
+    $(document).on('paste drop', function() {
+        setTimeout(loadImages, 0);
+    });
+
+    $(document).on('error', 'img', function() {
+        $(this).hide();
+    })
 
     $('.submit-button').click(function() {
         var email = $('.feedback-email').val();
@@ -1931,74 +1977,80 @@ $(document).ready(function() {
     }
 
     function getToken(install, callback) {
-        chrome.identity.getAuthToken({
-            'interactive': true
-        }, function(token) {
-            current_token = token;
-            if (chrome.runtime.lastError) {
-                if (install === false) {
-                    revokeToken();
+        //check if online
+        if(navigator.onLine){
+            chrome.identity.getAuthToken({
+                'interactive': true
+            }, function(token) {
+                current_token = token;
+                if (chrome.runtime.lastError) {
+                    if (install === false) {
+                        revokeToken();
+                    } else {
+                        loadScreen();
+                        $installScreen.show();
+                        chrome.storage.local.set({
+                            installed: false
+                        });
+                    }
                 } else {
-                    loadScreen();
-                    $installScreen.show();
-                    chrome.storage.local.set({
-                        installed: false
+                    $.get('https://www.googleapis.com/plus/v1/people/me?access_token=' + token, function(profile) {
+                        console.log(profile);
+                        var coverURL = profile.cover.coverPhoto.url;
+                        var imageURL = profile.image.url;
+                        var name = profile.displayName;
+                        getImage(imageURL, function(data) {
+                            $('.user-image').css('background-image', 'url(' + data + ')');
+                            var img = document.createElement('img');
+                            img.setAttribute('src', data)
+                            img.addEventListener('load', function() {
+                                var vibrant = new Vibrant(img);
+                                var color = vibrant.DarkMutedSwatch.rgb;
+                                var realColor = color.join(',');
+                                var ideal = idealTextColor(color);
+                                $('.user-info').css('color', ideal);
+
+                                $('.fallback-signin').hide();
+                                $('.sign-out').css({
+                                    backgroundColor: 'rgb(' + realColor + ')',
+                                    color: ideal
+                                });
+                                $('.sign-out .material-icons').css('color', ideal);
+                                $('.user-profile-body').show();
+
+                                chrome.storage.local.set({
+                                    installed: true,
+                                    signIn: true
+                                });
+
+                                if (callback) {
+                                    $installScreen.stop().animate({
+                                        top: '-100%'
+                                    }, 800, beizer, function() {
+                                        $(this).remove();
+                                    });
+                                    callback();
+                                }
+
+                            });
+                        });
+                        getImage(coverURL, function(data) {
+                            $('.user-profile').css('background-image', 'url(' + data + ')');
+                        });
+
+                        $('.user-name').text(name);
+                        chrome.identity.getProfileUserInfo(function(info) {
+                            $('.user-email').text(info.email);
+                        })
+                    }).fail(function() {
+                        revokeToken();
                     });
                 }
-            } else {
-                $.get('https://www.googleapis.com/plus/v1/people/me?access_token=' + token, function(profile) {
-                    console.log(profile);
-                    var coverURL = profile.cover.coverPhoto.url;
-                    var imageURL = profile.image.url;
-                    var name = profile.displayName;
-                    getImage(imageURL, function(data) {
-                        $('.user-image').css('background-image', 'url(' + data + ')');
-                        var img = document.createElement('img');
-                        img.setAttribute('src', data)
-                        img.addEventListener('load', function() {
-                            var vibrant = new Vibrant(img);
-                            var color = vibrant.DarkMutedSwatch.rgb;
-                            var realColor = color.join(',');
-                            var ideal = idealTextColor(color);
-                            $('.user-info').css('color', ideal);
-
-                            $('.fallback-signin').hide();
-                            $('.sign-out').css({
-                                backgroundColor: 'rgb(' + realColor + ')',
-                                color: ideal
-                            });
-                            $('.sign-out .material-icons').css('color', ideal);
-                            $('.user-profile-body').show();
-
-                            chrome.storage.local.set({
-                                installed: true,
-                                signIn: true
-                            });
-
-                            if (callback) {
-                                $installScreen.stop().animate({
-                                    top: '-100%'
-                                }, 800, beizer, function() {
-                                    $(this).remove();
-                                });
-                                callback();
-                            }
-
-                        });
-                    });
-                    getImage(coverURL, function(data) {
-                        $('.user-profile').css('background-image', 'url(' + data + ')');
-                    });
-
-                    $('.user-name').text(name);
-                    chrome.identity.getProfileUserInfo(function(info) {
-                        $('.user-email').text(info.email);
-                    })
-                }).fail(function() {
-                    revokeToken();
-                });
-            }
-        });
+            });
+        }else{
+            //skip to loading
+            callback();
+        }
     }
 
     //load data
