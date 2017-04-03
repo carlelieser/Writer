@@ -2048,8 +2048,8 @@ $(document).ready(function() {
                 }
             });
         }else{
-            //skip to loading
-            callback();
+            //load page normally
+            realLoad();
         }
     }
 
