@@ -1258,6 +1258,39 @@ $(document).ready(function() {
         return false;
     }
 
+    function openFiles(files){
+        files.forEach(function(value, index, array) {
+            var entry = value;
+            var path = entry.fullPath;
+            if (checkForPath(path) == true) {
+                closeModals();
+                openSnackBar(true, 'is already open.', entry.name);
+            } else {
+                entry.file(function(file) {
+                    //handle files based on extension
+                    var extension = getExtension(file.name),
+                        content;
+
+                    switch (extension) {
+                        case 'md':
+                            readAsHTML(file, entry, true);
+                            break;
+                        case 'docx':
+                            readAsArrayBuff(file, entry);
+                            break;
+                        case 'html':
+                        case 'htm':
+                        case 'txt':
+                        case 'wtr':
+                        default:
+                            readAsHTML(file, entry, false);
+                            break;
+                    }
+                });
+            }
+        });
+    }
+
     //open document
     $open.click(function() {
         chrome.fileSystem.chooseEntry({
@@ -1265,36 +1298,7 @@ $(document).ready(function() {
             acceptsMultiple: true,
             accepts: accepts
         }, function(files) {
-            files.forEach(function(value, index, array) {
-                var entry = value;
-                var path = entry.fullPath;
-                if (checkForPath(path) == true) {
-                    closeModals();
-                    openSnackBar(true, 'is already open.', entry.name);
-                } else {
-                    entry.file(function(file) {
-                        //handle files based on extension
-                        var extension = getExtension(file.name),
-                            content;
-
-                        switch (extension) {
-                            case 'md':
-                                readAsHTML(file, entry, true);
-                                break;
-                            case 'docx':
-                                readAsArrayBuff(file, entry);
-                                break;
-                            case 'html':
-                            case 'htm':
-                            case 'txt':
-                            case 'wtr':
-                            default:
-                                readAsHTML(file, entry, false);
-                                break;
-                        }
-                    });
-                }
-            });
+            openFiles(files);
         });
     });
 
@@ -2287,6 +2291,9 @@ $(document).ready(function() {
         if (message.full) {
             fullScreen();
         }
+        if (message.open) {
+            openLaunchData();
+        }
     });
 
     $('.sign-out').css({
@@ -2368,6 +2375,7 @@ $(document).ready(function() {
 
                         counter++;
                         if (counter === array.length) {
+                            openLaunchData();
                             loadSettings(settings);
                             loadScreen();
                         }
@@ -2378,6 +2386,16 @@ $(document).ready(function() {
     }
 
     loadData(realLoad);
+
+    function openLaunchData() {
+        if (launchData && launchData.items) {
+            for (var i = 0; i < launchData.items.length; i++) {
+                var temp = [];
+                temp.push(launchData.items[i].entry);
+                openFiles(temp);
+            }
+        }
+    }
 
     $('.close-window').click(function() {
         chrome.app.window.current().close();

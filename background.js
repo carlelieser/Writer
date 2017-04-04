@@ -1,4 +1,11 @@
+var mainWindow = null;
 chrome.app.runtime.onLaunched.addListener(function(launchData) {
+    if(mainWindow){
+      mainWindow.contentWindow.launchData = launchData;
+      mainWindow.focus();
+      mainWindow.drawAttention();
+      chrome.runtime.sendMessage({open: true});
+    }
   chrome.app.window.create(
     'index.html',
     {
@@ -23,5 +30,7 @@ chrome.app.runtime.onLaunched.addListener(function(launchData) {
         win.onFullscreened.addListener(function(){
             chrome.runtime.sendMessage({full: true});
         });
+        mainWindow = win;
+        win.contentWindow.launchData = launchData;
     });
 });
