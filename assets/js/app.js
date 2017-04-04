@@ -752,7 +752,6 @@ $(document).ready(function() {
         } else {
             chrome.fileSystem.getWritableEntry(fileEntry, function(writableFileEntry) {
                 writableFileEntry.createWriter(function(fileWriter) {
-                    console.log(writableFileEntry);
                     var extension = getExtension(writableFileEntry.name);
                     var doc = getDoc(documentAct().index());
                     var content;
@@ -774,7 +773,6 @@ $(document).ready(function() {
                                         console.log(err);
                                     } else {
                                         content = markdown;
-                                        console.log(content);
                                         blob = new Blob([content]);
                                         writeToWriter(fileWriter, doc, blob, writableFileEntry);
                                     }
@@ -1999,7 +1997,6 @@ $(document).ready(function() {
                     }
                 } else {
                     $.get('https://www.googleapis.com/plus/v1/people/me?access_token=' + token, function(profile) {
-                        console.log(profile);
                         var coverURL = profile.cover.coverPhoto.url;
                         var imageURL = profile.image.url;
                         var name = profile.displayName;
@@ -2340,8 +2337,6 @@ $(document).ready(function() {
         }, function(item) {
             var settings = item.settings,
                 data = item.data;
-
-            console.log(item);
 
             if (settings == 'settings' || data == 'documents') {
                 newDoc('untitled', '', '0 KB', false, true, false);
