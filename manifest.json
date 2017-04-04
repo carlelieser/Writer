@@ -39,6 +39,7 @@
     "file_handlers": {
         "text": {
             "types": [
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                 "text/*"
             ]
         }
