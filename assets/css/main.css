@@ -459,6 +459,10 @@ html, body {
     color: #000;
 }
 
+.help-container{
+    width: 450px !important;
+}
+
 .feedback-container .feedback-content .group {
     position: relative;
     margin-left: 20px;
