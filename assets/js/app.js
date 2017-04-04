@@ -812,7 +812,10 @@ $(document).ready(function() {
 
     function ExportToDisk(name) {
         name = strip(name);
-        if(name.indexOf('.') == -1){
+        // if on a chromebook,
+        // add .wtr extension (this fixes chrome os bug)
+        var ua = window.navigator.userAgent;
+        if(ua.indexOf('CrOS') > -1){
             name += '.wtr';
         }
         chrome.fileSystem.chooseEntry({
