@@ -752,6 +752,7 @@ $(document).ready(function() {
         } else {
             chrome.fileSystem.getWritableEntry(fileEntry, function(writableFileEntry) {
                 writableFileEntry.createWriter(function(fileWriter) {
+                    console.log(writableFileEntry);
                     var extension = getExtension(writableFileEntry.name);
                     var doc = getDoc(documentAct().index());
                     var content;
@@ -813,6 +814,9 @@ $(document).ready(function() {
 
     function ExportToDisk(name) {
         name = strip(name);
+        if(name.indexOf('.') == -1){
+            name += '.wtr';
+        }
         chrome.fileSystem.chooseEntry({
             type: 'saveFile',
             suggestedName: name,
