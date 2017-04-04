@@ -815,7 +815,7 @@ $(document).ready(function() {
         // if on a chromebook,
         // add .wtr extension (this fixes chrome os bug)
         var ua = window.navigator.userAgent;
-        if(ua.indexOf('CrOS') > -1){
+        if (ua.indexOf('CrOS') > -1) {
             name += '.wtr';
         }
         chrome.fileSystem.chooseEntry({
@@ -1258,7 +1258,7 @@ $(document).ready(function() {
         return false;
     }
 
-    function openFiles(files){
+    function openFiles(files) {
         files.forEach(function(value, index, array) {
             var entry = value;
             var path = entry.fullPath;
@@ -1987,7 +1987,7 @@ $(document).ready(function() {
 
     function getToken(install, callback) {
         //check if online
-        if(navigator.onLine){
+        if (navigator.onLine) {
             chrome.identity.getAuthToken({
                 'interactive': true
             }, function(token) {
@@ -2055,7 +2055,7 @@ $(document).ready(function() {
                     });
                 }
             });
-        }else{
+        } else {
             //load page normally
             $installScreen.hide();
             realLoad();

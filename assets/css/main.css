@@ -459,7 +459,7 @@ html, body {
     color: #000;
 }
 
-.help-container{
+.help-container {
     width: 450px !important;
 }
 
@@ -469,9 +469,10 @@ html, body {
     margin-top: 40px;
 }
 
-.feedback-container .feedback-content textarea{
+.feedback-container .feedback-content textarea {
     height: 58px;
 }
+
 .feedback-container .feedback-content input, .feedback-container .feedback-content textarea {
     font-size: 16px;
     display: block;
@@ -481,11 +482,11 @@ html, body {
     background-color: transparent;
     padding-top: 5px;
     padding-bottom: 15px;
-    resize:none;
+    resize: none;
     font-family: 'Roboto';
 }
 
-.feedback-container .feedback-content input:focus, .feedback-container .feedback-content textarea:focus{
+.feedback-container .feedback-content input:focus, .feedback-container .feedback-content textarea:focus {
     outline: none;
 }
 
@@ -507,16 +508,11 @@ html, body {
 
 /* active state */
 
-.feedback-container .feedback-content input:focus, .feedback-container .feedback-content input:valid,
-.feedback-container .feedback-content textarea:focus,
-.feedback-container .feedback-content textarea:valid {
+.feedback-container .feedback-content input:focus, .feedback-container .feedback-content input:valid, .feedback-container .feedback-content textarea:focus, .feedback-container .feedback-content textarea:valid {
     border-bottom: 1px solid transparent;
 }
 
-.feedback-container .feedback-content input:focus~label,
-.feedback-container .feedback-content textarea:focus~label,
-.feedback-container .feedback-content textarea:valid~label,
- .feedback-container .feedback-content input:valid~label {
+.feedback-container .feedback-content input:focus~label, .feedback-container .feedback-content textarea:focus~label, .feedback-container .feedback-content textarea:valid~label, .feedback-container .feedback-content input:valid~label {
     top: -18px;
     font-size: 12px;
     color: #51ad9a;
@@ -556,7 +552,7 @@ html, body {
     width: 50%;
 }
 
-.submit-button{
+.submit-button {
     width: 300px;
     height: 50px;
     background-color: #21d6b2;
@@ -567,9 +563,9 @@ html, body {
     line-height: 50px;
     border: none;
     border-radius: 2px;
-    box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.2);
-    color: rgba(0,0,0,0.7);
-    outline:none;
+    box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.2);
+    color: rgba(0, 0, 0, 0.7);
+    outline: none;
 }
 
 .settings-container .settings-list .settings-option {
@@ -838,8 +834,8 @@ html, body {
     transition: all .2s ease;
 }
 
-.ql-editor img{
-    display:none;
+.ql-editor img {
+    display: none;
 }
 
 .ql-editor::-webkit-scrollbar {
