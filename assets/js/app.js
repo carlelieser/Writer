@@ -18,7 +18,6 @@ $(document).ready(function() {
         }
     });
 
-    //define global variables
     var $html = $('html'),
         $body = $('body'),
         $topBar = $('.top-bar'),
@@ -31,22 +30,18 @@ $(document).ready(function() {
         $modal = $('.modal'),
         $bg = $('.bg');
 
-    //loading screen
     var $loadingScreen = $('.loading-screen');
 
-    //install screen
     var $installScreen = $('.install-screen');
-    //setting toggles
+
     var $toggle = $('.toggle');
 
-    //specific toggles
     var $coffeeMode = $('.coffee'),
         $nightMode = $('.night'),
         $fullScreen = $('.full'),
         $statistics = $('.statistics'),
         $focus = $('.focus');
 
-    //settings option
     var $settingsOption = $('.settings-option'),
         $optionContainer = $('.option');
 
@@ -56,7 +51,6 @@ $(document).ready(function() {
         $lineChildren = $('.line-options').children(),
         $marginChildren = $('.margin-options').children();
 
-    //modals
     var $documentContainer = $('.document-container'),
         $settingsContainer = $('.settings-container'),
         $feedBackContainer = $('.feedback-container'),
@@ -64,7 +58,6 @@ $(document).ready(function() {
         $helpContainer = $('.help-container'),
         $fileContainer = $('.file-container');
 
-    //modal triggers
     var $docButton = $('.open-documents'),
         $settingsButton = $('.open-settings'),
         $feedback = $('.open-feedback'),
@@ -73,23 +66,22 @@ $(document).ready(function() {
         $file = $('.open-file'),
         $modalClose = $('.modal-close');
 
-    //sidebar buttons
     var $new = $('.new'),
         $open = $('.open'),
         $save = $('.save'),
         $saveAs = $('.save-as'),
         $print = $('.print');
 
-    //snackbar
     var $snackBar = $('.snackbar');
 
-    //statistics
     var $statisticsBar = $('.statistics-bar');
 
-    //cubic-beizer for .anim
+    var $email = $('.feedback-email'),
+        $subject = $('.feedback-email'),
+        $message = $('.feedback-message');
+
     var beizer = $.bez([.17, .67, .29, 1.01]);
 
-    //useful for setting up chooseEntry
     var accepts = [{
             description: 'Writer Document (*.wtr)',
             extensions: [
@@ -128,7 +120,6 @@ $(document).ready(function() {
         }
     ];
 
-    //default configuration
     var defaults = {
         coffee: false,
         night: false,
@@ -142,8 +133,6 @@ $(document).ready(function() {
         margin: 'medium'
     }
 
-    //this will dynamically change based
-    //on user input
     var settings = {
         coffee: false,
         night: false,
@@ -188,15 +177,12 @@ $(document).ready(function() {
                     }).each(function() {
                         $(this).click();
                         setTimeout(function() {
-                            //make sure all dropdowns are hidden
-                            //with height : 0
                             $optionContainer.css('height', '0');
                             $optionContainer.hide();
                         }, 400);
                     });
 
                 } else {
-                    //convert value into active or inactive
                     if (value === false) {
                         value = 'toggle-inactive';
                     } else {
@@ -217,18 +203,13 @@ $(document).ready(function() {
         docAct().click();
     }
 
-    //the contents of an empty document item
-    //represented in html format
     var newDocumentString = '<div class="document-item"><div class="material-icons">insert_drive_file</div><input readonly=true class="document-title" type="text"/><div class="document-size"></div><div class="document-edit"><div class="material-icons">edit</div></div><div class="document-delete"><div class="material-icons">delete</div></div><div class="delete-dialogue"><div class="delete-confirm">Delete</div><div class="delete-cancel">Cancel</div></div></div>';
     var mainDocumentString = '<div class="document document-active"></div>';
 
-    //hide elements
     $('.sidebar, .settings-container, .document-container, .bg, .option, .snackbar').hide();
 
     var documents = [];
 
-    //simple functions to manipulate
-    //dom level documents (not in array)
     function setDocumentTitle(element, title) {
         element.find('.document-title').val(title);
     }
@@ -237,11 +218,15 @@ $(document).ready(function() {
         element.find('.document-size').text(size);
     }
 
-    function documentAct() {
-        return $('.document-active');
+    function documentAct(index) {
+        if (index) {
+            return $('.document-active').index();
+        } else {
+            return $('.document-active');
+        }
     }
 
-    function docAct(){
+    function docAct() {
         return $('.doc-active');
     }
 
@@ -249,11 +234,6 @@ $(document).ready(function() {
         element.removeClass(classOne);
         element.addClass(classTwo);
     }
-
-    //a Doc() object contains its contents
-    //as a delta object and its own fileEntry.
-    //this means we don't have to store these variables
-    //in different arrays.
 
     var _DOC;
 
@@ -347,8 +327,6 @@ $(document).ready(function() {
     }
 
     Doc.prototype.createEditor = function(element) {
-        //adding Medium shortcuts
-        //as well as our own
         var bindings = {
             alignLeft: {
                 key: 'W',
@@ -460,19 +438,17 @@ $(document).ready(function() {
         var doc = this;
 
         var editor = this.editor;
-        //set editorDOM for reference
-        this.editorDOM = $(element).children().first(); //should be ql-editor
+
+        this.editorDOM = $(element).children().first();
 
         var editorDOM = this.editorDOM;
 
-        //apply defaults
         applyAll();
 
         if (settings.statistics == true) {
             calcStats(editor.getText());
         }
 
-        //only save data 1s after user has stopped typing
         var timer;
         this.editor.on('text-change', function() {
             clearTimeout(timer);
@@ -543,12 +519,10 @@ $(document).ready(function() {
         });
     }
 
-    //returns editor in the DOM
     Doc.prototype.getEditor = function() {
         return this.editorDOM;
     }
 
-    //returns corresponding document-list item
     Doc.prototype.getDocItem = function() {
         return this.docListItem;
     }
@@ -576,7 +550,7 @@ $(document).ready(function() {
             this.setActive(true);
 
         }
-        //create editor
+
         this.createEditor('.document-' + lastDoc.index());
 
         setDocumentTitle(lastDoc, name);
@@ -616,12 +590,10 @@ $(document).ready(function() {
         this.showCreate(name, size, active);
     }
 
-    //check if content is html
     function isHTML(string) {
         return /<[\s\S]*>/i.test(string);
     }
 
-    //extend string prototype
     String.prototype.replaceAll = function(search, replacement) {
         var target = this;
         return target.replace(new RegExp(search, 'g'), replacement);
@@ -640,14 +612,11 @@ $(document).ready(function() {
             .replaceAll('&quot;', '')
     }
 
-    //convert nested lists
-    //make sure blockquotes dont have paragraph tags inside them
     function cleanHTML(html) {
         var htmlParent = $(document.createElement('div'));
         htmlParent.addClass('htmlParent');
         htmlParent.html(html);
 
-        //correct empty tags
         htmlParent.find('*').each(function() {
             if (isEmpty($(this))) {
                 $(this).html('<br/>');
@@ -682,7 +651,6 @@ $(document).ready(function() {
             }
         });
 
-        //remove tables
         htmlParent.find('table').remove();
 
         var cleaned = cleanDoc(htmlParent.html());
@@ -744,12 +712,10 @@ $(document).ready(function() {
         this.docListItem.remove();
         documents.splice(index, 1);
 
-        //handle events
         if (documents.length === 0) {
-            newDoc('untitled', '', '0 KB', false, true, false);
+            newDoc(true);
             closeModals();
         } else {
-            //last
             if (index - 1 == documents.length - 1) {
                 $documentList.children().last().click();
             } else {
@@ -758,8 +724,6 @@ $(document).ready(function() {
         }
     }
 
-    //strips away style tags
-    //outputs clean html
     function cleanStyles(html) {
         var temp = $(document.createElement('div'));
         temp.html(html);
@@ -782,7 +746,7 @@ $(document).ready(function() {
             chrome.fileSystem.getWritableEntry(fileEntry, function(writableFileEntry) {
                 writableFileEntry.createWriter(function(fileWriter) {
                     var extension = getExtension(writableFileEntry.name);
-                    var doc = getDoc(documentAct().index());
+                    var doc = getDoc(documentAct(true));
                     var content;
                     var blob;
 
@@ -828,8 +792,6 @@ $(document).ready(function() {
                     fileWriter.onwriteend = function(e) {
                         if (!truncated) {
                             truncated = true;
-                            // You need to explicitly set the file size to truncate
-                            // any content that might have been there before
                             this.truncate(blob.size);
                             return;
                         }
@@ -841,8 +803,6 @@ $(document).ready(function() {
 
     function ExportToDisk(name) {
         name = strip(name);
-        // if on a chromebook,
-        // add .wtr extension (this fixes chrome os bug)
         var ua = window.navigator.userAgent;
         if (ua.indexOf('CrOS') > -1) {
             name += '.wtr';
@@ -877,12 +837,21 @@ $(document).ready(function() {
         doc.load(name, content, size, savedFileEntry);
     }
 
-    function newDoc(name, content, size, savedFileEntry, active, changed) {
+    function newDoc(newString, name, content, size, savedFileEntry, active, changed) {
         var file = new Doc();
+        if (newString != false) {
+            name = 'untitled';
+            content = '';
+            size = '0 KB';
+            savedFileEntry = false;
+            active = true;
+            changed = false;
+        }
         createDoc(file, name, size, active);
         loadDoc(file, name, content, size, savedFileEntry, changed);
         addDocument(file);
         loadImages();
+        saveData();
     }
 
     function deleteDoc(doc) {
@@ -893,9 +862,12 @@ $(document).ready(function() {
         return documents[index];
     }
 
-    //returns ql-editor
     function qlEditor() {
         return $('.document-active .ql-editor');
+    }
+
+    function allEditors() {
+        return $('.ql-editor');
     }
 
     function getExtension(fileName) {
@@ -903,8 +875,6 @@ $(document).ready(function() {
         return extension;
     }
 
-    //autoscroll and focus on element
-    //on click and on keyup
     $(document).on('keyup', '.ql-editor', function(e) {
         var navKeys = [37, 38, 39, 40, 13];
         if (navKeys.indexOf(e.keyCode) > -1) {
@@ -929,8 +899,6 @@ $(document).ready(function() {
         closeNavBar();
     });
 
-    //focus on paragraphs
-    //by greying out all other paragraphs
     function selectThis(element) {
         if (element.get(0).nodeName.toLowerCase() == 'li') {
             qlEditor().find('*').css('opacity', '0.6');
@@ -945,9 +913,6 @@ $(document).ready(function() {
         }
     }
 
-    //get y coordinate of caret in editor
-    //by using its parent or inserting an element
-    //in its place and reading the position
     function getSelectionCoords(win) {
         win = win || window;
         var doc = win.document;
@@ -976,9 +941,7 @@ $(document).ready(function() {
                         rect = rects[0];
                         if (rect === undefined) {
                             rect = getSelectionContainerElement();
-                            if ($(rect).hasClass('ql-editor')) {
-                                //ignore
-                            } else {
+                            if (!$(rect).hasClass('ql-editor')) {
                                 rect = rect.getClientRects()[0];
                             }
                         }
@@ -994,34 +957,31 @@ $(document).ready(function() {
         };
     }
 
-    //neat trick to keep current paragraph near the center
-    //of the screen at all times
     function editorScroll(key) {
         setTimeout(function() {
             var editor = qlEditor();
             var scroll = editor.scrollTop();
             var nodePos = getSelectionCoords();
-            var endScroll = scroll + nodePos.y - editor.height() + 50;
+            var endScroll = scroll + nodePos.y - (editor.height() / 2) - 100;
 
             if (key) {
                 editor.stop().animate({
                     scrollTop: endScroll
                 }, 300, beizer, function() {
-                    var doc = getDoc(documentAct().index());
+                    var doc = getDoc(documentAct(true));
                     doc.scrollTop = endScroll;
                 });
             } else {
                 editor.filter(':not(:animated)').animate({
                     scrollTop: endScroll
                 }, 300, beizer, function() {
-                    var doc = getDoc(documentAct().index());
+                    var doc = getDoc(documentAct(true));
                     doc.scrollTop = endScroll;
                 });
             }
         }, 1);
     }
 
-    //get caret parent
     function getSelectionContainerElement() {
         var range, sel, container;
         if (window.getSelection) {
@@ -1036,12 +996,10 @@ $(document).ready(function() {
         if (range) {
             container = range.commonAncestorContainer;
 
-            //check if the container is a text node and return its parent if so
             return container.nodeType === 3 ? container.parentNode : container;
         }
     }
 
-    //actually focuses the element the cursor is under
     function focusOnElem() {
         if (focusMode === false) {
 
@@ -1049,12 +1007,7 @@ $(document).ready(function() {
             var nodeParent = getSelectionContainerElement();
             var name = nodeParent.nodeName.toLowerCase();
             var whiteList = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'blockquote', 'pre', 'li'];
-            if ($(nodeParent).hasClass('ql-editor')) {
-                //ignore if parent is ql-editor
-            } else if (whiteList.indexOf(name) == -1) {
-                //if parent isn't within the bounds of our
-                //whitelist, continue moving up the dom tree
-                //until it finds some parent that is
+            if ($(nodeParent).hasClass('ql-editor')) {} else if (whiteList.indexOf(name) == -1) {
                 while (whiteList.indexOf(name) == -1) {
                     nodeParent = $(nodeParent).parent();
                     name = nodeParent.prop('tagName').toLowerCase();
@@ -1067,17 +1020,12 @@ $(document).ready(function() {
         }
     }
 
-    //modals
-    //these only apply to bigger modals
-    //like settings, documents, .etc
-    //this excludes save warning dialogues and such
     function openModal(element, callback) {
 
         if (element == $documentContainer) {
             calcDocSize();
         }
 
-        //blur ql-editor
         qlEditor().blur();
         window.getSelection().removeAllRanges();
 
@@ -1105,14 +1053,13 @@ $(document).ready(function() {
             opacity: '0'
         }, 200, beizer, function() {
             $(this).hide();
-            focusEditor(documentAct().index());
+            focusEditor(documentAct(true));
             focusOnElem();
-            var editorScrollTop = getDoc(documentAct().index()).scrollTop;
+            var editorScrollTop = getDoc(documentAct(true)).scrollTop;
             documentAct().children().first().scrollTop(editorScrollTop);
         });
     }
-    //left property should simply be the
-    //negative of the width of the element
+
     function closeModal(element) {
         element.filter(':not(:animated)').animate({
             left: '-' + element.width()
@@ -1123,9 +1070,7 @@ $(document).ready(function() {
                 return $(this).is(':visible');
             }).length == 1) {
             closeBg();
-        } else {
-            //do nothing
-        }
+        } else {}
 
     }
 
@@ -1135,15 +1080,12 @@ $(document).ready(function() {
     }
 
     var elemToFocus;
-    //open sidebar
     $sideToggle.click(function() {
         elemToFocus = $(getSelectionContainerElement());
         openNavBar();
         openModal($sideBar);
     });
 
-    //convert html to blob
-    //and retrieve size from blob (approximately) in KB
     function calcSize(doc) {
         var extension = getExtension(doc.name);
         var content,
@@ -1185,17 +1127,14 @@ $(document).ready(function() {
         });
     }
 
-    //open documents
     $docButton.click(function() {
         openModal($documentContainer);
     });
 
-    //open settings
     $settingsButton.click(function() {
         openModal($settingsContainer);
     });
 
-    //close top most modal
     $bg.click(function() {
         var highestIndex = 0;
         $modal.each(function(index) {
@@ -1213,15 +1152,13 @@ $(document).ready(function() {
         });
     });
 
-    //close current modal
     $modalClose.click(function() {
         var modal = $(this).parent().parent();
         closeModal(modal);
     });
 
-    //create new document
     $new.click(function() {
-        newDoc('untitled', '', '0 KB', false, true, false);
+        newDoc(true);
         closeModals();
     });
 
@@ -1232,7 +1169,7 @@ $(document).ready(function() {
 
             if (content.indexOf('<w:altChunk r:id="htmlChunk" />') > -1) {
                 content = content.substring(content.lastIndexOf('<!DOCTYPE HTML><html><head></head><body>') + 15, content.lastIndexOf('</body></html>'));
-                newDoc(file.name, content, file.size, entry, true, false);
+                newDoc(false, file.name, content, file.size, entry, true, false);
                 closeModals();
             } else {
                 var secReader = new FileReader();
@@ -1242,7 +1179,7 @@ $(document).ready(function() {
                         arrayBuffer: content
                     }).then(function(result) {
                         content = result.value;
-                        newDoc(file.name, content, file.size, entry, true, false);
+                        newDoc(false, file.name, content, file.size, entry, true, false);
                         closeModals();
                     }).done();
                 }
@@ -1266,10 +1203,10 @@ $(document).ready(function() {
                 content = convertNewLines(content);
                 content = marked(content);
                 content = cleanHTML(content);
-                newDoc(file.name, content, file.size, entry, true, false);
+                newDoc(false, file.name, content, file.size, entry, true, false);
                 closeModals();
             } else {
-                newDoc(file.name, content, file.size, entry, true, false);
+                newDoc(false, file.name, content, file.size, entry, true, false);
                 closeModals();
             }
         }
@@ -1296,7 +1233,6 @@ $(document).ready(function() {
                 openSnackBar(true, 'is already open.', entry.name);
             } else {
                 entry.file(function(file) {
-                    //handle files based on extension
                     var extension = getExtension(file.name),
                         content;
 
@@ -1320,7 +1256,6 @@ $(document).ready(function() {
         });
     }
 
-    //open document
     $open.click(function() {
         chrome.fileSystem.chooseEntry({
             type: 'openFile',
@@ -1331,29 +1266,26 @@ $(document).ready(function() {
         });
     });
 
-    //save
     $save.click(function() {
-        var doc = getDoc(documentAct().index());
+        var doc = getDoc(documentAct(true));
         doc.save();
 
         closeModals();
     });
 
-    //save as
     $saveAs.click(function() {
-        var doc = getDoc(documentAct().index());
+        var doc = getDoc(documentAct(true));
         var name = doc.name;
         ExportToDisk(name);
         closeModals();
     });
 
-    //print document
     $print.click(function() {
         var html = qlEditor().html();
         var copyString = '<div class="ql-editor" id="print"></div>';
-            $html.append(copyString);
+        $html.append(copyString);
         var copy = $('#print');
-            copy.html(html);
+        copy.html(html);
         window.print();
         copy.remove();
     });
@@ -1362,7 +1294,6 @@ $(document).ready(function() {
         openModal($fileContainer);
     });
 
-    //feedback
     $feedback.click(function() {
         openModal($feedBackContainer, function() {
             $feedBackContainer.find('.feedback-email').val($('.user-email').text());
@@ -1398,9 +1329,7 @@ $(document).ready(function() {
 
     function loadImages() {
         qlEditor().find('img').each(function() {
-            if ($(this).attr('src') === undefined) {
-                //ignore image if src is undefined
-            } else {
+            if ($(this).attr('src') === undefined) {} else {
                 var url = $(this).attr('src');
                 requestXML(url, $(this));
             }
@@ -1416,9 +1345,9 @@ $(document).ready(function() {
     })
 
     $('.submit-button').click(function() {
-        var email = $('.feedback-email').val();
-        var subject = $('.feedback-subject').val();
-        var message = $('.feedback-message').val();
+        var email = $email.val();
+        var subject = $subject.val();
+        var message = $message.val();
         var url = "mailto:writerchromeapp@gmail.com?subject=" + subject + '&body=' + message;
         var link = document.createElement('a');
         link.href = url;
@@ -1457,7 +1386,6 @@ $(document).ready(function() {
         }
     }
 
-    //determine document details
     function getDocDetails(doc, callback) {
         var text = doc.editor.getText();
         var details = {
@@ -1506,22 +1434,19 @@ $(document).ready(function() {
         }
     }
 
-    //details
     $details.click(function() {
-        var doc = getDoc(documentAct().index());
+        var doc = getDoc(documentAct(true));
         getDocDetails(doc, openModal($detailsContainer));
     });
 
-    //help
     $help.click(function() {
         openModal($helpContainer);
     });
 
-    //set snackbar's bottom position to negative height
     $snackBar.css('bottom', '-' + ($snackBar.height() + 100) + 'px');
 
     var snackBarTime;
-    //open snackbar
+
     function openSnackBar(message, real, name) {
         if (message || real) {
             $snackBar.children().first().text(name);
@@ -1542,7 +1467,6 @@ $(document).ready(function() {
         }
     }
 
-    //close snackbar
     function closeSnackBar() {
         $snackBar.animate({
             bottom: '-' + ($snackBar.height() + 100) + 'px'
@@ -1552,7 +1476,6 @@ $(document).ready(function() {
         });
     }
 
-    //select document
     $(document).on('click', '.document-item', function() {
         var index = $(this).index();
         var doc = getDoc(index);
@@ -1566,10 +1489,8 @@ $(document).ready(function() {
         return element.hasClass('toggle-active');
     }
 
-    //toggles
     $toggle.click(function() {
         var key = $(this).attr('name');
-        //if active, make inactive
         if (isActive($(this))) {
             replaceClass($(this), 'toggle-active', 'toggle-inactive');
             changeSettings(key, false);
@@ -1599,16 +1520,10 @@ $(document).ready(function() {
         }
     });
 
-    //night mode
-    //load stylesheet
-
-    //removes animations prior to adding stylesheet
-    //then immediately adds them back so as to not
-    //cause a delay
     var animTimer;
 
     function removeAnim() {
-        $('.ql-editor').css('transition', 'none');
+        allEditors().css('transition', 'none');
         $('.ql-editor *').css('transition', 'none');
         clearTimeout(animTimer);
         animTimer = setTimeout(function() {
@@ -1617,7 +1532,7 @@ $(document).ready(function() {
     }
 
     function addAnim() {
-        $('.ql-editor').css('transition', 'all .2s ease');
+        allEditors().css('transition', 'all .2s ease');
         $('.ql-editor *').css('transition', 'all .2s ease');
     }
 
@@ -1653,7 +1568,6 @@ $(document).ready(function() {
         changeSettings(key, false);
     }
 
-    //fullscreen mode
     $fullScreen.click(function() {
         if (chrome.app.window.current().isFullscreen()) {
             chrome.app.window.current().restore();
@@ -1662,7 +1576,6 @@ $(document).ready(function() {
         }
     });
 
-    //focus mode
     var focusMode;
     $focus.click(function() {
         if (isActive($(this)) === false) {
@@ -1694,19 +1607,16 @@ $(document).ready(function() {
         charContainer.text(chars);
     }
 
-    //set statistics bottom to its height (negative)
     $statisticsBar.css('bottom', '-' + ($statisticsBar.height() + 100) + 'px');
 
-    //open statistics
     function openStatistics() {
-        var doc = getDoc(documentAct().index());
+        var doc = getDoc(documentAct(true));
         calcStats(doc.editor.getText());
         $statisticsBar.show().stop().animate({
             bottom: '0'
         }, 300, beizer);
     }
 
-    //close statistics
     function closeStatistics() {
         $statisticsBar.stop().animate({
             bottom: '-' + ($statisticsBar.height() + 50) + 'px'
@@ -1715,7 +1625,6 @@ $(document).ready(function() {
         });
     }
 
-    //statistics
     $statistics.click(function() {
         if (isActive($(this)) === false) {
             closeStatistics();
@@ -1724,14 +1633,12 @@ $(document).ready(function() {
         }
     });
 
-    //change font
     $fontChildren.click(function() {
         var fontFam = $(this).text();
-        $('.ql-editor').css('font-family', fontFam);
+        allEditors().css('font-family', fontFam);
         changeSettings('font', fontFam);
     });
 
-    //convert font size to relative em
     function convertSize(fontSize) {
         var size = Number(fontSize.replace('px', ''));
         var em = (size / 12) + 0.25;
@@ -1739,14 +1646,12 @@ $(document).ready(function() {
         return em + 'em';
     }
 
-    //change font size
     $sizeChildren.click(function() {
         var fontSize = $(this).text();
-        $('.ql-editor').css('font-size', convertSize(fontSize));
+        allEditors().css('font-size', convertSize(fontSize));
         changeSettings('size', fontSize);
     });
 
-    //change theme
     $themeChildren.click(function() {
         var theme = $(this).text();
         switch (theme) {
@@ -1766,7 +1671,6 @@ $(document).ready(function() {
         changeSettings('theme', theme);
     });
 
-    //change line height
     $lineChildren.click(function() {
         var lineHeight = $(this).text(),
             actualLine = lineHeight;
@@ -1776,13 +1680,13 @@ $(document).ready(function() {
         if (lineHeight == 'Double') {
             actualLine = 2;
         }
-        $('.ql-editor').css('line-height', actualLine);
+        allEditors().css('line-height', actualLine);
         changeSettings('line', lineHeight);
     });
 
     function setMargin(margin) {
-        $('.ql-editor').css('padding-left', margin);
-        $('.ql-editor').css('padding-right', margin);
+        allEditors().css('padding-left', margin);
+        allEditors().css('padding-right', margin);
     }
 
     $marginChildren.click(function() {
@@ -1805,7 +1709,6 @@ $(document).ready(function() {
         changeSettings('margin', margin);
     });
 
-    //open dropdown
     function openDropdown(dropdown) {
         var height = dropdown.children().length * 40 + 'px';
         dropdown.stop().show().animate({
@@ -1813,7 +1716,6 @@ $(document).ready(function() {
         }, 400, beizer);
     }
 
-    //close dropdown
     function closeDropdown(dropdown) {
         dropdown.stop().animate({
             height: '0'
@@ -1839,7 +1741,6 @@ $(document).ready(function() {
         $(this).addClass('active');
     });
 
-    //change document title
     function makeReadOnly(input, element) {
         input.attr('readonly', true);
         input.blur();
@@ -1879,9 +1780,7 @@ $(document).ready(function() {
         var doc = getDoc(index);
         if ($(this).text() == 'check') {
             makeReadOnly(input, $(this));
-            if (title == doc.name) {
-                //nothing
-            } else {
+            if (title == doc.name) {} else {
                 doc.setFileEntry(null);
                 doc.setName(title);
             }
@@ -1899,9 +1798,7 @@ $(document).ready(function() {
         if (e.keyCode == 13) {
             makeReadOnly($(this), $(this).parent());
             rotate($(this).parent().find('.document-edit').find('.material-icons'));
-            if (title == doc.name) {
-                //nothing
-            } else {
+            if (title == doc.name) {} else {
                 doc.setFileEntry(null);
                 doc.setName(title);
             }
@@ -1950,7 +1847,6 @@ $(document).ready(function() {
         closeDelete(parent);
     });
 
-    //override img clicks
     $(document).on('click', '.ql-editor img', function(e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
@@ -1958,10 +1854,8 @@ $(document).ready(function() {
 
     function loadScreen() {
         setTimeout(function() {
-            //make sure to calculate statistics for
-            //current active editor before loadingScreen
             if (settings.statistics == true) {
-                var doc = getDoc(documentAct().index());
+                var doc = getDoc(documentAct(true));
                 calcStats(doc.editor.getText());
             }
             $loadingScreen.stop().animate({
@@ -1972,8 +1866,6 @@ $(document).ready(function() {
         }, 800);
     }
 
-    //remember user data using the Chrome API
-    //save data
     function saveData() {
         setStorage({
             settings: settings,
@@ -2015,7 +1907,6 @@ $(document).ready(function() {
     }
 
     function getToken(install, callback) {
-        //check if online
         if (navigator.onLine) {
             chrome.identity.getAuthToken({
                 'interactive': true
@@ -2085,13 +1976,11 @@ $(document).ready(function() {
                 }
             });
         } else {
-            //load page normally
             $installScreen.hide();
             realLoad();
         }
     }
 
-    //load data
     var current_token;
 
     function loadData(callback) {
@@ -2136,7 +2025,6 @@ $(document).ready(function() {
         });
     });
 
-    //open navigation bar
     function openNavBar() {
         clearTimeout(navTimeout);
         $navBar.stop().animate({
@@ -2148,7 +2036,6 @@ $(document).ready(function() {
         $modal.css('height', 'calc(100% - 30px)');
     }
 
-    //close navigation bar
     var navTimeout;
 
     function closeNavBar() {
@@ -2167,7 +2054,7 @@ $(document).ready(function() {
     openNavBar();
 
     document.addEventListener('scroll', function(event) {
-        var doc = getDoc(documentAct().index());
+        var doc = getDoc(documentAct(true));
         doc.scrollTop = qlEditor().scrollTop();
     }, true);
 
@@ -2187,7 +2074,6 @@ $(document).ready(function() {
         return (e.keyCode == numb);
     }
 
-    //get ctrl key or cmd key based on os
     function getCntKey(e) {
         if (getOS() == 'MacOS') {
             return e.metaKey;
@@ -2207,7 +2093,6 @@ $(document).ready(function() {
 
     $(document).on('keydown', function(e) {
 
-        //keys
         var CTRL_KEY = getCntKey(e),
             SHIFT_KEY = getShiftKey(e),
             ALT_KEY = getAltKey(e),
@@ -2224,33 +2109,27 @@ $(document).ready(function() {
             HELP = CTRL_KEY && getKey(e, 191),
             CLOSE = getKey(e, 27);
 
-        //new
         if (NEW) {
             e.preventDefault();
             $new.click();
         }
 
-        //open
         if (OPEN) {
             $open.click();
         }
 
-        //save
         if (SAVE) {
             $save.click();
         }
 
-        //save as
         if (SAVE_AS) {
             $saveAs.click();
         }
 
-        //print
         if (PRINT) {
             $print.click();
         }
 
-        //fullscreen
         if (FULLSCREEN) {
             if (chrome.app.window.current().isFullscreen()) {
                 chrome.app.window.current().restore();
@@ -2259,23 +2138,19 @@ $(document).ready(function() {
             }
         }
 
-        //nightmode
         if (NIGHTMODE) {
             e.preventDefault();
             $nightMode.click();
         }
 
-        //focus
         if (FOCUS) {
             $focus.click();
         }
 
-        //statistics
         if (STATISTICS) {
             $statistics.click();
         }
 
-        //close
         if (CLOSE) {
             e.preventDefault();
             closeWindow();
@@ -2291,12 +2166,11 @@ $(document).ready(function() {
             }
         }
 
-        //delete
         if (DELETE) {
             if ($documentContainer.is(':visible')) {
                 docAct().find('.delete-confirm').click();
             } else {
-                var doc = getDoc(documentAct().index());
+                var doc = getDoc(documentAct(true));
                 if (doc.changed) {
                     openModal($documentContainer, docAct().find('.document-delete').click());
                 } else {
@@ -2307,8 +2181,7 @@ $(document).ready(function() {
 
     });
 
-    //autoresize textarea
-    $('.feedback-message').on('keydown keyup change', function() {
+    $message.on('keydown keyup change', function() {
         $(this).css('height', 'auto');
         $(this).css('height', this.scrollHeight + 'px');
     });
@@ -2386,13 +2259,13 @@ $(document).ready(function() {
                 data = item.data;
 
             if (settings == 'settings' || data == 'documents') {
-                newDoc('untitled', '', '0 KB', false, true, false);
+                newDoc(true);
                 loadSettings(defaults);
                 loadScreen();
             } else {
                 var counter = 0;
                 if (data.length === 0) {
-                    newDoc('untitled', '', '0 KB', false, true, false);
+                    newDoc(true);
                     loadSettings(settings);
                     loadScreen();
                 } else {
@@ -2404,9 +2277,8 @@ $(document).ready(function() {
                         var savedFileEntry = thisData.savedFileEntry;
                         var active = thisData.isActive;
                         var changed = thisData.changed;
-                        newDoc(name, content, size, savedFileEntry, active, changed);
+                        newDoc(false, name, content, size, savedFileEntry, active, changed);
 
-                        //manually focus on first elem
                         documentAct().children().first().children().css('opacity', '0.6');
                         documentAct().children().first().children().first().css('opacity', '1');
 
@@ -2443,7 +2315,7 @@ $(document).ready(function() {
     });
 
     $('.maximize-window').click(function() {
-        if (chrome.app.window.current().isMaximized()) {
+        if (chrome.app.window.current().isMaximized() || chrome.app.window.current().isFullscreen()) {
             chrome.app.window.current().restore();
         } else {
             chrome.app.window.current().maximize();
