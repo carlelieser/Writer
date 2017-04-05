@@ -468,6 +468,9 @@ $(document).ready(function() {
             if (settings.statistics == true) {
                 calcStats(doc.editor.getText());
             }
+            if ($('.tutorial-container').is(':visible')) {
+                nextTutorial();
+            }
         });
 
         if ($(element).hasClass('document-active')) {
@@ -1082,6 +1085,7 @@ $(document).ready(function() {
     var elemToFocus;
     $sideToggle.click(function() {
         elemToFocus = $(getSelectionContainerElement());
+        $('.tutorial-container-two').fadeOut('fast');
         openNavBar();
         openModal($sideBar);
     });
@@ -2250,6 +2254,31 @@ $(document).ready(function() {
         chrome.storage.local.get(storage, callback);
     }
 
+    function nextTutorial() {
+        $('.tutorial-container').fadeOut('fast', function() {
+            qlEditor().blur();
+            window.getSelection().removeAllRanges();
+            $('.tutorial-container-two').fadeIn('fast');
+        });
+    }
+
+    $('.tutorial-container .tutorial-close').click(function() {
+        nextTutorial();
+    });
+
+    $('.tutorial-container-two .tutorial-close').click(function() {
+        $('.tutorial-container-two').fadeOut('fast');
+        qlEditor().focus();
+    });
+
+    $mainContainer.click(function() {
+        if ($('.tutorial-container').is(':visible')) {
+            nextTutorial();
+        } else if ($('.tutorial-container-two').is(':visible')) {
+            $('.tutorial-container-two').fadeOut('fast');
+        }
+    });
+
     function realLoad() {
         getStorage({
             settings: 'settings',
@@ -2259,6 +2288,7 @@ $(document).ready(function() {
                 data = item.data;
 
             if (settings == 'settings' || data == 'documents') {
+                $('.tutorial-container').fadeIn('fast');
                 newDoc(true);
                 loadSettings(defaults);
                 loadScreen();

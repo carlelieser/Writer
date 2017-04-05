@@ -3,6 +3,100 @@ html, body {
     padding: 0;
 }
 
+.tutorial-container, .tutorial-container-two {
+    width: 200px;
+    height: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #FFF;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    position: absolute;
+    box-shadow: -1px 2px 7px 0px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    display: none;
+}
+
+.tutorial-container {
+    top: calc(100% - 300px);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.tutorial-container-two {
+    top: 50%;
+    left: 60px;
+    transform: translateY(-50%);
+}
+
+.tutorial-container:after, .tutorial-container:before {
+    left: 50%;
+    bottom: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.tutorial-container:after {
+    border-color: rgba(255, 255, 255, 0);
+    border-bottom-color: #FFF;
+    border-width: 14px;
+    margin-left: -12px;
+}
+
+.tutorial-container:before {
+    border-color: rgba(224, 224, 224, 0);
+    border-bottom-color: #e0e0e0;
+    border-width: 15px;
+    margin-left: -13px;
+}
+
+.tutorial-container-two:after, .tutorial-container-two:before {
+    right: 100%;
+    top: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.tutorial-container-two:after {
+    border-color: rgba(255, 255, 255, 0);
+    border-right-color: #FFF;
+    border-width: 14px;
+    margin-top: -12px;
+}
+
+.tutorial-container-two:before {
+    border-color: rgba(224, 224, 224, 0);
+    border-right-color: #e0e0e0;
+    border-width: 15px;
+    margin-top: -13px;
+}
+
+.tutorial-close {
+    float: right;
+}
+
+.tutorial-close .material-icons {
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.tutorial-text {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-family: 'Roboto';
+    float: right;
+    color: rgba(0, 0, 0, 0.8);
+}
+
 .navigation-container {
     width: 100%;
     height: 30px;
@@ -230,8 +324,8 @@ html, body {
     top: 0;
     left: 0;
     position: absolute;
-    background-color: #000;
-    opacity: 0.5;
+    background-color: #0c272f;
+    opacity: 0.4;
     z-index: 0;
 }
 
@@ -247,19 +341,10 @@ html, body {
     z-index: 100;
 }
 
-.install-screen .install-icon {
-    width: 200px;
-    height: 200px;
-    margin-top: -80px;
-    background-image: url('../icon-128.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    position: absolute;
-}
-
-.install-screen .install-screen-button-container {
-    margin-top: 180px;
-    width: 150px;
+.install-screen .install-content .install-screen-button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .install-screen .install-screen-button {
@@ -275,6 +360,11 @@ html, body {
     text-transform: uppercase;
     color: #404040;
     background-color: #fbfbfb;
+    box-shadow: none;
+    transition: all .2s ease;
+}
+
+.install-screen .install-screen-button:hover {
     box-shadow: -1px 2px 7px 0px rgba(0, 0, 0, 0.4);
 }
 
@@ -289,13 +379,12 @@ html, body {
 }
 
 .install-screen .install-screen-button:nth-child(1) {
-    width: 150px;
-    margin-left: -20px;
+    width: 200px;
 }
 
 .install-screen .install-screen-button:nth-child(2) {
     width: 80px;
-    margin-left: 15px;
+    margin-left: 40px;
 }
 
 .modal:not(.sidebar) {
@@ -310,7 +399,7 @@ html, body {
 .modal {
     background-color: #F9F9F9;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    display:none;
+    display: none;
 }
 
 .modal-title-container {
