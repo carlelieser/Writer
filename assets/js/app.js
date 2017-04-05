@@ -203,7 +203,7 @@ $(document).ready(function() {
         docAct().click();
     }
 
-    var newDocumentString = '<div class="document-item"><div class="material-icons">insert_drive_file</div><input readonly=true class="document-title" type="text"/><div class="document-size"></div><div class="document-edit"><div class="material-icons">edit</div></div><div class="document-delete"><div class="material-icons">delete</div></div><div class="delete-dialogue"><div class="delete-confirm">Delete</div><div class="delete-cancel">Cancel</div></div></div>';
+    var newDocumentString = '<div class="document-item"><div class="material-icons">insert_drive_file</div><input readonly=true class="document-title" type="text"/><div class="doc-overflow"><div class="material-icons">more_vert</div></div><div class="overflow-menu"><div class="doc-rename">Rename</div><div class="doc-delete">Delete</div></div><div class="document-size"></div></div>';
     var mainDocumentString = '<div class="document document-active"></div>';
 
     $('.sidebar, .settings-container, .document-container, .bg, .option, .snackbar').hide();
@@ -709,20 +709,50 @@ $(document).ready(function() {
         }
     }
 
-    Doc.prototype.delete = function() {
-        var index = documents.indexOf(this);
-        this.editorDOM.parent().remove();
-        this.docListItem.remove();
-        documents.splice(index, 1);
+    var deleteIndex;
 
-        if (documents.length === 0) {
-            newDoc(true);
-            closeModals();
+    function openSave(doc) {
+        closeModals(true);
+        $('.save-dialogue .save-text span').text(doc.name);
+        $('.save-dialogue').fadeIn('fast');
+
+        deleteIndex = documents.indexOf(doc);
+    }
+
+    function closeSave() {
+        closeModals();
+        $('.save-dialogue').fadeOut('fast');
+    }
+
+    $('.save-buttons .delete-cancel').click(function() {
+        closeSave();
+    });
+
+    $('.save-buttons .delete-confirm').click(function() {
+        var doc = getDoc(deleteIndex);
+        doc.changed = false;
+        doc.delete();
+        closeSave();
+    });
+
+    Doc.prototype.delete = function() {
+        if (this.changed) {
+            openSave(this);
         } else {
-            if (index - 1 == documents.length - 1) {
-                $documentList.children().last().click();
+            var index = documents.indexOf(this);
+            this.editorDOM.parent().remove();
+            this.docListItem.remove();
+            documents.splice(index, 1);
+
+            if (documents.length === 0) {
+                newDoc(true);
+                closeModals();
             } else {
-                $documentList.children().eq(index).click();
+                if (index - 1 == documents.length - 1) {
+                    $documentList.children().last().click();
+                } else {
+                    $documentList.children().eq(index).click();
+                }
             }
         }
     }
@@ -836,8 +866,8 @@ $(document).ready(function() {
         doc.create(name, size, active);
     }
 
-    function loadDoc(doc, name, content, size, savedFileEntry) {
-        doc.load(name, content, size, savedFileEntry);
+    function loadDoc(doc, name, content, size, savedFileEntry, changed) {
+        doc.load(name, content, size, savedFileEntry, changed);
     }
 
     function newDoc(newString, name, content, size, savedFileEntry, active, changed) {
@@ -1077,9 +1107,11 @@ $(document).ready(function() {
 
     }
 
-    function closeModals() {
+    function closeModals(bg) {
         closeModal($modal);
-        closeBg();
+        if (bg != true) {
+            closeBg();
+        }
     }
 
     var elemToFocus;
@@ -1140,20 +1172,22 @@ $(document).ready(function() {
     });
 
     $bg.click(function() {
-        var highestIndex = 0;
-        $modal.each(function(index) {
-            var currentIndex = parseInt($(this).css('zIndex'), 10);
+        if (!$('.save-dialogue').is(':visible')) {
+            var highestIndex = 0;
+            $modal.each(function(index) {
+                var currentIndex = parseInt($(this).css('zIndex'), 10);
 
-            if (currentIndex > highestIndex && $(this).is(':visible')) {
-                highestIndex = currentIndex;
-            }
-        });
+                if (currentIndex > highestIndex && $(this).is(':visible')) {
+                    highestIndex = currentIndex;
+                }
+            });
 
-        $modal.filter(function() {
-            return $(this).css('z-index') == highestIndex;
-        }).each(function() {
-            closeModal($(this));
-        });
+            $modal.filter(function() {
+                return $(this).css('z-index') == highestIndex;
+            }).each(function() {
+                closeModal($(this));
+            });
+        }
     });
 
     $modalClose.click(function() {
@@ -1481,12 +1515,16 @@ $(document).ready(function() {
     }
 
     $(document).on('click', '.document-item', function() {
-        var index = $(this).index();
-        var doc = getDoc(index);
-        setDocsActive();
+        if ($('.overflow-menu').is(':visible')) {
+            closeOverflow($('.overflow-menu'));
+        } else {
+            var index = $(this).index();
+            var doc = getDoc(index);
+            setDocsActive();
 
-        doc.show(index);
-        closeModals();
+            doc.show(index);
+            closeModals();
+        }
     });
 
     function isActive(element) {
@@ -1713,6 +1751,31 @@ $(document).ready(function() {
         changeSettings('margin', margin);
     });
 
+    function loadDefaults() {
+        $('.toggle').each(function() {
+            if ($(this).hasClass('toggle-active')) {
+                if ($(this).attr('name') != 'focus') {
+                    $(this).click();
+                }
+            }
+        });
+
+        $('.default-theme').click();
+        $('.charter').click();
+        $('.16px').click();
+        $('.double-line').click();
+        $('.medium-margin').click();
+
+        $optionContainer.each(function(){
+            $(this).css('height', '0px');
+            $(this).hide();
+        });
+    }
+
+    $('.reset-button').click(function() {
+        loadDefaults();
+    });
+
     function openDropdown(dropdown) {
         var height = dropdown.children().length * 40 + 'px';
         dropdown.stop().show().animate({
@@ -1734,6 +1797,9 @@ $(document).ready(function() {
             if (dropdown.is(':visible')) {
                 closeDropdown(dropdown);
             } else {
+                if(dropdown.css('height') != '0px'){
+                    dropdown.css('height', '0px');
+                }
                 openDropdown(dropdown);
             }
         }
@@ -1745,69 +1811,41 @@ $(document).ready(function() {
         $(this).addClass('active');
     });
 
-    function makeReadOnly(input, element) {
+    function makeReadOnly(input) {
         input.attr('readonly', true);
         input.blur();
-
-        if (element.find('.material-icons').length > 1) {
-            element.find('.material-icons').eq(1).text('edit');
-        } else {
-            element.find('.material-icons').text('edit');
-        }
     }
 
-    function undoReadOnly(input, element) {
+    function undoReadOnly(input) {
         input.attr('readonly', false);
         input.select();
+    }
 
-        if (element.find('.material-icons').length > 1) {
-            element.find('.document-edit').find('.material-icons').text('check');
-        } else {
-            element.find('.material-icons').text('check');
+    function openOverflow(element) {
+        element.show().stop().animate({
+            height: '120px'
+        }, 300, beizer);
+    }
+
+    function closeOverflow(element, callback) {
+        element.stop().animate({
+            height: '0'
+        }, 300, beizer, function() {
+            $(this).hide();
+        });
+        if (callback) {
+            callback();
         }
     }
 
-    function rotate(element) {
-        if (element.css('transform') == 'matrix(1, -2.44929e-16, 2.44929e-16, 1, 0, 0)') {
-            element.css('transform', 'rotate(0deg)');
-        } else {
-            element.css('transform', 'rotate(360deg)');
-        }
-    }
-
-    $(document).on('click', '.document-edit', function(e) {
-        e.stopImmediatePropagation();
+    $(document).on('click', '.doc-overflow', function(e) {
         e.stopPropagation();
-        var input = $(this).parent().find('input');
-        var index = input.parent().index();
-        var title = input.val();
-        var doc = getDoc(index);
-        if ($(this).text() == 'check') {
-            makeReadOnly(input, $(this));
-            if (title == doc.name) {} else {
-                doc.setFileEntry(null);
-                doc.setName(title);
-            }
-        } else {
-            undoReadOnly(input, $(this));
-        }
-        rotate($(this).find('.material-icons'))
-    });
+        var thisOverflow = $(this).parent().find('.overflow-menu');
+        closeOverflow($('.overflow-menu'), function() {
+            openOverflow(thisOverflow);
+        })
+    })
 
-    $(document).on('keyup', '.document-title', function(e) {
-        var index = $(this).parent().index();
-        var doc = getDoc(index);
-        var title = $(this).val();
-
-        if (e.keyCode == 13) {
-            makeReadOnly($(this), $(this).parent());
-            rotate($(this).parent().find('.document-edit').find('.material-icons'));
-            if (title == doc.name) {} else {
-                doc.setFileEntry(null);
-                doc.setName(title);
-            }
-        }
-    });
 
     $(document).on('click', '.document-title', function(e) {
         if ($(this).attr('readonly') === undefined) {
@@ -1816,39 +1854,33 @@ $(document).ready(function() {
         }
     });
 
-    function openDelete(parent) {
-        parent.css('transform', 'translateX(-220px)');
-    }
-
-    function closeDelete(parent) {
-        parent.css('transform', 'translateX(0)');
-    }
-
-    $(document).on('click', '.document-delete', function(e) {
-
-        e.stopPropagation();
-
-        var index = $(this).parent().index();
-        var doc = getDoc(index);
-        if (doc.changed) {
-            openDelete($(this).parent());
-        } else {
-            deleteDoc(doc);
-        }
-
-    });
-
-    $(document).on('click', '.delete-confirm', function(e) {
+    $(document).on('click', '.doc-delete', function(e) {
         e.stopPropagation();
         var index = $(this).parent().parent().index();
         var doc = getDoc(index);
         deleteDoc(doc);
+    });
+
+    $(document).on('click', '.doc-rename', function() {
+        undoReadOnly($(this).parent().parent().find('input'));
+    });
+
+    $(document).on('keyup', '.document-title', function(e) {
+        var index = $(this).parent().index();
+        var doc = getDoc(index);
+        var title = $(this).val();
+
+        if (e.keyCode == 13) {
+            makeReadOnly($(this));
+            if (title == doc.name) {} else {
+                doc.setFileEntry(null);
+                doc.setName(title);
+            }
+        }
     })
 
-    $(document).on('click', '.delete-cancel', function(e) {
-        e.stopPropagation();
-        var parent = $(this).parent().parent();
-        closeDelete(parent);
+    $(document).on('click', function() {
+        closeOverflow($('.overflow-menu'));
     });
 
     $(document).on('click', '.ql-editor img', function(e) {
@@ -2106,6 +2138,7 @@ $(document).ready(function() {
             SAVE_AS = CTRL_KEY && SHIFT_KEY && !ALT_KEY && getKey(e, 83),
             PRINT = CTRL_KEY && getKey(e, 80),
             FULLSCREEN = getKey(e, 122),
+            COFFEE = CTRL_KEY && SHIFT_KEY && getKey(e, 67),
             NIGHTMODE = CTRL_KEY && SHIFT_KEY && getKey(e, 78),
             FOCUS = CTRL_KEY && SHIFT_KEY && getKey(e, 70),
             STATISTICS = CTRL_KEY && ALT_KEY && !SHIFT_KEY && getKey(e, 83),
@@ -2142,6 +2175,10 @@ $(document).ready(function() {
             }
         }
 
+        if(COFFEE){
+            $coffeeMode.click();
+        }
+
         if (NIGHTMODE) {
             e.preventDefault();
             $nightMode.click();
@@ -2171,16 +2208,8 @@ $(document).ready(function() {
         }
 
         if (DELETE) {
-            if ($documentContainer.is(':visible')) {
-                docAct().find('.delete-confirm').click();
-            } else {
-                var doc = getDoc(documentAct(true));
-                if (doc.changed) {
-                    openModal($documentContainer, docAct().find('.document-delete').click());
-                } else {
-                    docAct().find('.document-delete').click();
-                }
-            }
+            var doc = getDoc(documentAct(true));
+            deleteDoc(doc);
         }
 
     });
@@ -2246,8 +2275,8 @@ $(document).ready(function() {
         });
     });
 
-    function setStorage(storage) {
-        chrome.storage.local.set(storage);
+    function setStorage(storage, callback) {
+        chrome.storage.local.set(storage, callback);
     }
 
     function getStorage(storage, callback) {

@@ -3,10 +3,61 @@ html, body {
     padding: 0;
 }
 
+.save-dialogue {
+    width: 250px;
+    height: auto;
+    padding: 20px;
+    border-radius: 2px;
+    background-color: #FFF;
+    box-shadow: -1px 2px 7px 0px rgba(0, 0, 0, 0.1);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    z-index: 999;
+    display: none;
+}
+
+.save-dialogue>div {
+    display: block;
+}
+
+.save-dialogue .save-title {
+    font-family: 'Roboto Med';
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.save-dialogue .save-text {
+    font-family: 'Roboto';
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.save-dialogue .save-buttons {
+    margin-top: 10px;
+    float: right;
+}
+
+.save-dialogue .save-buttons>div {
+    float: right;
+    font-family: 'Roboto Med';
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #1abc9c;
+}
+
+.save-dialogue .save-buttons>div:nth-child(2) {
+    margin-right: 20px;
+}
+
 .tutorial-container, .tutorial-container-two {
     width: 200px;
     height: auto;
-    padding: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    padding-top: 5px;
     box-sizing: border-box;
     background-color: #FFF;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -80,6 +131,7 @@ html, body {
 }
 
 .tutorial-close {
+    margin-top: 10px;
     float: right;
 }
 
@@ -463,7 +515,7 @@ html, body {
     background-color: #1ddb99;
 }
 
-.document-container .document-list .document-item div, .document-container .document-list .document-item input {
+.document-container .document-list .document-item>div:not(.overflow-menu), .document-container .document-list .document-item>input {
     line-height: 60px;
     display: inline-block;
     color: rgba(0, 0, 0, 0.7);
@@ -491,39 +543,56 @@ html, body {
     text-align: center;
 }
 
-.document-edit, .document-delete {
-    width: 13%;
+.document-item .material-icons {
+    float: left;
 }
 
-.document-edit .material-icons, .document-delete .material-icons {
-    color: rgba(0, 0, 0, 0.6);
+.document-item .document-size {
+    float: right;
+}
+
+.document-item .doc-overflow {
+    float: right;
+}
+
+.document-item .doc-overflow .material-icons {
+    width: 80px;
+    line-height: 60px;
+    text-align: center;
+}
+
+.document-item .overflow-menu {
+    right: 0;
+    margin-right: 20px;
+    margin-top: -40px;
+    width: 140px;
+    height: 0px;
+    position: absolute;
+    background-color: #FFF;
+    display: none;
+    border-radius: 2px;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+}
+
+.document-item .overflow-menu>div {
     width: 100%;
+    height: 60px;
+    font-size: 14px;
+    font-family: 'Roboto';
+    padding-left: 20px;
+    box-sizing: border-box;
+    line-height: 60px;
+    display: block;
     transition: all .2s ease;
+}
+
+.document-item .overflow-menu>div:hover {
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 .document-list::-webkit-scrollbar {
     width: 0px;
     background-color: transparent;
-}
-
-.document-list .delete-dialogue {
-    width: 220px;
-    background-color: #f35262;
-    position: absolute;
-    height: 60px;
-    padding-left: 20px;
-    padding-right: 20px;
-    box-sizing: border-box;
-    margin-left: 16px;
-}
-
-.delete-confirm, .delete-cancel {
-    width: 50%;
-    font-family: 'Roboto Med';
-    float: left;
-    display: inline-block;
-    text-align: center;
-    text-transform: uppercase;
 }
 
 .details-container .details-content>div, .help-container .help-content>div {
@@ -658,7 +727,7 @@ html, body {
     outline: none;
 }
 
-.settings-container .settings-list .settings-option {
+.settings-container .settings-list .settings-option, .reset-button {
     width: 100%;
     float: left;
     display: block;
@@ -670,7 +739,7 @@ html, body {
     height: 70px;
 }
 
-.settings-container .settings-list .noToggle {
+.settings-container .settings-list .noToggle, .reset-button {
     height: auto;
     min-height: 80px;
 }
@@ -679,21 +748,21 @@ html, body {
     line-height: 70px;
 }
 
-.settings-container .settings-list .settings-option .settings-title {
+.settings-container .settings-list>div .settings-title {
     height: 100%;
     padding-left: 60px;
     display: inline-block;
     color: rgba(0, 0, 0, 0.8);
 }
 
-.settings-container .settings-list .settings-option .settings-title-second {
+.settings-container .settings-list>div .settings-title-second {
     padding-left: 60px;
     display: block;
     color: rgba(0, 0, 0, 0.8);
     margin-top: 10px;
 }
 
-.settings-container .settings-list .settings-option .settings-description {
+.settings-container .settings-list>div .settings-description {
     display: block;
     font-family: 'Roboto';
     font-size: 12px;

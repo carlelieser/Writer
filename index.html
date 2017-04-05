@@ -9,6 +9,17 @@
 
 <body>
 
+    <div class="save-dialogue">
+        <div class="save-title">Delete File?</div>
+        <div class="save-text">
+            <span>untitled</span> has unsaved changes. Progress will be lost.
+        </div>
+        <div class="save-buttons">
+            <div class="delete-confirm">Delete</div>
+            <div class="delete-cancel">Cancel</div>
+        </div>
+    </div>
+
     <div class="tutorial-container">
         <div class="tutorial-close">
             <div class="material-icons">close</div>
@@ -202,7 +213,11 @@
                 <div class="command">&#8984; + P / CTRL + P</div>
             </div>
             <div class="command-container">
-                <div class="command-title">Nightmode</div>
+                <div class="command-title">Coffee</div>
+                <div class="command">&#8984; + SHIFT + C / CTRL + SHIFT + C</div>
+            </div>
+            <div class="command-container">
+                <div class="command-title">Night</div>
                 <div class="command">&#8984; + SHIFT + N / CTRL + SHIFT + N</div>
             </div>
             <div class="command-container">
@@ -364,22 +379,22 @@
                 <div class="settings-title-second">Font Size</div>
                 <div class="settings-description">Choose the default font size.</div>
                 <div class="option font-size-options">
-                    <div class="font-size-option">12px</div>
-                    <div class="font-size-option">14px</div>
-                    <div class="font-size-option active">16px</div>
-                    <div class="font-size-option">18px</div>
-                    <div class="font-size-option">24px</div>
-                    <div class="font-size-option">30px</div>
+                    <div class="font-size-option 12px">12px</div>
+                    <div class="font-size-option 14px">14px</div>
+                    <div class="font-size-option 16px active">16px</div>
+                    <div class="font-size-option 18px">18px</div>
+                    <div class="font-size-option 24px">24px</div>
+                    <div class="font-size-option 30px">30px</div>
                 </div>
             </div>
             <div class="settings-option noToggle">
                 <div class="settings-title-second">Line Height</div>
                 <div class="settings-description">Choose the default line height.</div>
                 <div class="option line-options">
-                    <div class="line-option">Single</div>
-                    <div class="line-option">1.15</div>
-                    <div class="line-option">1.5</div>
-                    <div class="line-option active">Double</div>
+                    <div class="line-option single-line">Single</div>
+                    <div class="line-option second-line">1.15</div>
+                    <div class="line-option third-line">1.5</div>
+                    <div class="line-option double-line active">Double</div>
                 </div>
             </div>
             <div class="settings-option noToggle">
@@ -390,6 +405,10 @@
                     <div class="medium-margin active">Medium</div>
                     <div class="larg-margin">Large</div>
                 </div>
+            </div>
+            <div class="reset-button noToggle">
+                <div class="settings-title-second">Reset</div>
+                <div class="settings-description">Set Writer back to defaults.</div>
             </div>
         </div>
     </div>
@@ -456,7 +475,7 @@
     <script type="text/javascript" src="assets/libs/minified/vibrant.min.js"></script>
     <script type="text/javascript" src="assets/js/google-analytics-bundle.js"></script>
     <script type="text/javascript" src="assets/libs/minified/require.min.js"></script>
-    <script type="text/javascript" src="assets/js/app.js"></script>
+    <script type="text/javascript" src="assets/js/app.min.js"></script>
 </body>
 
 </html>
