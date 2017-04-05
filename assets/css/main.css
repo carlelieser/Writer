@@ -835,10 +835,6 @@ html, body {
     transition: all .2s ease;
 }
 
-.ql-editor img {
-    display: none;
-}
-
 .ql-editor::-webkit-scrollbar {
     width: 8px;
     background-color: transparent;

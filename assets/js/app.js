@@ -19,7 +19,9 @@ $(document).ready(function() {
     });
 
     //define global variables
-    var $body = $('body'),
+    var $html = $('html'),
+        $body = $('body'),
+        $topBar = $('.top-bar'),
         $documentList = $('.document-list'),
         $mainContainer = $('.main-container'),
         $navBar = $('.navigation-container'),
@@ -212,7 +214,7 @@ $(document).ready(function() {
                 }
             }
         }
-        $('.doc-active').click();
+        docAct().click();
     }
 
     //the contents of an empty document item
@@ -235,9 +237,12 @@ $(document).ready(function() {
         element.find('.document-size').text(size);
     }
 
-    //return active document
     function documentAct() {
         return $('.document-active');
+    }
+
+    function docAct(){
+        return $('.doc-active');
     }
 
     function replaceClass(element, classOne, classTwo) {
@@ -440,7 +445,7 @@ $(document).ready(function() {
                     }, {
                         align: []
                     }],
-                    ['blockquote', 'code-block', 'link'],
+                    ['blockquote', 'code-block', 'link', 'image'],
                     [{
                         'header': 1
                     }, {
@@ -448,7 +453,6 @@ $(document).ready(function() {
                     }]
                 ]
             },
-            scrollingContainer: '.main-container',
             bounds: '.main-container',
             theme: 'bubble'
         });
@@ -468,7 +472,7 @@ $(document).ready(function() {
             calcStats(editor.getText());
         }
 
-        //only save data 600ms after user has stopped typing
+        //only save data 1s after user has stopped typing
         var timer;
         this.editor.on('text-change', function() {
             clearTimeout(timer);
@@ -483,7 +487,7 @@ $(document).ready(function() {
                 }
                 _DOC.setContents(contents);
                 saveData();
-            }, 2000);
+            }, 1000);
             doc.changed = true;
             if (settings.statistics == true) {
                 calcStats(doc.editor.getText());
@@ -712,8 +716,8 @@ $(document).ready(function() {
         this.setSize(size);
         this.setFileEntry(fileEntry);
         this.changed = changed;
-        setDocumentTitle($('.doc-active'), name);
-        setDocumentSize($('.doc-active'), size);
+        setDocumentTitle(docAct(), name);
+        setDocumentSize(docAct(), size);
     }
 
     function strip(name) {
@@ -917,7 +921,7 @@ $(document).ready(function() {
         focusOnElem();
     });
 
-    $('.top-bar').mouseenter(function() {
+    $topBar.mouseenter(function() {
         openNavBar();
     });
 
@@ -1347,9 +1351,9 @@ $(document).ready(function() {
     $print.click(function() {
         var html = qlEditor().html();
         var copyString = '<div class="ql-editor" id="print"></div>';
-        $('html').append(copyString);
+            $html.append(copyString);
         var copy = $('#print');
-        copy.html(html);
+            copy.html(html);
         window.print();
         copy.remove();
     });
@@ -1968,82 +1972,12 @@ $(document).ready(function() {
         }, 800);
     }
 
-    // LZW-compress a string
-    function lzw_encode(s) {
-        var dict = {};
-        var data = (s + "").split("");
-        var out = [];
-        var currChar;
-        var phrase = data[0];
-        var code = 256;
-        for (var i = 1; i < data.length; i++) {
-            currChar = data[i];
-            if (dict['_' + phrase + currChar] != null) {
-                phrase += currChar;
-            } else {
-                out.push(phrase.length > 1 ? dict['_' + phrase] : phrase.charCodeAt(0));
-                dict['_' + phrase + currChar] = code;
-                code++;
-                phrase = currChar;
-            }
-        }
-        out.push(phrase.length > 1 ? dict['_' + phrase] : phrase.charCodeAt(0));
-        for (var i = 0; i < out.length; i++) {
-            out[i] = String.fromCharCode(out[i]);
-        }
-        return out.join("");
-    }
-
-    // Decompress an LZW-encoded string
-    function lzw_decode(s) {
-        var dict = {};
-        var data = (s + "").split("");
-        var currChar = data[0];
-        var oldPhrase = currChar;
-        var out = [currChar];
-        var code = 256;
-        var phrase;
-        for (var i = 1; i < data.length; i++) {
-            var currCode = data[i].charCodeAt(0);
-            if (currCode < 256) {
-                phrase = data[i];
-            } else {
-                phrase = dict['_' + currCode] ? dict['_' + currCode] : (oldPhrase + currChar);
-            }
-            out.push(phrase);
-            currChar = phrase.charAt(0);
-            dict['_' + code] = oldPhrase + currChar;
-            code++;
-            oldPhrase = phrase;
-        }
-        return out.join("");
-    }
-
-    function encode_utf8(s) {
-        return unescape(encodeURIComponent(s));
-    }
-
-    function decode_utf8(s) {
-        return decodeURIComponent(escape(s));
-    }
-
-    function compress(array) {
-        var compressed = lzw_encode(encode_utf8(CircularJSON.stringify(array)));
-        return compressed;
-    }
-
-    function decompress(string) {
-        var decompressed = CircularJSON.parse(decode_utf8(lzw_decode(string)));
-        return decompressed;
-    }
-
     //remember user data using the Chrome API
     //save data
     function saveData() {
-        var compressedString = compress(documents);
-        chrome.storage.sync.set({
+        setStorage({
             settings: settings,
-            data: compressedString
+            data: documents
         });
     }
 
@@ -2093,7 +2027,7 @@ $(document).ready(function() {
                     } else {
                         loadScreen();
                         $installScreen.show();
-                        chrome.storage.sync.set({
+                        setStorage({
                             installed: false
                         });
                     }
@@ -2121,7 +2055,7 @@ $(document).ready(function() {
                                 $('.sign-out .material-icons').css('color', ideal);
                                 $('.user-profile-body').show();
 
-                                chrome.storage.sync.set({
+                                setStorage({
                                     installed: true,
                                     signIn: true
                                 });
@@ -2161,7 +2095,7 @@ $(document).ready(function() {
     var current_token;
 
     function loadData(callback) {
-        chrome.storage.sync.get({
+        getStorage({
             installed: 'installed',
             signIn: 'signIn'
         }, function(ist) {
@@ -2196,7 +2130,7 @@ $(document).ready(function() {
             realLoad();
         });
 
-        chrome.storage.sync.set({
+        setStorage({
             installed: true,
             signIn: false
         });
@@ -2344,7 +2278,7 @@ $(document).ready(function() {
         //close
         if (CLOSE) {
             e.preventDefault();
-            window.close();
+            closeWindow();
         }
 
         if (HELP) {
@@ -2360,13 +2294,13 @@ $(document).ready(function() {
         //delete
         if (DELETE) {
             if ($documentContainer.is(':visible')) {
-                $('.doc-active').find('.delete-confirm').click();
+                docAct().find('.delete-confirm').click();
             } else {
                 var doc = getDoc(documentAct().index());
                 if (doc.changed) {
-                    openModal($documentContainer, $('.doc-active').find('.document-delete').click());
+                    openModal($documentContainer, docAct().find('.document-delete').click());
                 } else {
-                    $('.doc-active').find('.document-delete').click();
+                    docAct().find('.document-delete').click();
                 }
             }
         }
@@ -2430,13 +2364,21 @@ $(document).ready(function() {
         revokeToken();
         closeSignOut();
         applySignOut();
-        chrome.storage.sync.set({
+        setStorage({
             signIn: false
         });
     });
 
+    function setStorage(storage) {
+        chrome.storage.local.set(storage);
+    }
+
+    function getStorage(storage, callback) {
+        chrome.storage.local.get(storage, callback);
+    }
+
     function realLoad() {
-        chrome.storage.sync.get({
+        getStorage({
             settings: 'settings',
             data: 'documents'
         }, function(item) {
@@ -2449,7 +2391,6 @@ $(document).ready(function() {
                 loadScreen();
             } else {
                 var counter = 0;
-                data = decompress(data);
                 if (data.length === 0) {
                     newDoc('untitled', '', '0 KB', false, true, false);
                     loadSettings(settings);
@@ -2493,8 +2434,12 @@ $(document).ready(function() {
         }
     }
 
-    $('.close-window').click(function() {
+    function closeWindow() {
         chrome.app.window.current().close();
+    }
+
+    $('.close-window').click(function() {
+        closeWindow();
     });
 
     $('.maximize-window').click(function() {
