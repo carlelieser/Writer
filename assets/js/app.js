@@ -1,5 +1,5 @@
 // Writer
-// Version 5.4
+// Version 5.4.1
 // Author : Carlos E. Santos
 // Made with <3
 $(document).ready(function() {
