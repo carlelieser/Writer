@@ -4,14 +4,6 @@
 // Made with <3
 $(document).ready(function() {
 
-    service = analytics.getService('Writer');
-    service.getConfig().addCallback(function(config) {
-        config.setTrackingPermitted(true);
-    });
-
-    tracker = service.getTracker('UA-96857701-1');
-    tracker.sendAppView('MainView');
-
     require.config({
         paths: {
             'upndown': '/assets/libs/upndown/lib/upndown.bundle.min'
@@ -2027,6 +2019,13 @@ $(document).ready(function() {
 
     function getToken(install, callback) {
         if (navigator.onLine) {
+            service = analytics.getService('Writer');
+    service.getConfig().addCallback(function(config) {
+        config.setTrackingPermitted(true);
+    });
+
+    tracker = service.getTracker('UA-96857701-1');
+    tracker.sendAppView('MainView');
             chrome.identity.getAuthToken({
                 'interactive': true
             }, function(token) {
