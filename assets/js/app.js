@@ -254,6 +254,7 @@ $(document).ready(function() {
 
     Doc.prototype.setName = function(name) {
         this.name = name;
+        saveData();
     }
 
     Doc.prototype.getName = function() {
@@ -303,6 +304,7 @@ $(document).ready(function() {
                 this.path = this.fileEntry.fullPath;
                 this.setName(fileEntry.name);
                 this.setSavedFileEntry(fileEntry);
+                saveData();
             }
         }
     }
@@ -464,7 +466,7 @@ $(document).ready(function() {
                 }
                 _DOC.setContents(contents);
                 saveData();
-            }, 600);
+            }, 1000);
             doc.changed = true;
             if (settings.statistics == true) {
                 calcStats(doc.editor.getText());
@@ -807,10 +809,14 @@ $(document).ready(function() {
                 newDoc(true);
                 closeModals();
             } else {
-                if (index - 1 == documents.length - 1) {
-                    $documentList.children().last().click();
+                if (!this.docListItem.hasClass('doc-active')) {
+                    $('.doc-active').click();
                 } else {
-                    $documentList.children().eq(index).click();
+                    if (index - 1 == documents.length - 1) {
+                        $documentList.children().last().click();
+                    } else {
+                        $documentList.children().eq(index).click();
+                    }
                 }
             }
         }
@@ -1944,6 +1950,18 @@ $(document).ready(function() {
         }
     })
 
+    $(document).on('blur', '.document-title', function(e) {
+        var index = $(this).parent().index();
+        var doc = getDoc(index);
+        var title = $(this).val();
+
+        makeReadOnly($(this));
+        if (title == doc.name) {} else {
+            doc.setFileEntry(null);
+            doc.setName(title);
+        }
+    });
+
     $(document).on('click', function() {
         closeOverflow($('.overflow-menu'));
     });
@@ -1964,7 +1982,7 @@ $(document).ready(function() {
             }, 800, beizer, function() {
                 $(this).remove();
             });
-        }, 800);
+        }, 600);
     }
 
     function saveData() {
@@ -2444,7 +2462,7 @@ $(document).ready(function() {
         } else {
             chrome.app.window.current().maximize();
         }
-        if(!$modal.is(':visible')){
+        if (!$modal.is(':visible')) {
             qlEditor().focus();
         }
     });
