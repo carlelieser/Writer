@@ -45,6 +45,7 @@ html, body {
     font-size: 14px;
     text-transform: uppercase;
     color: #1abc9c;
+    cursor: pointer;
 }
 
 .save-dialogue .save-buttons>div:nth-child(2) {
@@ -415,6 +416,7 @@ html, body {
     background-color: #fbfbfb;
     box-shadow: none;
     transition: all .2s ease;
+    cursor: pointer;
 }
 
 .install-screen .install-screen-button:hover {
@@ -596,8 +598,8 @@ html, body {
     background-color: transparent;
 }
 
-.file-name-details{
-    width:200px !important;
+.file-name-details {
+    width: 200px !important;
 }
 
 .details-container .details-content>div, .help-container .help-content>div {
@@ -608,8 +610,8 @@ html, body {
     font-family: 'Roboto';
     font-size: 14px;
     line-height: 60px;
-    padding-left:40px;
-    padding-right:40px;
+    padding-left: 40px;
+    padding-right: 40px;
     box-sizing: border-box;
 }
 
