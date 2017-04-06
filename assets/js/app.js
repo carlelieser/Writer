@@ -2019,13 +2019,14 @@ $(document).ready(function() {
 
     function getToken(install, callback) {
         if (navigator.onLine) {
-            service = analytics.getService('Writer');
-    service.getConfig().addCallback(function(config) {
-        config.setTrackingPermitted(true);
-    });
+          var gService = analytics.getService('Writer');
+          gService.getConfig().addCallback(function(config) {
+            config.setTrackingPermitted(true);
+          });
 
-    tracker = service.getTracker('UA-96857701-1');
-    tracker.sendAppView('MainView');
+        var gTracker = gService.getTracker('UA-96857701-1');
+            gTracker.sendAppView('MainView');
+            
             chrome.identity.getAuthToken({
                 'interactive': true
             }, function(token) {
