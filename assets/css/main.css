@@ -52,7 +52,7 @@ html, body {
 }
 
 .tutorial-container, .tutorial-container-two {
-    width: 200px;
+    width: 280px;
     height: auto;
     padding-left: 20px;
     padding-right: 20px;
@@ -145,6 +145,7 @@ html, body {
     margin-bottom: 10px;
     font-size: 14px;
     font-family: 'Roboto';
+    line-height:1.5;
     float: right;
     color: rgba(0, 0, 0, 0.8);
 }
