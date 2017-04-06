@@ -2444,6 +2444,9 @@ $(document).ready(function() {
         } else {
             chrome.app.window.current().maximize();
         }
+        if(!$modal.is(':visible')){
+            qlEditor().focus();
+        }
     });
 
     $('.minimize-window').click(function() {
