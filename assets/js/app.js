@@ -189,14 +189,15 @@ $(document).ready(function() {
                         value = 'toggle-active'
                     }
 
-                    if (value == 'toggle-active') {
-                        $('.' + key).click();
-                    }
-
                     if (key == 'focus' && value == 'toggle-inactive') {
                         focusMode = false;
                         $('.ql-editor *').css('opacity', '1');
                     }
+
+                    if (value == 'toggle-active') {
+                        $('.' + key).click();
+                    }
+
                 }
             }
         }
