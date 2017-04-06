@@ -129,7 +129,7 @@ $(document).ready(function() {
         font: 'Charter',
         size: '16px',
         theme: 'default',
-        line: 'single',
+        line: 'double',
         margin: 'medium'
     }
 
@@ -142,7 +142,7 @@ $(document).ready(function() {
         font: 'Charter',
         size: '16px',
         theme: 'default',
-        line: 'single',
+        line: 'double',
         margin: 'medium'
     }
 
@@ -160,7 +160,7 @@ $(document).ready(function() {
         for (var key in config) {
             if (config.hasOwnProperty(key)) {
                 var value = config[key];
-                var excluded = ['font', 'size', 'theme', 'margin'];
+                var excluded = ['font', 'size', 'theme', 'margin', 'line'];
 
                 if (excluded.indexOf(key) > -1) {
                     var correspondingDropdown;
@@ -464,7 +464,7 @@ $(document).ready(function() {
                 }
                 _DOC.setContents(contents);
                 saveData();
-            }, 1000);
+            }, 600);
             doc.changed = true;
             if (settings.statistics == true) {
                 calcStats(doc.editor.getText());
