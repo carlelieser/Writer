@@ -713,6 +713,9 @@ $(document).ready(function() {
 
     function openSave(doc) {
         closeModals(true);
+        if(!$bg.is(':visible')){
+            openBg();
+        }
         $('.save-dialogue .save-text span').text(doc.name);
         $('.save-dialogue').fadeIn('fast');
 
@@ -1079,6 +1082,12 @@ $(document).ready(function() {
                 }, 200, beizer);
             });
         }
+    }
+
+    function openBg(){
+        $bg.show().filter(':not(:animated)').animate({
+            opacity: '0.5'
+        }, 200);
     }
 
     function closeBg() {

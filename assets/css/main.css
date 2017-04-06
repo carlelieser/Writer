@@ -145,7 +145,7 @@ html, body {
     margin-bottom: 10px;
     font-size: 14px;
     font-family: 'Roboto';
-    line-height:1.5;
+    line-height: 1.5;
     float: right;
     color: rgba(0, 0, 0, 0.8);
 }
@@ -710,6 +710,15 @@ html, body {
 
 .feedback-container .feedback-content input:focus~.bar:before, .feedback-container .feedback-content input:focus~.bar:after, .feedback-container .feedback-content textarea:focus~.bar:before, .feedback-container .feedback-content textarea:focus~.bar:after {
     width: 50%;
+}
+
+.feedback-content a {
+    margin-top: 20px;
+    height: 40px;
+    display: block;
+    margin-left: 20px;
+    text-decoration: none;
+    color: #21d6b2;
 }
 
 .submit-button {
