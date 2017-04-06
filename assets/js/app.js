@@ -615,14 +615,59 @@ $(document).ready(function() {
             .replaceAll('&quot;', '')
     }
 
+    function getIndicesOf(searchStr, str, caseSensitive) {
+        var searchStrLen = searchStr.length;
+        if (searchStrLen == 0) {
+            return [];
+        }
+        var startIndex = 0,
+            index, indices = [];
+        if (!caseSensitive) {
+            str = str.toLowerCase();
+            searchStr = searchStr.toLowerCase();
+        }
+        while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+            indices.push(index);
+            startIndex = index + searchStrLen;
+        }
+        return indices;
+    }
+
+    function getNextIndex(string, start, token) {
+        var indices = getIndicesOf(token, string);
+
+        indices.forEach(function(value, index, array) {
+            if (start < value) {
+                return value;
+            }
+        });
+    }
+
+    function getStyle(element, styleProp) {
+        var style = element.attr('style');
+        var index = style.lastIndexOf(styleProp + ':') + styleProp.length + 2;
+        style = style.substring(index, getNextIndex(style, index, ':'));
+        style = style.replace(';', '');
+        return style;
+    }
+
     function cleanHTML(html) {
         var htmlParent = $(document.createElement('div'));
         htmlParent.addClass('htmlParent');
         htmlParent.html(html);
 
+        htmlParent.find('br').remove();
+
         htmlParent.find('*').each(function() {
             if (isEmpty($(this))) {
                 $(this).html('<br/>');
+            }
+            if ($(this).attr('style')) {
+                if ($(this).attr('style').indexOf('text-align') > -1) {
+                    var prop = getStyle($(this), 'text-align');
+                    $(this).addClass('ql-align-' + prop);
+                    $(this).removeAttr('style');
+                }
             }
         });
 
@@ -647,6 +692,15 @@ $(document).ready(function() {
             }
         });
 
+        htmlParent.find('div').each(function() {
+            $(this).replaceWith('<p>' + $(this).html() + '</p>');
+        });
+
+        htmlParent.find('span').each(function() {
+            var cnt = $(this).contents();
+            $(this).replaceWith(cnt);
+        });
+
         htmlParent.find('p').each(function() {
             if ($(this).parent().is('li') || $(this).parent().is('blockquote')) {
                 var cnt = $(this).contents();
@@ -657,6 +711,7 @@ $(document).ready(function() {
         htmlParent.find('table').remove();
 
         var cleaned = cleanDoc(htmlParent.html());
+        console.log(cleaned);
         return cleaned;
     }
 
@@ -713,7 +768,7 @@ $(document).ready(function() {
 
     function openSave(doc) {
         closeModals(true);
-        if(!$bg.is(':visible')){
+        if (!$bg.is(':visible')) {
             openBg();
         }
         $('.save-dialogue .save-text span').text(doc.name);
@@ -1084,7 +1139,7 @@ $(document).ready(function() {
         }
     }
 
-    function openBg(){
+    function openBg() {
         $bg.show().filter(':not(:animated)').animate({
             opacity: '0.5'
         }, 200);
@@ -1245,7 +1300,7 @@ $(document).ready(function() {
         var reader = new FileReader();
         reader.onload = function() {
             var content = this.result;
-
+            console.log(content);
             if (markdown) {
                 content = convertNewLines(content);
                 content = marked(content);
@@ -1775,7 +1830,7 @@ $(document).ready(function() {
         $('.double-line').click();
         $('.medium-margin').click();
 
-        $optionContainer.each(function(){
+        $optionContainer.each(function() {
             $(this).css('height', '0px');
             $(this).hide();
         });
@@ -1806,7 +1861,7 @@ $(document).ready(function() {
             if (dropdown.is(':visible')) {
                 closeDropdown(dropdown);
             } else {
-                if(dropdown.css('height') != '0px'){
+                if (dropdown.css('height') != '0px') {
                     dropdown.css('height', '0px');
                 }
                 openDropdown(dropdown);
@@ -2184,7 +2239,7 @@ $(document).ready(function() {
             }
         }
 
-        if(COFFEE){
+        if (COFFEE) {
             $coffeeMode.click();
         }
 
