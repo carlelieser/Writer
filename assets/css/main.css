@@ -284,6 +284,7 @@ html, body {
     left: 0;
     position: absolute;
     z-index: 100;
+    display:none;
 }
 
 .user-profile .user-image-container {
@@ -565,7 +566,7 @@ html, body {
     vertical-align: middle;
 }
 
-.document-container .document-list .document-item div:not(.document-edit, .document-delete) {
+.document-container .document-list .document-item div:not(.doc-overflow):not(.overflow-menu) {
     float: left;
 }
 
@@ -958,7 +959,6 @@ html, body {
 
 .sidebar-option div, .file-option div, .templates-option div {
     display: inline-block;
-    float: left;
     vertical-align: middle;
 }
 
@@ -1187,6 +1187,5 @@ html, body {
     white-space: nowrap;
     word-wrap: normal;
     direction: ltr;
-    -webkit-font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
 }
