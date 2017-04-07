@@ -1,5 +1,5 @@
 // Writer
-// Version 5.4.2
+// Version 5.4.3
 // Author : Carlos E. Santos
 // Made with <3
 $(document).ready(function() {
@@ -17,7 +17,7 @@ $(document).ready(function() {
         $mainContainer = $('.main-container'),
         $navBar = $('.navigation-container'),
         $sideBar = $('.sidebar'),
-        $sideToggle = $('.sidebar-toggle'),
+        $sideToggle = $('.dumbass-indicator'),
         $settings = $('.settings-container'),
         $modal = $('.modal'),
         $bg = $('.bg');
@@ -48,7 +48,8 @@ $(document).ready(function() {
         $feedBackContainer = $('.feedback-container'),
         $detailsContainer = $('.details-container'),
         $helpContainer = $('.help-container'),
-        $fileContainer = $('.file-container');
+        $fileContainer = $('.file-container'),
+        $templatesContainer = $('.templates-container');
 
     var $docButton = $('.open-documents'),
         $settingsButton = $('.open-settings'),
@@ -56,6 +57,7 @@ $(document).ready(function() {
         $details = $('.open-details'),
         $help = $('.open-help'),
         $file = $('.open-file'),
+        $templates = $('.open-templates'),
         $modalClose = $('.modal-close');
 
     var $new = $('.new'),
@@ -458,7 +460,7 @@ $(document).ready(function() {
                 }
                 _DOC.setContents(contents);
                 saveData();
-            }, 1000);
+            }, 2000);
             doc.changed = true;
             if (settings.statistics == true) {
                 calcStats(doc.editor.getText());
@@ -706,7 +708,6 @@ $(document).ready(function() {
         htmlParent.find('table').remove();
 
         var cleaned = cleanDoc(htmlParent.html());
-        console.log(cleaned);
         return cleaned;
     }
 
@@ -1299,7 +1300,6 @@ $(document).ready(function() {
         var reader = new FileReader();
         reader.onload = function() {
             var content = this.result;
-            console.log(content);
             if (markdown) {
                 content = convertNewLines(content);
                 content = marked(content);
@@ -1387,12 +1387,516 @@ $(document).ready(function() {
         $html.append(copyString);
         var copy = $('#print');
         copy.html(html);
+        copy.css({
+            fontSize: settings.size,
+            fontFamily: settings.font,
+            lineHeight: settings.line
+        });
         window.print();
         copy.remove();
     });
 
     $file.click(function() {
         openModal($fileContainer);
+    });
+
+    $templates.click(function() {
+        openModal($templatesContainer);
+    });
+
+    $templatesContainer.children().last().children().click(function() {
+        closeModals();
+    });
+
+    var $letter = $('.templates-options > .letter');
+    var $notes = $('.templates-options > .notes');
+    var $MLA = $('.templates-options > .MLA-essay');
+    var $APA = $('.templates-options > .APA-essay');
+
+    var noteContents = {
+        "ops": [{
+            "insert": "Your Name\nInstructor's Name\nCourse Title\nDate\n{Course Title} Notes"
+        }, {
+            "attributes": {
+                "align": "center"
+            },
+            "insert": "\n"
+        }, {
+            "attributes": {
+                "bold": true
+            },
+            "insert": "Heading"
+        }, {
+            "insert": "\nCreate bulleted lists by typing \"-\" + the spacebar"
+        }, {
+            "attributes": {
+                "list": "bullet"
+            },
+            "insert": "\n"
+        }, {
+            "insert": "Indent lists by hitting tab at the beginning of a bullet (or list number)"
+        }, {
+            "attributes": {
+                "list": "bullet"
+            },
+            "insert": "\n"
+        }, {
+            "insert": "Like so."
+        }, {
+            "attributes": {
+                "indent": 1,
+                "list": "bullet"
+            },
+            "insert": "\n"
+        }, {
+            "insert": "This allows you to have multiple levels and therefore a comprehensive hierarchy of text"
+        }, {
+            "attributes": {
+                "indent": 1,
+                "list": "bullet"
+            },
+            "insert": "\n"
+        }, {
+            "insert": "Increases productivity"
+        }, {
+            "attributes": {
+                "indent": 2,
+                "list": "bullet"
+            },
+            "insert": "\n"
+        }, {
+            "insert": "Makes learning easier"
+        }, {
+            "attributes": {
+                "indent": 2,
+                "list": "bullet"
+            },
+            "insert": "\n"
+        }, {
+            "attributes": {
+                "bold": true
+            },
+            "insert": "Headings in this template are bold"
+        }, {
+            "insert": ", but you can easily change these to real headings by hitting CTRL + ALT + 1 (for a top-level heading) or CTRL + ALT + 2 for a subheading\n"
+        }, {
+            "attributes": {
+                "italic": true
+            },
+            "insert": "You can access Writer's keyboard shortcuts by:"
+        }, {
+            "insert": "\nOpening the sidebar"
+        }, {
+            "attributes": {
+                "list": "ordered"
+            },
+            "insert": "\n"
+        }, {
+            "insert": "Selecting the help menu"
+        }, {
+            "attributes": {
+                "list": "ordered"
+            },
+            "insert": "\n"
+        }, {
+            "insert": "\nAfter you're done with your notes, it is recommended that you save as a .wtr file or Writer file as it is the most supported file type used by Writer.\n\nKeep learning, and enjoy!\n"
+        }]
+    }
+
+    var letterContents = {
+        "ops": [{
+            "attributes": {
+                "bold": true,
+                "color": "#353744"
+            },
+            "insert": "Your Name"
+        }, {
+            "insert": "\n"
+        }, {
+            "attributes": {
+                "color": "#666666"
+            },
+            "insert": "123 Your Street"
+        }, {
+            "insert": "\n"
+        }, {
+            "attributes": {
+                "color": "#666666"
+            },
+            "insert": "Your City, ST 12345"
+        }, {
+            "insert": "\n"
+        }, {
+            "attributes": {
+                "color": "#666666"
+            },
+            "insert": "(123) 456-7890"
+        }, {
+            "insert": "\n"
+        }, {
+            "attributes": {
+                "color": "#666666"
+            },
+            "insert": "no_reply@example.com"
+        }, {
+            "insert": "\n\n"
+        }, {
+            "attributes": {
+                "color": "#353744"
+            },
+            "insert": "4th September 20XX"
+        }, {
+            "insert": "\n"
+        }, {
+            "attributes": {
+                "bold": true,
+                "color": "#353744"
+            },
+            "insert": "Ronny Reader"
+        }, {
+            "insert": "\n"
+        }, {
+            "attributes": {
+                "color": "#353744"
+            },
+            "insert": "CEO, Company Name"
+        }, {
+            "insert": "\n"
+        }, {
+            "attributes": {
+                "color": "#353744"
+            },
+            "insert": "123 Address St "
+        }, {
+            "insert": "\n"
+        }, {
+            "attributes": {
+                "color": "#353744"
+            },
+            "insert": "Anytown, ST 12345"
+        }, {
+            "insert": "\n\n"
+        }, {
+            "attributes": {
+                "color": "#353744"
+            },
+            "insert": "Dear Ms. Reader,"
+        }, {
+            "insert": "\n"
+        }, {
+            "attributes": {
+                "color": "#353744"
+            },
+            "insert": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat."
+        }, {
+            "insert": "\n"
+        }, {
+            "attributes": {
+                "color": "#353744"
+            },
+            "insert": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan."
+        }, {
+            "insert": "\n"
+        }, {
+            "attributes": {
+                "color": "#353744"
+            },
+            "insert": "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius."
+        }, {
+            "insert": "\n\n"
+        }, {
+            "attributes": {
+                "color": "#353744"
+            },
+            "insert": "Sincerely,"
+        }, {
+            "insert": "\nYour Name\n"
+        }]
+    }
+
+    var APAContents = {
+        "ops": [{
+            "insert": "Full Title of Your Paper"
+        }, {
+            "attributes": {
+                "align": "center"
+            },
+            "insert": "\n"
+        }, {
+            "insert": "Your Name (First M. Last)"
+        }, {
+            "attributes": {
+                "align": "center"
+            },
+            "insert": "\n"
+        }, {
+            "insert": "Name of School or Institution"
+        }, {
+            "attributes": {
+                "align": "center"
+            },
+            "insert": "\n\n"
+        }, {
+            "insert": "Author Note"
+        }, {
+            "attributes": {
+                "align": "center",
+                "header": 1
+            },
+            "insert": "\n"
+        }, {
+            "insert": "\tFirst paragraph: Complete departmental and institutional affiliation\n\tSecond paragraph: Changes in affiliation (if any)\n\tThird paragraph: Acknowledgments, funding sources, special circumstances\n\tFourth paragraph: Contact information (mailing address and e-mail)\n\n\t\f\nAbstract"
+        }, {
+            "attributes": {
+                "align": "center",
+                "header": 1
+            },
+            "insert": "\n"
+        }, {
+            "insert": "\tLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.\n\t"
+        }, {
+            "attributes": {
+                "italic": true
+            },
+            "insert": "Keywords:"
+        }, {
+            "insert": " Lorem, ipsum, dolor\n\f\nYour Full Title of Your Paper"
+        }, {
+            "attributes": {
+                "align": "center",
+                "header": 1
+            },
+            "insert": "\n"
+        }, {
+            "insert": "\tLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat (Lorem, 20XX). Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.\n\nMethod"
+        }, {
+            "attributes": {
+                "align": "center",
+                "header": 1
+            },
+            "insert": "\n"
+        }, {
+            "insert": "Participants"
+        }, {
+            "attributes": {
+                "header": 2
+            },
+            "insert": "\n"
+        }, {
+            "insert": "\tLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.\nAssessments and Measures"
+        }, {
+            "attributes": {
+                "header": 2
+            },
+            "insert": "\n"
+        }, {
+            "insert": "\tUt blandit malesuada quam, ac varius tortor gravida eget. Vestibulum id ligula leo, ut accumsan mi. Sed tristique euismod convallis. Nulla facilisi. Etiam vestibulum est id orci interdum vitae porta enim blandit. Cras sit amet arcu dolor, at venenatis erat. Vestibulum accumsan placerat mauris. Morbi nec nibh nibh. Duis ultricies posuere nunc. Morbi at tellus quis magna vestibulum eleifend. \n\t"
+        }, {
+            "attributes": {
+                "bold": true
+            },
+            "insert": "Heading 3 is the beginning of a paragraph ending with a period. "
+        }, {
+            "insert": "Maecenas ullamcorper bibendum consequat. Pellentesque ultrices, eros eu tincidunt pretium, magna leo volutpat libero, non bibendum diam nunc eget urna. Vivamus eu tortor et dui aliquam vestibulum at vel augue. Vivamus elit dui, porttitor eget egestas at, rhoncus in justo. Curabitur tristique, elit ac venenatis volutpat, eros mauris iaculis diam, vitae rhoncus erat metus vitae eros.\n\t"
+        }, {
+            "attributes": {
+                "bold": true,
+                "italic": true
+            },
+            "insert": "First Heading 4 level in the section."
+        }, {
+            "insert": " Nulla congue egestas ante, id ultricies orci dignissim commodo. Fusce placerat, libero eu pharetra pulvinar, lorem dui pulvinar nisi, et semper orci orci vitae magna. Nullam sodales, felis id feugiat scelerisque, tortor nulla interdum mauris, ac porttitor odio dolor eget eros.\n\t"
+        }, {
+            "attributes": {
+                "bold": true,
+                "italic": true
+            },
+            "insert": "Second Heading 4 level in the section. "
+        }, {
+            "insert": "Duis sit amet ipsum pretium erat accumsan iaculis vitae eget risus. Donec ut dui in lorem volutpat fermentum bibendum pulvinar libero. Nunc imperdiet eros et mi posuere pellentesque. Donec tincidunt ipsum eget nisl ullamcorper eu placerat libero ullamcorper. Maecenas id luctus ligula. Cras condimentum eleifend nibh sit amet iaculis. Suspendisse placerat sollicitudin mi, vel ornare augue hendrerit ac. Nulla sed suscipit sapien. Cras pellentesque orci lectus, eu consequat enim.\n\t"
+        }, {
+            "attributes": {
+                "italic": true
+            },
+            "insert": "First Heading 5 level in the section."
+        }, {
+            "insert": " Nulla congue egestas ante, id ultricies orci dignissim commodo. Fusce placerat, libero eu pharetra pulvinar, lorem dui pulvinar nisi, et semper orci orci vitae magna. Nullam sodales, felis id feugiat scelerisque, tortor nulla interdum mauris, ac porttitor odio dolor eget eros.\n\t"
+        }, {
+            "attributes": {
+                "italic": true
+            },
+            "insert": "Second Heading 5 level in the section."
+        }, {
+            "insert": " Duis sit amet ipsum pretium erat accumsan iaculis vitae eget risus. Donec ut dui in lorem volutpat fermentum bibendum pulvinar libero. Nunc imperdiet eros et mi posuere pellentesque. Donec tincidunt ipsum eget nisl ullamcorper eu placerat libero ullamcorper. Maecenas id luctus ligula. Cras condimentum eleifend nibh sit amet iaculis. Suspendisse placerat sollicitudin mi, vel ornare augue hendrerit ac. Nulla sed suscipit sapien. Cras pellentesque orci lectus, eu consequat enim.\n\nResults"
+        }, {
+            "attributes": {
+                "align": "center",
+                "header": 1
+            },
+            "insert": "\n"
+        }, {
+            "insert": "\tMaecenas id luctus ligula. Cras condimentum eleifend nibh sit amet iaculis. Suspendisse placerat sollicitudin mi, vel ornare augue hendrerit ac. Nulla sed suscipit sapien. Cras pellentesque orci lectus, eu consequat enim.\nOutcome 1"
+        }, {
+            "attributes": {
+                "header": 2
+            },
+            "insert": "\n"
+        }, {
+            "insert": "\tLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. \nOutcome 2"
+        }, {
+            "attributes": {
+                "header": 2
+            },
+            "insert": "\n"
+        }, {
+            "insert": "\tLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. \n\nDiscussion"
+        }, {
+            "attributes": {
+                "align": "center",
+                "header": 1
+            },
+            "insert": "\n"
+        }, {
+            "insert": "\tLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.\n\n\f"
+        }, {
+            "attributes": {
+                "align": "center",
+                "header": 1
+            },
+            "insert": "\n"
+        }, {
+            "insert": "References"
+        }, {
+            "attributes": {
+                "align": "center",
+                "header": 1
+            },
+            "insert": "\n"
+        }, {
+            "attributes": {
+                "background": "#ffffff"
+            },
+            "insert": "Lastname, C. (2008). Title of the source without caps except Proper Nouns or: First word after colon. "
+        }, {
+            "attributes": {
+                "background": "#ffffff",
+                "italic": true
+            },
+            "insert": "The Journal or Publication Italicized and Capped"
+        }, {
+            "attributes": {
+                "background": "#ffffff"
+            },
+            "insert": ", Vol#(Issue#), Page numbers."
+        }, {
+            "insert": "\n"
+        }, {
+            "attributes": {
+                "background": "#ffffff"
+            },
+            "insert": "Lastname, O. (2010).  Online journal using DOI or digital object identifier. "
+        }, {
+            "attributes": {
+                "background": "#ffffff",
+                "italic": true
+            },
+            "insert": "Main Online Journal Name"
+        }, {
+            "attributes": {
+                "background": "#ffffff"
+            },
+            "insert": ", Vol#(Issue#), 159-192. doi: 10.1000/182"
+        }, {
+            "insert": "\n"
+        }, {
+            "attributes": {
+                "background": "#ffffff"
+            },
+            "insert": "Lastname, W. (2009). If there is no DOI use the URL of the main website referenced. "
+        }, {
+            "attributes": {
+                "background": "#ffffff",
+                "italic": true
+            },
+            "insert": "Article Without DOI Reference"
+        }, {
+            "attributes": {
+                "background": "#ffffff"
+            },
+            "insert": ", Vol#(Issue#), 166-212. Retrieved from"
+        }, {
+            "attributes": {
+                "background": "#ffffff",
+                "color": "#000000",
+                "link": "http://www.mainwebsite.org/"
+            },
+            "insert": " "
+        }, {
+            "attributes": {
+                "color": "#1155cc",
+                "link": "http://www.example.com"
+            },
+            "insert": "http://www.example.com"
+        }, {
+            "insert": "\n\n"
+        }]
+    }
+
+    var MLAContents = {
+        "ops": [{
+            "insert": "Your Name\nProfessor Name \nSubject Name\n04 September 20XX\n\nTitle of Your Report"
+        }, {
+            "attributes": {
+                "align": "center"
+            },
+            "insert": "\n"
+        }, {
+            "insert": "\tLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.\nSECTION HEADER"
+        }, {
+            "attributes": {
+                "header": 1
+            },
+            "insert": "\n"
+        }, {
+            "insert": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.\n"
+        }, {
+            "attributes": {
+                "italic": true
+            },
+            "insert": "Subsection heading."
+        }, {
+            "insert": " Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat:\n(1) Lorem ipsum dolor sit amet; (2) consectetuer adipiscing elit; (3) sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat; and (4) ut wisi enim ad minim veniam.  (Lorem et al. 14)\n\tNam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.\n"
+        }, {
+            "attributes": {
+                "italic": true
+            },
+            "insert": "Subsection heading."
+        }, {
+            "insert": " Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.\nCONCLUSION"
+        }, {
+            "attributes": {
+                "header": 1
+            },
+            "insert": "\n"
+        }, {
+            "insert": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. \n\tNam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.\n"
+        }]
+    }
+
+    $letter.click(function() {
+        newDoc(false, 'Letter', letterContents, '0 KB', false, true, false);
+    });
+
+    $notes.click(function() {
+        newDoc(false, 'Class Notes', noteContents, '0 KB', false, true, false);
+    });
+
+    $MLA.click(function() {
+        newDoc(false, 'MLA Essay', MLAContents, '0 KB', false, true, false);
+    });
+
+    $APA.click(function() {
+        newDoc(false, 'APA Essay', APAContents, '0 KB', false, true, false);
     });
 
     $feedback.click(function() {
@@ -2448,7 +2952,15 @@ $(document).ready(function() {
     }
 
     function closeWindow() {
-        chrome.app.window.current().close();
+        var doc = getDoc(documentAct(true)),
+            contents = doc.editor.getContents();
+        doc.setContents(contents);
+        setStorage({
+            settings: settings,
+            data: documents
+        }, function() {
+            chrome.app.window.current().close();
+        });
     }
 
     $('.close-window').click(function() {

@@ -1,24 +1,33 @@
-html, body{
+html, body {
     background-color: #1b1b1b;
 }
 
-.navigation-container{
-    background-color:#313131 !important;
+.dumbass-indicator {
+    background-color: #313131 !important;
+    border: 1px solid #1b1b1b !important;
 }
 
-.navigation-container .close-window-line{
+.dumbass-indicator .material-icons {
+    color: #FFF !important;
+}
+
+.navigation-container {
+    background-color: #313131 !important;
+}
+
+.navigation-container .close-window-line {
     background-color: #FFF !important;
 }
 
-.navigation-container .maximize-square{
+.navigation-container .maximize-square {
     border: 1px solid #FFF !important;
 }
 
-.navigation-container .minimize-line{
+.navigation-container .minimize-line {
     background-color: #FFF !important;
 }
 
-.ql-editor{
+.ql-editor {
     color: #FFF !important;
 }
 
@@ -34,37 +43,37 @@ html, body{
     background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-.ql-tooltip{
-    background-color:#EFEFEF !important;
+.ql-tooltip {
+    background-color: #EFEFEF !important;
 }
 
-.ql-tooltip .ql-tooltip-arrow{
+.ql-tooltip .ql-tooltip-arrow {
     border-bottom: 6px solid #EFEFEF !important;
 }
 
-.ql-tooltip *{
-    color:#212121 !important;
+.ql-tooltip * {
+    color: #212121 !important;
     stroke: #212121 !important;
     fill: #212121;
 }
 
 .snackbar {
     background-color: #EFEFEF !important;
-    color:#000 !important;
+    color: #000 !important;
 }
 
 .snackbar .snackbar-doc-title {
     color: #616161 !important;
 }
 
-.statistics-bar{
+.statistics-bar {
     background-color: #2d2d2d !important;
 }
 
-.statistics-bar label{
-    color: rgba(255,255,255, 0.6) !important;
+.statistics-bar label {
+    color: rgba(255, 255, 255, 0.6) !important;
 }
 
-.statistics-bar div{
+.statistics-bar div {
     color: #FFF !important;
 }
