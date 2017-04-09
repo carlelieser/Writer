@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
 }
@@ -46,16 +47,22 @@ html, body {
 .save-dialogue {
     width: 250px;
     height: auto;
-    padding: 20px;
-    border-radius: 2px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 30px;
+    padding-right: 35px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border: 1px solid #dcdcdc;
     background-color: #FFF;
     box-shadow: -1px 2px 7px 0px rgba(0, 0, 0, 0.1);
-    top: 50%;
+    top: -250px;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-49%);
     position: absolute;
-    z-index: 999;
+    z-index: 9999999;
     display: none;
+    transition-timing-function: ease;
 }
 
 .save-dialogue>div {
@@ -92,7 +99,8 @@ html, body {
     margin-right: 20px;
 }
 
-.tutorial-container, .tutorial-container-two {
+.tutorial-container,
+.tutorial-container-two {
     width: 280px;
     height: auto;
     padding-left: 20px;
@@ -121,7 +129,8 @@ html, body {
     transform: translateY(-50%);
 }
 
-.tutorial-container:after, .tutorial-container:before {
+.tutorial-container:after,
+.tutorial-container:before {
     left: 50%;
     bottom: 100%;
     border: solid transparent;
@@ -146,7 +155,8 @@ html, body {
     margin-left: -13px;
 }
 
-.tutorial-container-two:after, .tutorial-container-two:before {
+.tutorial-container-two:after,
+.tutorial-container-two:before {
     right: 100%;
     top: 50%;
     border: solid transparent;
@@ -284,7 +294,7 @@ html, body {
     left: 0;
     position: absolute;
     z-index: 100;
-    display:none;
+    display: none;
 }
 
 .user-profile .user-image-container {
@@ -559,7 +569,8 @@ html, body {
     background-color: #1ddb99;
 }
 
-.document-container .document-list .document-item>div:not(.overflow-menu), .document-container .document-list .document-item>input {
+.document-container .document-list .document-item>div:not(.overflow-menu),
+.document-container .document-list .document-item>input {
     line-height: 60px;
     display: inline-block;
     color: rgba(0, 0, 0, 0.7);
@@ -579,7 +590,8 @@ html, body {
     cursor: default;
 }
 
-.document-item .material-icons, .document-size {
+.document-item .material-icons,
+.document-size {
     width: 20%;
     text-align: center;
 }
@@ -632,7 +644,8 @@ html, body {
     width: 200px !important;
 }
 
-.details-container .details-content>div, .help-container .help-content>div {
+.details-container .details-content>div,
+.help-container .help-content>div {
     width: 100%;
     height: 60px;
     display: block;
@@ -645,12 +658,14 @@ html, body {
     box-sizing: border-box;
 }
 
-.details-container .details-content>div>.details-title, .help-container .help-content>div>.command-title {
+.details-container .details-content>div>.details-title,
+.help-container .help-content>div>.command-title {
     float: left;
     color: rgba(0, 0, 0, 0.7);
 }
 
-.details-container .details-content>div>.details-amount, .help-container .help-content>div>.command {
+.details-container .details-content>div>.details-amount,
+.help-container .help-content>div>.command {
     height: 60px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -673,7 +688,8 @@ html, body {
     height: 58px;
 }
 
-.feedback-container .feedback-content input, .feedback-container .feedback-content textarea {
+.feedback-container .feedback-content input,
+.feedback-container .feedback-content textarea {
     font-size: 16px;
     display: block;
     width: 300px;
@@ -686,7 +702,8 @@ html, body {
     font-family: 'Roboto';
 }
 
-.feedback-container .feedback-content input:focus, .feedback-container .feedback-content textarea:focus {
+.feedback-container .feedback-content input:focus,
+.feedback-container .feedback-content textarea:focus {
     outline: none;
 }
 
@@ -708,11 +725,17 @@ html, body {
 
 /* active state */
 
-.feedback-container .feedback-content input:focus, .feedback-container .feedback-content input:valid, .feedback-container .feedback-content textarea:focus, .feedback-container .feedback-content textarea:valid {
+.feedback-container .feedback-content input:focus,
+.feedback-container .feedback-content input:valid,
+.feedback-container .feedback-content textarea:focus,
+.feedback-container .feedback-content textarea:valid {
     border-bottom: 1px solid transparent;
 }
 
-.feedback-container .feedback-content input:focus~label, .feedback-container .feedback-content textarea:focus~label, .feedback-container .feedback-content textarea:valid~label, .feedback-container .feedback-content input:valid~label {
+.feedback-container .feedback-content input:focus~label,
+.feedback-container .feedback-content textarea:focus~label,
+.feedback-container .feedback-content textarea:valid~label,
+.feedback-container .feedback-content input:valid~label {
     top: -18px;
     font-size: 12px;
     color: #51ad9a;
@@ -727,7 +750,8 @@ html, body {
     width: 300px;
 }
 
-.feedback-container .feedback-content .bar:before, .bar:after {
+.feedback-container .feedback-content .bar:before,
+.bar:after {
     content: '';
     height: 2px;
     width: 0;
@@ -748,7 +772,10 @@ html, body {
 
 /* active state */
 
-.feedback-container .feedback-content input:focus~.bar:before, .feedback-container .feedback-content input:focus~.bar:after, .feedback-container .feedback-content textarea:focus~.bar:before, .feedback-container .feedback-content textarea:focus~.bar:after {
+.feedback-container .feedback-content input:focus~.bar:before,
+.feedback-container .feedback-content input:focus~.bar:after,
+.feedback-container .feedback-content textarea:focus~.bar:before,
+.feedback-container .feedback-content textarea:focus~.bar:after {
     width: 50%;
 }
 
@@ -777,7 +804,8 @@ html, body {
     outline: none;
 }
 
-.settings-container .settings-list .settings-option, .reset-button {
+.settings-container .settings-list .settings-option,
+.reset-button {
     width: 100%;
     float: left;
     display: block;
@@ -789,7 +817,8 @@ html, body {
     height: 70px;
 }
 
-.settings-container .settings-list .noToggle, .reset-button {
+.settings-container .settings-list .noToggle,
+.reset-button {
     height: auto;
     min-height: 80px;
 }
@@ -857,7 +886,7 @@ html, body {
     font-family: 'Charter';
 }
 
-.droid{
+.droid {
     font-family: 'Droid Serif';
 }
 
@@ -941,7 +970,9 @@ html, body {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-.sidebar-option, .file-option, .templates-option {
+.sidebar-option,
+.file-option,
+.templates-option {
     width: 100%;
     height: 60px;
     line-height: 60px;
@@ -950,16 +981,22 @@ html, body {
     color: rgba(0, 0, 0, 0.7);
 }
 
-.sidebar-option div, .file-option div, .templates-option div {
+.sidebar-option div,
+.file-option div,
+.templates-option div {
     display: inline-block;
     vertical-align: middle;
 }
 
-.sidebar-option .option-title, .file-option .option-title, .templates-option .option-title {
+.sidebar-option .option-title,
+.file-option .option-title,
+.templates-option .option-title {
     font-family: 'Roboto Med';
 }
 
-.sidebar-option .material-icons, .file-option .material-icons, .templates-option .material-icons {
+.sidebar-option .material-icons,
+.file-option .material-icons,
+.templates-option .material-icons {
     width: 70px;
     height: 60px;
     text-align: center;
@@ -968,7 +1005,9 @@ html, body {
     opacity: 0.7;
 }
 
-.sidebar-option:hover, .file-option:hover, .templates-option:hover {
+.sidebar-option:hover,
+.file-option:hover,
+.templates-option:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
@@ -1037,8 +1076,9 @@ html, body {
     transition: all .2s ease;
 }
 
-.ql-editor img{
-    background: url('../settings/loading.gif') 50% no-repeat;
+.ql-editor img {
+    background: url('/assets/settings/loading.gif') 50% no-repeat;
+    height: auto !important;
     transition: none !important;
 }
 
@@ -1057,17 +1097,31 @@ html, body {
     padding-top: 1px;
 }
 
-.ql-editor p>*, .ql-editor pre>*, .ql-editor blockquote>*, .ql-editor h1>*, .ql-editor h2>*, .ql-editor h3>*, .ql-editor h4>*, .ql-editor h5>*, .ql-editor h6>*, .ql-editor strong>*, .ql-editor em>*, .ql-editor u>*, .ql-editor ol, .ql-editor ul, .ql-editor li>* {
+.ql-editor p>*,
+.ql-editor pre>*,
+.ql-editor blockquote>*,
+.ql-editor h1>*,
+.ql-editor h2>*,
+.ql-editor h3>*,
+.ql-editor h4>*,
+.ql-editor h5>*,
+.ql-editor h6>*,
+.ql-editor strong>*,
+.ql-editor em>*,
+.ql-editor u>*,
+.ql-editor ol,
+.ql-editor ul,
+.ql-editor li>* {
     opacity: 1 !important;
 }
 
-.ql-editor img{
-    padding-top:20px;
+.ql-editor img {
+    padding-top: 20px;
     padding-bottom: 20px;
-    margin:auto;
+    margin: auto;
 }
 
-.ql-editor a{
+.ql-editor a {
     color: inherit;
 }
 
@@ -1139,7 +1193,8 @@ html, body {
 }
 
 @media print {
-    html, body {
+    html,
+    body {
         background-color: #FFF;
     }
     body {
