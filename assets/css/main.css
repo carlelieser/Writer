@@ -564,10 +564,7 @@ html, body {
     display: inline-block;
     color: rgba(0, 0, 0, 0.7);
     vertical-align: middle;
-}
-
-.document-container .document-list .document-item div:not(.doc-overflow):not(.overflow-menu) {
-    float: left;
+    height: 100%;
 }
 
 .document-container .document-list .document-item .document-title {
@@ -585,14 +582,6 @@ html, body {
 .document-item .material-icons, .document-size {
     width: 20%;
     text-align: center;
-}
-
-.document-item .material-icons {
-    float: left;
-}
-
-.document-item .document-size {
-    float: right;
 }
 
 .document-item .doc-overflow {
@@ -865,7 +854,11 @@ html, body {
 }
 
 .charter {
-    font-family: 'Charter'
+    font-family: 'Charter';
+}
+
+.droid{
+    font-family: 'Droid Serif';
 }
 
 .courier {
@@ -1033,6 +1026,7 @@ html, body {
     padding-right: 18%;
     padding-bottom: 200px;
     overflow-y: auto;
+    overflow-x: hidden;
     cursor: default;
     line-height: 2;
     transition: all .2s ease;
@@ -1041,6 +1035,11 @@ html, body {
 .ql-editor * {
     cursor: text;
     transition: all .2s ease;
+}
+
+.ql-editor img{
+    background: url('../settings/loading.gif') 50% no-repeat;
+    transition: none !important;
 }
 
 .ql-editor::-webkit-scrollbar {
@@ -1060,6 +1059,16 @@ html, body {
 
 .ql-editor p>*, .ql-editor pre>*, .ql-editor blockquote>*, .ql-editor h1>*, .ql-editor h2>*, .ql-editor h3>*, .ql-editor h4>*, .ql-editor h5>*, .ql-editor h6>*, .ql-editor strong>*, .ql-editor em>*, .ql-editor u>*, .ql-editor ol, .ql-editor ul, .ql-editor li>* {
     opacity: 1 !important;
+}
+
+.ql-editor img{
+    padding-top:20px;
+    padding-bottom: 20px;
+    margin:auto;
+}
+
+.ql-editor a{
+    color: inherit;
 }
 
 .snackbar {
@@ -1166,6 +1175,12 @@ html, body {
     font-family: 'Charter';
     font-style: normal;
     src: url('../fonts/charter.ttf');
+}
+
+@font-face {
+    font-family: 'Droid Serif';
+    font-style: normal;
+    src: url('../fonts/droid.ttf');
 }
 
 @font-face {

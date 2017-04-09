@@ -598,9 +598,6 @@
   color: #f8f8f2;
   overflow: visible;
 }
-.ql-bubble .ql-editor img {
-  max-width: 100%;
-}
 .ql-bubble .ql-picker {
   color: #ccc;
   display: inline-block;

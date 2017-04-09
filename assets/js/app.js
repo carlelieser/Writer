@@ -1,5 +1,5 @@
 // Writer
-// Version 5.4.3
+// Version 5.4.6
 // Author : Carlos E. Santos
 // Made with <3
 $(document).ready(function() {
@@ -28,7 +28,8 @@ $(document).ready(function() {
 
     var $toggle = $('.toggle');
 
-    var $coffeeMode = $('.coffee'),
+    var $typeWriter = $('.type'),
+        $coffeeMode = $('.coffee'),
         $nightMode = $('.night'),
         $fullScreen = $('.full'),
         $statistics = $('.statistics'),
@@ -114,27 +115,79 @@ $(document).ready(function() {
         }
     ];
 
+    function createAudio(path) {
+        var keyAudio = new Audio(path);
+        return keyAudio;
+    }
+
+    var randomNumber;
+
+    function getRandomInt(min, max) {
+        var number = Math.floor(Math.random() * (max - min + 1)) + min;
+        while (number == randomNumber) {
+            number = Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        randomNumber = number;
+        return number;
+    }
+
+    function getSpecialAudio(enter) {
+        if (enter) {
+            return typeWriterSounds.special.enter;
+        } else {
+            return typeWriterSounds.special.space;
+        }
+    }
+
+    function getRandomAudio() {
+        var random = getRandomInt(0, 8);
+        var keys = typeWriterSounds.keys;
+        var key = keys[random];
+        return keys[random];
+    }
+
+    var typeWriterSounds = {
+        keys: {
+            0: createAudio('/assets/settings/typewriter/type1A.mp3'),
+            1: createAudio('/assets/settings/typewriter/type1B.mp3'),
+            2: createAudio('/assets/settings/typewriter/type1C.mp3'),
+            3: createAudio('/assets/settings/typewriter/type1D.mp3'),
+            4: createAudio('/assets/settings/typewriter/type1E.mp3'),
+            5: createAudio('/assets/settings/typewriter/type2A.mp3'),
+            6: createAudio('/assets/settings/typewriter/type2B.mp3'),
+            7: createAudio('/assets/settings/typewriter/type2C.mp3'),
+            8: createAudio('/assets/settings/typewriter/type2D.mp3'),
+        },
+        special: {
+            enter: createAudio('/assets/settings/typewriter/enter.mp3'),
+            space: createAudio('/assets/settings/typewriter/space.mp3')
+        }
+    }
+
     var defaults = {
+        type: false,
         coffee: false,
         night: false,
         full: false,
         statistics: false,
         focus: true,
-        font: 'Charter',
-        size: '16px',
+        font: 'Droid Serif',
+        size: '14px',
         theme: 'default',
         line: 'double',
         margin: 'medium'
     }
 
     var settings = {
+        type: false,
         coffee: false,
         night: false,
         full: false,
         statistics: false,
         focus: true,
-        font: 'Charter',
-        size: '16px',
+        font: 'Droid Serif',
+        size: '14px',
         theme: 'default',
         line: 'double',
         margin: 'medium'
@@ -198,7 +251,7 @@ $(document).ready(function() {
         docAct().click();
     }
 
-    var newDocumentString = '<div class="document-item"><div class="material-icons">insert_drive_file</div><input readonly=true class="document-title" type="text"/><div class="doc-overflow"><div class="material-icons">more_vert</div></div><div class="overflow-menu"><div class="doc-rename">Rename</div><div class="doc-delete">Delete</div></div><div class="document-size"></div></div>';
+    var newDocumentString = '<div class="document-item"><div class="material-icons">insert_drive_file</div><input readonly=true class="document-title" type="text"/><div class="doc-overflow"><div class="material-icons">more_vert</div></div><div class="overflow-menu"><div class="doc-rename">Rename</div><div class="doc-delete">Close</div></div><div class="document-size"></div></div>';
     var mainDocumentString = '<div class="document document-active"></div>';
 
     $('.sidebar, .settings-container, .document-container, .bg, .option, .snackbar').hide();
@@ -841,6 +894,9 @@ $(document).ready(function() {
                     var content;
                     var blob;
 
+                    var editorContents = doc.editor.getContents();
+                    doc.setContents(editorContents);
+
                     switch (extension) {
                         case 'html':
                         case 'htm':
@@ -866,10 +922,6 @@ $(document).ready(function() {
                         case 'docx':
                             content = '<!DOCTYPE HTML><html><head></head><body>' + cleanStyles(qlEditor().html()) + '</body></html>';
                             blob = htmlDocx.asBlob(content);
-                            writeToWriter(fileWriter, doc, blob, writableFileEntry);
-                            break;
-                        case 'pdf':
-                            blob = pdfBlob;
                             writeToWriter(fileWriter, doc, blob, writableFileEntry);
                             break;
                         case 'txt':
@@ -966,7 +1018,9 @@ $(document).ready(function() {
         return extension;
     }
 
+    var typeAudio;
     $(document).on('keyup', '.ql-editor', function(e) {
+
         var navKeys = [37, 38, 39, 40, 13];
         if (navKeys.indexOf(e.keyCode) > -1) {
             editorScroll(true);
@@ -975,7 +1029,26 @@ $(document).ready(function() {
         }
         closeNavBar();
         focusOnElem();
-    })
+    });
+
+    $(document).on('keydown', '.ql-editor', function(e) {
+        if (settings.type) {
+            var navKeys = [37, 38, 39, 40];
+            if (navKeys.indexOf(e.keyCode) == -1) {
+                if (getCntKey(e) || getAltKey(e) || getShiftKey(e)) {} else {
+                    if (getKey(e, 13)) {
+                        typeAudio = getSpecialAudio(true);
+                    } else if (getKey(e, 32)) {
+                        typeAudio = getSpecialAudio();
+                    } else {
+                        typeAudio = getRandomAudio();
+                    }
+                    typeAudio.currentTime = 0;
+                    typeAudio.play();
+                }
+            }
+        }
+    });
 
     $(document).on('click select', '.ql-editor', function() {
         editorScroll();
@@ -1305,11 +1378,10 @@ $(document).ready(function() {
                 content = marked(content);
                 content = cleanHTML(content);
                 newDoc(false, file.name, content, file.size, entry, true, false);
-                closeModals();
             } else {
                 newDoc(false, file.name, content, file.size, entry, true, false);
-                closeModals();
             }
+            closeModals();
         }
 
         reader.readAsText(file);
@@ -1913,6 +1985,7 @@ $(document).ready(function() {
             var data = this.result;
             if (node != undefined) {
                 node.attr('src', data);
+                resizeImage(node, 200);
             }
         }
 
@@ -1932,6 +2005,41 @@ $(document).ready(function() {
         node.show();
     }
 
+    function resizeAllImages(time, margin) {
+        removeAnim();
+        setTimeout(function() {
+            $('img').each(function() {
+                resizeImage($(this), 0, margin);
+            });
+        }, time);
+    }
+
+    function resizeImage(img, time, margin) {
+        if (!time) {
+            time = 0;
+        }
+        setTimeout(function() {
+            var windowWidth = $(window).width();
+            var image = new Image();
+            image.src = img.attr('src');
+            if (image.width > windowWidth) {
+                var imageWidth = img.outerWidth();
+                var padding = Number(allEditors().css('padding-left').replace('px', ''));
+                if (margin) {
+                    padding = margin;
+                    padding = windowWidth * (Number(margin.replace('%', '')) / 100);
+                }
+                var marginLeft = -1 * padding;
+                img.css('width', windowWidth);
+                img.css('margin-left', marginLeft + 'px');
+                addAnim();
+            } else {
+                img.css('max-width', '100%');
+                addAnim();
+            }
+        }, time);
+    }
+
     function loadImages() {
         qlEditor().find('img').each(function() {
             if ($(this).attr('src') === undefined) {} else {
@@ -1941,12 +2049,20 @@ $(document).ready(function() {
         });
     }
 
+    $(window).resize(function() {
+        resizeAllImages();
+    });
+
     $(document).on('paste drop', function() {
-        setTimeout(loadImages, 0);
+        setTimeout(loadImages, 1);
     });
 
     $(document).on('error', 'img', function() {
         $(this).hide();
+    })
+
+    $(document).on('load', 'img', function() {
+        resizeImage($(this));
     })
 
     $('.submit-button').click(function() {
@@ -2294,8 +2410,11 @@ $(document).ready(function() {
     });
 
     function setMargin(margin) {
+        removeAnim();
+        resizeAllImages(0, margin);
         allEditors().css('padding-left', margin);
         allEditors().css('padding-right', margin);
+        addAnim();
     }
 
     $marginChildren.click(function() {
@@ -2328,8 +2447,8 @@ $(document).ready(function() {
         });
 
         $('.default-theme').click();
-        $('.charter').click();
-        $('.16px').click();
+        $('.droid').click();
+        $('.14px').click();
         $('.double-line').click();
         $('.medium-margin').click();
 
