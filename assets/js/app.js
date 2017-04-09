@@ -1999,6 +1999,9 @@ $(document).ready(function () {
 
         reader.onload = function () {
             var data = this.result;
+            node.get(0).onload = function () {
+                resizeImage($(node));
+            };
             node.attr('src', data);
         }
 
@@ -2028,6 +2031,7 @@ $(document).ready(function () {
     }
 
     function resizeImage(img, time, margin) {
+        removeAnim();
         if (!time) {
             time = 0;
         }
