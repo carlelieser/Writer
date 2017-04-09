@@ -2017,6 +2017,8 @@ $(document).ready(function () {
                 createDataURL(xhr.response, node);
             }.bind(this);
             xhr.send();
+        }else{
+            resizeImage(node);
         }
         node.show();
     }
