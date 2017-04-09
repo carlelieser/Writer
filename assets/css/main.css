@@ -986,6 +986,7 @@ body {
 .templates-option div {
     display: inline-block;
     vertical-align: middle;
+    float:left;
 }
 
 .sidebar-option .option-title,

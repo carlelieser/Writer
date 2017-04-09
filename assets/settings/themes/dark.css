@@ -71,3 +71,8 @@
 .details-title, .command-title{
     color: rgba(255,255,255, 0.7) !important;
 }
+
+.overflow-menu{
+    background-color: #4a4a4a !important;
+    color: #FFF;
+}
