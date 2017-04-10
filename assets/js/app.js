@@ -1,8 +1,8 @@
 // Writer
-// Version 5.4.6
+// Version 5.4.9
 // Author : Carlos E. Santos
 // Made with <3
-$(document).ready(function () {
+$(document).ready(function() {
 
     require.config({
         paths: {
@@ -221,11 +221,11 @@ $(document).ready(function () {
 
                     $(correspondingDropdown).children().removeClass('active');
 
-                    $(correspondingDropdown).children().filter(function () {
+                    $(correspondingDropdown).children().filter(function() {
                         return $(this).text() == capitalizeFirstLetter(value);
-                    }).each(function () {
+                    }).each(function() {
                         $(this).click();
-                        setTimeout(function () {
+                        setTimeout(function() {
                             $optionContainer.css('height', '0');
                             $optionContainer.hide();
                         }, 400);
@@ -301,12 +301,12 @@ $(document).ready(function () {
         _DOC = this;
     }
 
-    Doc.prototype.setName = function (name) {
+    Doc.prototype.setName = function(name) {
         this.name = name;
         saveData();
     }
 
-    Doc.prototype.getName = function () {
+    Doc.prototype.getName = function() {
         return this.name;
     }
 
@@ -323,26 +323,26 @@ $(document).ready(function () {
         return editorContents;
     }
 
-    Doc.prototype.setContents = function (contents) {
+    Doc.prototype.setContents = function(contents) {
         if (isHTML(contents)) {
             contents = createTempEditor(contents);
         }
         this.contents = contents;
     }
 
-    Doc.prototype.getContent = function () {
+    Doc.prototype.getContent = function() {
         return this.contents;
     }
 
-    Doc.prototype.setSize = function (size) {
+    Doc.prototype.setSize = function(size) {
         this.size = size;
     }
 
-    Doc.prototype.getSize = function () {
+    Doc.prototype.getSize = function() {
         return this.size;
     }
 
-    Doc.prototype.setFileEntry = function (fileEntry) {
+    Doc.prototype.setFileEntry = function(fileEntry) {
         if (typeof fileEntry === 'string') {
             this.loadFileEntry(fileEntry);
         } else {
@@ -358,32 +358,32 @@ $(document).ready(function () {
         }
     }
 
-    Doc.prototype.getFileEntry = function () {
+    Doc.prototype.getFileEntry = function() {
         return this.fileEntry;
     }
 
-    Doc.prototype.setSavedFileEntry = function (fileEntry) {
+    Doc.prototype.setSavedFileEntry = function(fileEntry) {
         this.savedFileEntry = chrome.fileSystem.retainEntry(fileEntry);
     }
 
-    Doc.prototype.getSavedFileEntry = function () {
+    Doc.prototype.getSavedFileEntry = function() {
         return this.savedFileEntry;
     }
 
-    Doc.prototype.loadFileEntry = function (string) {
+    Doc.prototype.loadFileEntry = function(string) {
         var thisDOC = this;
-        chrome.fileSystem.restoreEntry(string, function (newFileEntry) {
+        chrome.fileSystem.restoreEntry(string, function(newFileEntry) {
             thisDOC.setFileEntry(newFileEntry);
             thisDOC.path = thisDOC.fileEntry.fullPath;
         });
     }
 
-    Doc.prototype.createEditor = function (element) {
+    Doc.prototype.createEditor = function(element) {
         var bindings = {
             alignLeft: {
                 key: 'W',
                 shortKey: true,
-                handler: function (range, context) {
+                handler: function(range, context) {
                     if (context.format.align != 'left') {
                         this.quill.formatLine(range, 'align', false);
                     }
@@ -392,7 +392,7 @@ $(document).ready(function () {
             alignCenter: {
                 key: 'E',
                 shortKey: true,
-                handler: function (range, context) {
+                handler: function(range, context) {
                     if (context.format.align != 'center') {
                         this.quill.formatLine(range, 'align', 'center', true);
                     } else {
@@ -403,7 +403,7 @@ $(document).ready(function () {
             alignRight: {
                 key: 'R',
                 shortKey: true,
-                handler: function (range, context) {
+                handler: function(range, context) {
                     if (context.format.align != 'right') {
                         this.quill.formatLine(range, 'align', 'right', true);
                     } else {
@@ -415,7 +415,7 @@ $(document).ready(function () {
                 key: '1',
                 shortKey: true,
                 altKey: true,
-                handler: function (range, context) {
+                handler: function(range, context) {
                     if (context.format.header == 1) {
                         this.quill.formatLine(range, 'header', false);
                     } else {
@@ -427,7 +427,7 @@ $(document).ready(function () {
                 key: '2',
                 shortKey: true,
                 altKey: true,
-                handler: function (range, context) {
+                handler: function(range, context) {
                     if (context.format.header == 2) {
                         this.quill.formatLine(range, 'header', false);
                     } else {
@@ -439,7 +439,7 @@ $(document).ready(function () {
                 key: '5',
                 shortKey: true,
                 altKey: true,
-                handler: function (range, context) {
+                handler: function(range, context) {
                     if (context.format.blockquote) {
                         this.quill.formatLine(range, 'blockquote', false);
                     } else {
@@ -451,7 +451,7 @@ $(document).ready(function () {
                 key: '6',
                 shortKey: true,
                 altKey: true,
-                handler: function (range, context) {
+                handler: function(range, context) {
                     if (context.format['code-block'] == true) {
                         this.quill.formatLine(range, 'code-block', false);
                     } else {
@@ -502,9 +502,9 @@ $(document).ready(function () {
         }
 
         var timer;
-        this.editor.on('text-change', function () {
+        this.editor.on('text-change', function() {
             clearTimeout(timer);
-            timer = setTimeout(function () {
+            timer = setTimeout(function() {
                 var _DOC = getDoc($(element).index());
                 var oldText = _DOC.getContent(),
                     contents;
@@ -536,60 +536,60 @@ $(document).ready(function () {
     }
 
     function applyAll() {
-        $fontChildren.filter(function () {
+        $fontChildren.filter(function() {
             return $(this).hasClass('active');
-        }).each(function () {
+        }).each(function() {
             $(this).click();
-            setTimeout(function () {
+            setTimeout(function() {
                 $optionContainer.css('height', '0');
                 $optionContainer.hide();
             }, 200);
         });
 
-        $sizeChildren.filter(function () {
+        $sizeChildren.filter(function() {
             return $(this).hasClass('active');
-        }).each(function () {
+        }).each(function() {
             $(this).click();
-            setTimeout(function () {
+            setTimeout(function() {
                 $optionContainer.css('height', '0');
                 $optionContainer.hide();
             }, 200);
         });
 
-        $lineChildren.filter(function () {
+        $lineChildren.filter(function() {
             return $(this).hasClass('active');
-        }).each(function () {
+        }).each(function() {
             $(this).click();
-            setTimeout(function () {
+            setTimeout(function() {
                 $optionContainer.css('height', '0');
                 $optionContainer.hide();
             }, 200);
         });
 
-        $marginChildren.filter(function () {
+        $marginChildren.filter(function() {
             return $(this).hasClass('active');
-        }).each(function () {
+        }).each(function() {
             $(this).click();
-            setTimeout(function () {
+            setTimeout(function() {
                 $optionContainer.css('height', '0');
                 $optionContainer.hide();
             }, 200);
         });
     }
 
-    Doc.prototype.getEditor = function () {
+    Doc.prototype.getEditor = function() {
         return this.editorDOM;
     }
 
-    Doc.prototype.getDocItem = function () {
+    Doc.prototype.getDocItem = function() {
         return this.docListItem;
     }
 
-    Doc.prototype.setActive = function (active) {
+    Doc.prototype.setActive = function(active) {
         this.isActive = active;
     }
 
-    Doc.prototype.showCreate = function (name, size, active) {
+    Doc.prototype.showCreate = function(name, size, active) {
         $documentList.append(newDocumentString);
         $mainContainer.append(mainDocumentString);
 
@@ -625,7 +625,7 @@ $(document).ready(function () {
         return "rgb(" + (Math.round((t - R) * p) + R) + "," + (Math.round((t - G) * p) + G) + "," + (Math.round((t - B) * p) + B) + ")";
     }
 
-    Doc.prototype.show = function (index) {
+    Doc.prototype.show = function(index) {
         $documentList.children().removeClass('doc-active');
         this.docListItem.addClass('doc-active');
         $mainContainer.children().removeClass('document-active');
@@ -640,7 +640,7 @@ $(document).ready(function () {
         saveData();
     }
 
-    Doc.prototype.create = function (name, size, active) {
+    Doc.prototype.create = function(name, size, active) {
         this.setName(name);
         this.setContents('');
         this.setSize(size);
@@ -652,7 +652,7 @@ $(document).ready(function () {
         return /<[\s\S]*>/i.test(string);
     }
 
-    String.prototype.replaceAll = function (search, replacement) {
+    String.prototype.replaceAll = function(search, replacement) {
         var target = this;
         return target.replace(new RegExp(search, 'g'), replacement);
     };
@@ -691,7 +691,7 @@ $(document).ready(function () {
     function getNextIndex(string, start, token) {
         var indices = getIndicesOf(token, string);
 
-        indices.forEach(function (value, index, array) {
+        indices.forEach(function(value, index, array) {
             if (start < value) {
                 return value;
             }
@@ -713,7 +713,7 @@ $(document).ready(function () {
 
         htmlParent.find('br').remove();
 
-        htmlParent.find('*').each(function () {
+        htmlParent.find('*').each(function() {
             if (isEmpty($(this))) {
                 $(this).html('<br/>');
             }
@@ -727,7 +727,7 @@ $(document).ready(function () {
         });
 
 
-        htmlParent.find('ol, ul').each(function () {
+        htmlParent.find('ol, ul').each(function() {
             var indent = ($(this).parentsUntil(htmlParent).length - 1);
 
             if (indent != -1) {
@@ -741,22 +741,22 @@ $(document).ready(function () {
 
         });
 
-        htmlParent.find('li').each(function () {
+        htmlParent.find('li').each(function() {
             if ($(this).find('li').length) {
                 $(this).find('li').insertAfter($(this));
             }
         });
 
-        htmlParent.find('div').each(function () {
+        htmlParent.find('div').each(function() {
             $(this).replaceWith('<p>' + $(this).html() + '</p>');
         });
 
-        htmlParent.find('span').each(function () {
+        htmlParent.find('span').each(function() {
             var cnt = $(this).contents();
             $(this).replaceWith(cnt);
         });
 
-        htmlParent.find('p').each(function () {
+        htmlParent.find('p').each(function() {
             if ($(this).parent().is('li') || $(this).parent().is('blockquote')) {
                 var cnt = $(this).contents();
                 $(this).replaceWith(cnt);
@@ -769,7 +769,7 @@ $(document).ready(function () {
         return cleaned;
     }
 
-    Doc.prototype.setEditorContents = function (content) {
+    Doc.prototype.setEditorContents = function(content) {
         if (typeof content === 'object') {
             this.editor.setContents(content);
         } else if (isHTML(content)) {
@@ -782,7 +782,7 @@ $(document).ready(function () {
         this.editor.history.clear();
     }
 
-    Doc.prototype.load = function (name, content, size, savedFileEntry, changed) {
+    Doc.prototype.load = function(name, content, size, savedFileEntry, changed) {
         this.setName(name);
         this.setContents(content);
         this.setEditorContents(content);
@@ -791,7 +791,7 @@ $(document).ready(function () {
         this.changed = changed;
     }
 
-    Doc.prototype.loadFile = function (name, size, fileEntry, changed) {
+    Doc.prototype.loadFile = function(name, size, fileEntry, changed) {
         this.setName(name);
         this.setSize(size);
         this.setFileEntry(fileEntry);
@@ -808,7 +808,7 @@ $(document).ready(function () {
         }
     }
 
-    Doc.prototype.save = function () {
+    Doc.prototype.save = function() {
         var savedEntry = this.fileEntry;
         var name = strip(this.name);
         if (savedEntry) {
@@ -827,7 +827,7 @@ $(document).ready(function () {
         $saveDialogue.show().stop().animate({
             top: '50%',
             opacity: '1'
-        }, 300, beizer, function(){
+        }, 300, beizer, function() {
             qlEditor().blur();
             window.getSelection().removeAllRanges();
         });
@@ -840,32 +840,32 @@ $(document).ready(function () {
         $saveDialogue.stop().animate({
             top: '55%',
             opacity: '0'
-        }, 300, beizer, function () {
+        }, 300, beizer, function() {
             $(this).hide();
-            if(blur){
+            if (blur) {
                 qlEditor().blur();
                 window.getSelection().removeAllRanges();
-            }else{
+            } else {
                 focusEditor(documentAct(true));
-            focusOnElem();
-            var editorScrollTop = getDoc(documentAct(true)).scrollTop;
-            documentAct().children().first().scrollTop(editorScrollTop);
+                focusOnElem();
+                var editorScrollTop = getDoc(documentAct(true)).scrollTop;
+                documentAct().children().first().scrollTop(editorScrollTop);
             }
         });
     }
 
-    $('.save-buttons .delete-cancel').click(function () {
+    $('.save-buttons .delete-cancel').click(function() {
         closeSave();
     });
 
-    $('.save-buttons .delete-confirm').click(function () {
+    $('.save-buttons .delete-confirm').click(function() {
         var doc = getDoc(deleteIndex);
         doc.changed = false;
         doc.delete();
         closeSave();
     });
 
-    Doc.prototype.delete = function () {
+    Doc.prototype.delete = function() {
         if (this.changed) {
             openSave(this);
         } else {
@@ -910,8 +910,8 @@ $(document).ready(function () {
         if (!fileEntry) {
             console.log('User cancelled saving.');
         } else {
-            chrome.fileSystem.getWritableEntry(fileEntry, function (writableFileEntry) {
-                writableFileEntry.createWriter(function (fileWriter) {
+            chrome.fileSystem.getWritableEntry(fileEntry, function(writableFileEntry) {
+                writableFileEntry.createWriter(function(fileWriter) {
                     var extension = getExtension(writableFileEntry.name);
                     var doc = getDoc(documentAct(true));
                     var content;
@@ -929,9 +929,9 @@ $(document).ready(function () {
                             writeToWriter(fileWriter, doc, blob, writableFileEntry);
                             break;
                         case 'md':
-                            require(['upndown'], function (upndown) {
+                            require(['upndown'], function(upndown) {
                                 var und = new upndown();
-                                und.convert(cleanStyles(qlEditor().html()), function (err, markdown) {
+                                und.convert(cleanStyles(qlEditor().html()), function(err, markdown) {
                                     if (err) {
                                         console.log(err);
                                     } else {
@@ -955,7 +955,7 @@ $(document).ready(function () {
                             break;
                     }
                     var truncated = false;
-                    fileWriter.onwriteend = function (e) {
+                    fileWriter.onwriteend = function(e) {
                         if (!truncated) {
                             truncated = true;
                             this.truncate(blob.size);
@@ -981,7 +981,7 @@ $(document).ready(function () {
     }
 
     function setDocsActive() {
-        documents.forEach(function (value, index, array) {
+        documents.forEach(function(value, index, array) {
             var doc = getDoc(index);
             doc.setActive(false);
         });
@@ -1042,7 +1042,7 @@ $(document).ready(function () {
     }
 
     var typeAudio;
-    $(document).on('keyup', '.ql-editor', function (e) {
+    $(document).on('keyup', '.ql-editor', function(e) {
 
         var navKeys = [37, 38, 39, 40, 13];
         if (navKeys.indexOf(e.keyCode) > -1) {
@@ -1054,7 +1054,7 @@ $(document).ready(function () {
         focusOnElem();
     });
 
-    $(document).on('keydown', '.ql-editor', function (e) {
+    $(document).on('keydown', '.ql-editor', function(e) {
         if (settings.type) {
             var navKeys = [37, 38, 39, 40];
             if (navKeys.indexOf(e.keyCode) == -1) {
@@ -1073,7 +1073,7 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on('click select', '.ql-editor', function () {
+    $(document).on('click select', '.ql-editor', function() {
         if ($saveDialogue.is(':visible')) {
             closeSave();
         }
@@ -1081,11 +1081,11 @@ $(document).ready(function () {
         focusOnElem();
     });
 
-    $topBar.mouseenter(function () {
+    $topBar.mouseenter(function() {
         openNavBar();
     });
 
-    $(document).on('mouseenter', '.ql-editor', function () {
+    $(document).on('mouseenter', '.ql-editor', function() {
         closeNavBar();
     });
 
@@ -1148,7 +1148,7 @@ $(document).ready(function () {
     }
 
     function editorScroll(key) {
-        setTimeout(function () {
+        setTimeout(function() {
             var editor = qlEditor();
             var scroll = editor.scrollTop();
             var nodePos = getSelectionCoords();
@@ -1157,14 +1157,14 @@ $(document).ready(function () {
             if (key) {
                 editor.stop().animate({
                     scrollTop: endScroll
-                }, 300, beizer, function () {
+                }, 300, beizer, function() {
                     var doc = getDoc(documentAct(true));
                     doc.scrollTop = endScroll;
                 });
             } else {
                 editor.filter(':not(:animated)').animate({
                     scrollTop: endScroll
-                }, 300, beizer, function () {
+                }, 300, beizer, function() {
                     var doc = getDoc(documentAct(true));
                     doc.scrollTop = endScroll;
                 });
@@ -1217,14 +1217,14 @@ $(document).ready(function () {
         if (element == $documentContainer) {
             calcDocSize();
         }
-        
+
         qlEditor().blur();
         window.getSelection().removeAllRanges();
 
         if ($bg.is(':visible')) {
             element.show().filter(':not(:animated)').animate({
                 left: '0'
-            }, 200, beizer, function () {
+            }, 200, beizer, function() {
                 if (callback) {
                     callback();
                 }
@@ -1232,7 +1232,7 @@ $(document).ready(function () {
         } else {
             $bg.show().filter(':not(:animated)').animate({
                 opacity: '0.5'
-            }, 200, beizer, function () {
+            }, 200, beizer, function() {
                 element.show().filter(':not(:animated)').animate({
                     left: '0'
                 }, 200, beizer);
@@ -1252,7 +1252,7 @@ $(document).ready(function () {
     function closeBg() {
         $bg.filter(':not(:animated)').animate({
             opacity: '0'
-        }, 200, beizer, function () {
+        }, 200, beizer, function() {
             $(this).hide();
             focusEditor(documentAct(true));
             focusOnElem();
@@ -1264,7 +1264,7 @@ $(document).ready(function () {
     function closeModal(element, bg, callback) {
         element.filter(':not(:animated)').animate({
             left: '-' + element.width()
-        }, 200, beizer, function () {
+        }, 200, beizer, function() {
             $(this).hide();
             if (callback) {
                 callback();
@@ -1281,7 +1281,7 @@ $(document).ready(function () {
     }
 
     var elemToFocus;
-    $sideToggle.click(function () {
+    $sideToggle.click(function() {
         elemToFocus = $(getSelectionContainerElement());
         $('.tutorial-container-two').fadeOut('fast');
         openNavBar();
@@ -1321,7 +1321,7 @@ $(document).ready(function () {
     }
 
     function calcDocSize() {
-        $documentList.children().each(function () {
+        $documentList.children().each(function() {
             var doc = getDoc($(this).index());
             var size = calcSize(doc);
             doc.setSize(size + ' KB');
@@ -1329,18 +1329,18 @@ $(document).ready(function () {
         });
     }
 
-    $docButton.click(function () {
+    $docButton.click(function() {
         openModal($documentContainer);
     });
 
-    $settingsButton.click(function () {
+    $settingsButton.click(function() {
         openModal($settingsContainer);
     });
 
-    $bg.click(function () {
+    $bg.click(function() {
         if (!$saveDialogue.is(':visible')) {
             var highestIndex = 0;
-            $modal.each(function (index) {
+            $modal.each(function(index) {
                 var currentIndex = parseInt($(this).css('zIndex'), 10);
 
                 if (currentIndex > highestIndex && $(this).is(':visible')) {
@@ -1348,34 +1348,34 @@ $(document).ready(function () {
                 }
             });
 
-            $modal.filter(function () {
+            $modal.filter(function() {
                 return $(this).css('z-index') == highestIndex;
-            }).each(function () {
-                if($modal.filter(function() {
-                    return $(this).is(':visible');
-                }).length == 1){
+            }).each(function() {
+                if ($modal.filter(function() {
+                        return $(this).is(':visible');
+                    }).length == 1) {
                     closeModal($(this), true);
-                }else{
+                } else {
                     closeModal($(this));
                 }
             });
-        }else{
+        } else {
             closeSave();
         }
     });
 
-    $modalClose.click(function () {
+    $modalClose.click(function() {
         $bg.click();
     });
 
-    $new.click(function () {
+    $new.click(function() {
         newDoc(true);
         closeModals(true);
     });
 
     function readAsArrayBuff(file, entry) {
         var reader = new FileReader();
-        reader.onload = function () {
+        reader.onload = function() {
             var content = this.result;
 
             if (content.indexOf('<w:altChunk r:id="htmlChunk" />') > -1) {
@@ -1384,11 +1384,11 @@ $(document).ready(function () {
                 closeModals(true);
             } else {
                 var secReader = new FileReader();
-                reader.onload = function () {
+                reader.onload = function() {
                     var content = this.result;
                     mammoth.convertToHtml({
                         arrayBuffer: content
-                    }).then(function (result) {
+                    }).then(function(result) {
                         content = result.value;
                         newDoc(false, file.name, content, file.size, entry, true, false);
                         closeModals(true);
@@ -1407,7 +1407,7 @@ $(document).ready(function () {
 
     function readAsHTML(file, entry, markdown) {
         var reader = new FileReader();
-        reader.onload = function () {
+        reader.onload = function() {
             var content = this.result;
             if (markdown) {
                 content = convertNewLines(content);
@@ -1435,14 +1435,14 @@ $(document).ready(function () {
     }
 
     function openFiles(files) {
-        files.forEach(function (value, index, array) {
+        files.forEach(function(value, index, array) {
             var entry = value;
             var path = entry.fullPath;
             if (checkForPath(path) == true) {
                 closeModals(true);
                 openSnackBar(true, 'is already open.', entry.name);
             } else {
-                entry.file(function (file) {
+                entry.file(function(file) {
                     var extension = getExtension(file.name),
                         content;
 
@@ -1466,31 +1466,31 @@ $(document).ready(function () {
         });
     }
 
-    $open.click(function () {
+    $open.click(function() {
         chrome.fileSystem.chooseEntry({
             type: 'openFile',
             acceptsMultiple: true,
             accepts: accepts
-        }, function (files) {
+        }, function(files) {
             openFiles(files);
         });
     });
 
-    $save.click(function () {
+    $save.click(function() {
         var doc = getDoc(documentAct(true));
         doc.save();
 
         closeModals(true);
     });
 
-    $saveAs.click(function () {
+    $saveAs.click(function() {
         var doc = getDoc(documentAct(true));
         var name = doc.name;
         ExportToDisk(name);
         closeModals(true);
     });
 
-    $print.click(function () {
+    $print.click(function() {
         var html = qlEditor().html();
         var copyString = '<div class="ql-editor" id="print"></div>';
         $html.append(copyString);
@@ -1505,15 +1505,15 @@ $(document).ready(function () {
         copy.remove();
     });
 
-    $file.click(function () {
+    $file.click(function() {
         openModal($fileContainer);
     });
 
-    $templates.click(function () {
+    $templates.click(function() {
         openModal($templatesContainer);
     });
 
-    $templatesContainer.children().last().children().click(function () {
+    $templatesContainer.children().last().children().click(function() {
         closeModals(true);
     });
 
@@ -1992,24 +1992,24 @@ $(document).ready(function () {
         }]
     }
 
-    $letter.click(function () {
+    $letter.click(function() {
         newDoc(false, 'Letter', letterContents, '0 KB', false, true, false);
     });
 
-    $notes.click(function () {
+    $notes.click(function() {
         newDoc(false, 'Class Notes', noteContents, '0 KB', false, true, false);
     });
 
-    $MLA.click(function () {
+    $MLA.click(function() {
         newDoc(false, 'MLA Essay', MLAContents, '0 KB', false, true, false);
     });
 
-    $APA.click(function () {
+    $APA.click(function() {
         newDoc(false, 'APA Essay', APAContents, '0 KB', false, true, false);
     });
 
-    $feedback.click(function () {
-        openModal($feedBackContainer, function () {
+    $feedback.click(function() {
+        openModal($feedBackContainer, function() {
             $feedBackContainer.find('.feedback-email').val($('.user-email').text());
             $feedBackContainer.find('.feedback-email').focus();
         });
@@ -2018,9 +2018,9 @@ $(document).ready(function () {
     function createDataURL(response, node) {
         var reader = new FileReader();
 
-        reader.onload = function () {
+        reader.onload = function() {
             var data = this.result;
-            node.get(0).onload = function () {
+            node.get(0).onload = function() {
                 resizeImage($(node));
             };
             node.attr('src', data);
@@ -2034,7 +2034,7 @@ $(document).ready(function () {
             var xhr = new XMLHttpRequest();
             xhr.open('GET', url);
             xhr.responseType = 'blob';
-            xhr.onload = function () {
+            xhr.onload = function() {
                 createDataURL(xhr.response, node);
             }.bind(this);
             xhr.send();
@@ -2046,8 +2046,8 @@ $(document).ready(function () {
 
     function resizeAllImages(time, margin) {
         removeAnim();
-        setTimeout(function () {
-            $('img').each(function () {
+        setTimeout(function() {
+            $('img').each(function() {
                 resizeImage($(this), 0, margin);
             });
         }, time);
@@ -2058,7 +2058,7 @@ $(document).ready(function () {
         if (!time) {
             time = 0;
         }
-        setTimeout(function () {
+        setTimeout(function() {
             var windowWidth = $(window).width();
             var image = new Image();
             image.src = img.attr('src');
@@ -2082,13 +2082,14 @@ $(document).ready(function () {
                 addAnim();
             } else {
                 img.css('max-width', '100%');
+                img.css('margin-left', '0');
                 addAnim();
             }
         }, time);
     }
 
     function loadImages() {
-        qlEditor().find('img').each(function () {
+        qlEditor().find('img').each(function() {
             if ($(this).attr('src') === undefined) {} else {
                 var url = $(this).attr('src');
                 requestXML(url, $(this));
@@ -2096,23 +2097,23 @@ $(document).ready(function () {
         });
     }
 
-    $(window).resize(function () {
+    $(window).resize(function() {
         resizeAllImages();
     });
 
-    $(document).on('paste drop', function () {
+    $(document).on('paste drop', function() {
         setTimeout(loadImages, 0);
     });
 
-    $(document).on('error', 'img', function () {
+    $(document).on('error', 'img', function() {
         $(this).hide();
     })
 
-    $(document).on('load', 'img', function () {
+    $(document).on('load', 'img', function() {
         resizeImage($(this));
     })
 
-    $('.submit-button').click(function () {
+    $('.submit-button').click(function() {
         var email = $email.val();
         var subject = $subject.val();
         var message = $message.val();
@@ -2202,12 +2203,12 @@ $(document).ready(function () {
         }
     }
 
-    $details.click(function () {
+    $details.click(function() {
         var doc = getDoc(documentAct(true));
         getDocDetails(doc, openModal($detailsContainer));
     });
 
-    $help.click(function () {
+    $help.click(function() {
         openModal($helpContainer);
     });
 
@@ -2221,7 +2222,7 @@ $(document).ready(function () {
             $snackBar.children('span').text(real);
             $snackBar.show().stop().animate({
                 bottom: '0'
-            }, 500, beizer, function () {
+            }, 500, beizer, function() {
                 snackBarTime = setTimeout(closeSnackBar, 5000);
             });
         } else {
@@ -2229,7 +2230,7 @@ $(document).ready(function () {
             $snackBar.children('span').text('was saved.');
             $snackBar.show().stop().animate({
                 bottom: '0'
-            }, 500, beizer, function () {
+            }, 500, beizer, function() {
                 snackBarTime = setTimeout(closeSnackBar, 3000);
             });
         }
@@ -2238,13 +2239,13 @@ $(document).ready(function () {
     function closeSnackBar() {
         $snackBar.animate({
             bottom: '-' + ($snackBar.height() + 100) + 'px'
-        }, 500, beizer, function () {
+        }, 500, beizer, function() {
             $(this).hide();
             clearTimeout(snackBarTime);
         });
     }
 
-    $(document).on('click', '.document-item', function () {
+    $(document).on('click', '.document-item', function() {
         if ($('.overflow-menu').is(':visible')) {
             closeOverflow($('.overflow-menu'));
         } else {
@@ -2261,7 +2262,7 @@ $(document).ready(function () {
         return element.hasClass('toggle-active');
     }
 
-    $toggle.click(function () {
+    $toggle.click(function() {
         var key = $(this).attr('name');
         if (isActive($(this))) {
             replaceClass($(this), 'toggle-active', 'toggle-inactive');
@@ -2272,19 +2273,19 @@ $(document).ready(function () {
         }
     });
 
-    $toggle.mousedown(function () {
+    $toggle.mousedown(function() {
         $(this).children().css('transform', 'scale(1.15, .85)');
         $(this).children().css('box-shadow', 'rgba(0, 0, 0, 0.1) 0px 0px 0px 8px');
     });
 
-    $(document).mouseup(function () {
+    $(document).mouseup(function() {
         $toggle.children().css('transform', 'none');
         $toggle.children().css('box-shadow', 'none');
     });
 
     var src = '/assets/settings/coffee.mp3';
     var audio = new Audio(src);
-    $coffeeMode.click(function () {
+    $coffeeMode.click(function() {
         if (isActive($(this))) {
             audio.play();
         } else {
@@ -2298,7 +2299,7 @@ $(document).ready(function () {
         allEditors().css('transition', 'none');
         $('.ql-editor *').css('transition', 'none');
         clearTimeout(animTimer);
-        animTimer = setTimeout(function () {
+        animTimer = setTimeout(function() {
             addAnim();
         }, 200);
     }
@@ -2319,7 +2320,7 @@ $(document).ready(function () {
         $('link[href="assets/settings/themes/' + name + '"]').remove();
     }
 
-    $nightMode.click(function () {
+    $nightMode.click(function() {
         removeAnim();
         if (isActive($(this)) === false) {
             removeStyles('night.css');
@@ -2340,7 +2341,7 @@ $(document).ready(function () {
         changeSettings(key, false);
     }
 
-    $fullScreen.click(function () {
+    $fullScreen.click(function() {
         if (chrome.app.window.current().isFullscreen()) {
             chrome.app.window.current().restore();
         } else {
@@ -2349,7 +2350,7 @@ $(document).ready(function () {
     });
 
     var focusMode;
-    $focus.click(function () {
+    $focus.click(function() {
         if (isActive($(this)) === false) {
             focusMode = false;
             $('.ql-editor *').css('opacity', '1');
@@ -2392,12 +2393,12 @@ $(document).ready(function () {
     function closeStatistics() {
         $statisticsBar.stop().animate({
             bottom: '-' + ($statisticsBar.height() + 50) + 'px'
-        }, 300, beizer, function () {
+        }, 300, beizer, function() {
             $(this).hide();
         });
     }
 
-    $statistics.click(function () {
+    $statistics.click(function() {
         if (isActive($(this)) === false) {
             closeStatistics();
         } else {
@@ -2405,7 +2406,7 @@ $(document).ready(function () {
         }
     });
 
-    $fontChildren.click(function () {
+    $fontChildren.click(function() {
         var fontFam = $(this).text();
         allEditors().css('font-family', fontFam);
         changeSettings('font', fontFam);
@@ -2418,13 +2419,13 @@ $(document).ready(function () {
         return em + 'em';
     }
 
-    $sizeChildren.click(function () {
+    $sizeChildren.click(function() {
         var fontSize = $(this).text();
         allEditors().css('font-size', convertSize(fontSize));
         changeSettings('size', fontSize);
     });
 
-    $themeChildren.click(function () {
+    $themeChildren.click(function() {
         var theme = $(this).text();
         switch (theme) {
             case 'Default':
@@ -2443,7 +2444,7 @@ $(document).ready(function () {
         changeSettings('theme', theme);
     });
 
-    $lineChildren.click(function () {
+    $lineChildren.click(function() {
         var lineHeight = $(this).text(),
             actualLine = lineHeight;
         if (lineHeight == 'Single') {
@@ -2464,7 +2465,7 @@ $(document).ready(function () {
         addAnim();
     }
 
-    $marginChildren.click(function () {
+    $marginChildren.click(function() {
         var margin = $(this).text(),
             realMarg = margin;
 
@@ -2485,7 +2486,7 @@ $(document).ready(function () {
     });
 
     function loadDefaults() {
-        $('.toggle').each(function () {
+        $('.toggle').each(function() {
             if ($(this).hasClass('toggle-active')) {
                 if ($(this).attr('name') != 'focus') {
                     $(this).click();
@@ -2499,13 +2500,13 @@ $(document).ready(function () {
         $('.double-line').click();
         $('.medium-margin').click();
 
-        $optionContainer.each(function () {
+        $optionContainer.each(function() {
             $(this).css('height', '0px');
             $(this).hide();
         });
     }
 
-    $('.reset-button').click(function () {
+    $('.reset-button').click(function() {
         loadDefaults();
     });
 
@@ -2519,12 +2520,12 @@ $(document).ready(function () {
     function closeDropdown(dropdown) {
         dropdown.stop().animate({
             height: '0'
-        }, 400, beizer, function () {
+        }, 400, beizer, function() {
             $(this).hide();
         });
     }
 
-    $settingsOption.click(function () {
+    $settingsOption.click(function() {
         if ($(this).hasClass('noToggle')) {
             var dropdown = $(this).children().last();
             if (dropdown.is(':visible')) {
@@ -2538,7 +2539,7 @@ $(document).ready(function () {
         }
     });
 
-    $optionContainer.children().click(function () {
+    $optionContainer.children().click(function() {
         var dropdown = $(this).parent();
         dropdown.children().removeClass('active');
         $(this).addClass('active');
@@ -2563,7 +2564,7 @@ $(document).ready(function () {
     function closeOverflow(element, callback) {
         element.stop().animate({
             height: '0'
-        }, 300, beizer, function () {
+        }, 300, beizer, function() {
             $(this).hide();
         });
         if (callback) {
@@ -2571,34 +2572,34 @@ $(document).ready(function () {
         }
     }
 
-    $(document).on('click', '.doc-overflow', function (e) {
+    $(document).on('click', '.doc-overflow', function(e) {
         e.stopPropagation();
         var thisOverflow = $(this).parent().find('.overflow-menu');
-        closeOverflow($('.overflow-menu'), function () {
+        closeOverflow($('.overflow-menu'), function() {
             openOverflow(thisOverflow);
         })
     })
 
 
-    $(document).on('click', '.document-title', function (e) {
+    $(document).on('click', '.document-title', function(e) {
         if ($(this).attr('readonly') === undefined) {
             e.stopImmediatePropagation();
             e.stopPropagation();
         }
     });
 
-    $(document).on('click', '.doc-delete', function (e) {
+    $(document).on('click', '.doc-delete', function(e) {
         e.stopPropagation();
         var index = $(this).parent().parent().index();
         var doc = getDoc(index);
         deleteDoc(doc);
     });
 
-    $(document).on('click', '.doc-rename', function () {
+    $(document).on('click', '.doc-rename', function() {
         undoReadOnly($(this).parent().parent().find('input'));
     });
 
-    $(document).on('keyup', '.document-title', function (e) {
+    $(document).on('keyup', '.document-title', function(e) {
         var index = $(this).parent().index();
         var doc = getDoc(index);
         var title = $(this).val();
@@ -2612,7 +2613,7 @@ $(document).ready(function () {
         }
     })
 
-    $(document).on('blur', '.document-title', function (e) {
+    $(document).on('blur', '.document-title', function(e) {
         var index = $(this).parent().index();
         var doc = getDoc(index);
         var title = $(this).val();
@@ -2624,24 +2625,24 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on('click', function () {
+    $(document).on('click', function() {
         closeOverflow($('.overflow-menu'));
     });
 
-    $(document).on('click', '.ql-editor img', function (e) {
+    $(document).on('click', '.ql-editor img', function(e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
     });
 
     function loadScreen() {
-        setTimeout(function () {
+        setTimeout(function() {
             if (settings.statistics == true) {
                 var doc = getDoc(documentAct(true));
                 calcStats(doc.editor.getText());
             }
             $loadingScreen.stop().animate({
                 top: '-100%'
-            }, 800, beizer, function () {
+            }, 800, beizer, function() {
                 $(this).remove();
             });
         }, 600);
@@ -2656,9 +2657,9 @@ $(document).ready(function () {
 
     function getImage(url, callback) {
         var xhr = new XMLHttpRequest();
-        xhr.onload = function () {
+        xhr.onload = function() {
             var reader = new FileReader();
-            reader.onloadend = function () {
+            reader.onloadend = function() {
                 callback(reader.result);
             }
             reader.readAsDataURL(xhr.response);
@@ -2680,7 +2681,7 @@ $(document).ready(function () {
     function revokeToken() {
         chrome.identity.removeCachedAuthToken({
             token: current_token
-        }, function () {});
+        }, function() {});
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'https://accounts.google.com/o/oauth2/revoke?token=' +
             current_token);
@@ -2690,7 +2691,7 @@ $(document).ready(function () {
     function getToken(install, callback) {
         if (navigator.onLine) {
             var gService = analytics.getService('Writer');
-            gService.getConfig().addCallback(function (config) {
+            gService.getConfig().addCallback(function(config) {
                 config.setTrackingPermitted(true);
             });
             var gTracker = gService.getTracker('UA-96857701-1');
@@ -2698,7 +2699,7 @@ $(document).ready(function () {
 
             chrome.identity.getAuthToken({
                 'interactive': true
-            }, function (token) {
+            }, function(token) {
                 current_token = token;
                 if (chrome.runtime.lastError) {
                     if (install === false) {
@@ -2711,15 +2712,15 @@ $(document).ready(function () {
                         });
                     }
                 } else {
-                    $.get('https://www.googleapis.com/plus/v1/people/me?access_token=' + token, function (profile) {
+                    $.get('https://www.googleapis.com/plus/v1/people/me?access_token=' + token, function(profile) {
                         var coverURL = profile.cover.coverPhoto.url;
                         var imageURL = profile.image.url;
                         var name = profile.displayName;
-                        getImage(imageURL, function (data) {
+                        getImage(imageURL, function(data) {
                             $('.user-image').css('background-image', 'url(' + data + ')');
                             var img = document.createElement('img');
                             img.setAttribute('src', data)
-                            img.addEventListener('load', function () {
+                            img.addEventListener('load', function() {
                                 var vibrant = new Vibrant(img);
                                 var color = vibrant.DarkMutedSwatch.rgb;
                                 var realColor = color.join(',');
@@ -2742,7 +2743,7 @@ $(document).ready(function () {
                                 if (callback) {
                                     $installScreen.stop().animate({
                                         top: '-100%'
-                                    }, 800, beizer, function () {
+                                    }, 800, beizer, function() {
                                         $(this).remove();
                                     });
                                     callback();
@@ -2750,15 +2751,15 @@ $(document).ready(function () {
 
                             });
                         });
-                        getImage(coverURL, function (data) {
+                        getImage(coverURL, function(data) {
                             $('.user-profile').css('background-image', 'url(' + data + ')');
                         });
 
                         $('.user-name').text(name);
-                        chrome.identity.getProfileUserInfo(function (info) {
+                        chrome.identity.getProfileUserInfo(function(info) {
                             $('.user-email').text(info.email);
                         })
-                    }).fail(function () {
+                    }).fail(function() {
                         revokeToken();
                     });
                 }
@@ -2775,7 +2776,7 @@ $(document).ready(function () {
         getStorage({
             installed: 'installed',
             signIn: 'signIn'
-        }, function (ist) {
+        }, function(ist) {
             var installed = ist.installed;
             var signIn = ist.signIn;
             if (installed == 'installed' || installed === false || signIn == 'signIn') {
@@ -2791,18 +2792,18 @@ $(document).ready(function () {
         });
     }
 
-    $('.signin-button').click(function () {
+    $('.signin-button').click(function() {
         getToken(true, realLoad);
     });
 
-    $('.fallback-signin').click(function () {
+    $('.fallback-signin').click(function() {
         getToken(false);
     });
 
-    $('.continue-button').click(function () {
+    $('.continue-button').click(function() {
         $installScreen.stop().animate({
             top: '-100%'
-        }, 400, beizer, function () {
+        }, 400, beizer, function() {
             $(this).remove();
             realLoad();
         });
@@ -2828,7 +2829,7 @@ $(document).ready(function () {
 
     function closeNavBar() {
         clearTimeout(navTimeout);
-        navTimeout = setTimeout(function () {
+        navTimeout = setTimeout(function() {
             $navBar.stop().animate({
                 top: '-30px'
             }, 400, beizer);
@@ -2841,7 +2842,7 @@ $(document).ready(function () {
 
     openNavBar();
 
-    document.addEventListener('scroll', function (event) {
+    document.addEventListener('scroll', function(event) {
         var doc = getDoc(documentAct(true));
         doc.scrollTop = qlEditor().scrollTop();
         qlEditor().get(0).scrollLeft = 0;
@@ -2880,7 +2881,7 @@ $(document).ready(function () {
     }
 
 
-    $(document).on('keydown', function (e) {
+    $(document).on('keydown', function(e) {
 
         var CTRL_KEY = getCntKey(e),
             SHIFT_KEY = getShiftKey(e),
@@ -2895,6 +2896,7 @@ $(document).ready(function () {
             NIGHTMODE = CTRL_KEY && SHIFT_KEY && getKey(e, 78),
             FOCUS = CTRL_KEY && SHIFT_KEY && getKey(e, 70),
             STATISTICS = CTRL_KEY && ALT_KEY && !SHIFT_KEY && getKey(e, 83),
+            TYPE = CTRL_KEY && getKey(e, 84),
             DELETE = CTRL_KEY && ALT_KEY && getKey(e, 81),
             OPENDOCS = CTRL_KEY && getKey(e, 68),
             HELP = CTRL_KEY && getKey(e, 191),
@@ -2933,6 +2935,11 @@ $(document).ready(function () {
             $coffeeMode.click();
         }
 
+        if (TYPE) {
+            e.preventDefault();
+            $typeWriter.click();
+        }
+
         if (NIGHTMODE) {
             e.preventDefault();
             $nightMode.click();
@@ -2956,8 +2963,8 @@ $(document).ready(function () {
             if ($helpContainer.is(':visible')) {
                 $bg.click();
             } else {
-                closeModals(false, function () {
-                    openBg(function () {
+                closeModals(false, function() {
+                    openBg(function() {
                         openNavBar();
                         openModal($helpContainer);
                     });
@@ -2969,8 +2976,8 @@ $(document).ready(function () {
             if ($documentContainer.is(':visible')) {
                 $bg.click();
             } else {
-                closeModals(false, function () {
-                    openBg(function () {
+                closeModals(false, function() {
+                    openBg(function() {
                         openNavBar();
                         openModal($documentContainer);
                     });
@@ -2988,12 +2995,12 @@ $(document).ready(function () {
         }
     });
 
-    $message.on('keydown keyup change', function () {
+    $message.on('keydown keyup change', function() {
         $(this).css('height', 'auto');
         $(this).css('height', this.scrollHeight + 'px');
     });
 
-    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         if (message.max || message.min || message.restored) {
             undoFullScreen();
         }
@@ -3021,7 +3028,7 @@ $(document).ready(function () {
         $('.arrow-down .material-icons').css('transform', 'rotate(0deg)');
         $('.sign-out').stop().animate({
             height: '0px'
-        }, 200, beizer, function () {
+        }, 200, beizer, function() {
             $(this).hide();
         });
     }
@@ -3032,7 +3039,7 @@ $(document).ready(function () {
         $('.fallback-signin').show();
     }
 
-    $('.arrow-down').click(function () {
+    $('.arrow-down').click(function() {
         if ($('.sign-out').is(':visible')) {
             closeSignOut();
         } else {
@@ -3040,7 +3047,7 @@ $(document).ready(function () {
         }
     });
 
-    $('.sign-out').click(function () {
+    $('.sign-out').click(function() {
         revokeToken();
         closeSignOut();
         applySignOut();
@@ -3058,23 +3065,23 @@ $(document).ready(function () {
     }
 
     function nextTutorial() {
-        $('.tutorial-container').fadeOut('fast', function () {
+        $('.tutorial-container').fadeOut('fast', function() {
             qlEditor().blur();
             window.getSelection().removeAllRanges();
             $('.tutorial-container-two').fadeIn('fast');
         });
     }
 
-    $('.tutorial-container .tutorial-close').click(function () {
+    $('.tutorial-container .tutorial-close').click(function() {
         nextTutorial();
     });
 
-    $('.tutorial-container-two .tutorial-close').click(function () {
+    $('.tutorial-container-two .tutorial-close').click(function() {
         $('.tutorial-container-two').fadeOut('fast');
         qlEditor().focus();
     });
 
-    $mainContainer.click(function () {
+    $mainContainer.click(function() {
         if ($('.tutorial-container').is(':visible')) {
             nextTutorial();
         } else if ($('.tutorial-container-two').is(':visible')) {
@@ -3086,7 +3093,7 @@ $(document).ready(function () {
         getStorage({
             settings: 'settings',
             data: 'documents'
-        }, function (item) {
+        }, function(item) {
             var settings = item.settings,
                 data = item.data;
 
@@ -3102,7 +3109,7 @@ $(document).ready(function () {
                     loadSettings(settings);
                     loadScreen();
                 } else {
-                    data.forEach(function (value, index, array) {
+                    data.forEach(function(value, index, array) {
                         var thisData = data[index];
                         var name = thisData.name;
                         var content = thisData.contents;
@@ -3146,16 +3153,16 @@ $(document).ready(function () {
         setStorage({
             settings: settings,
             data: documents
-        }, function () {
+        }, function() {
             chrome.app.window.current().close();
         });
     }
 
-    $('.close-window').click(function () {
+    $('.close-window').click(function() {
         closeWindow();
     });
 
-    $('.maximize-window').click(function () {
+    $('.maximize-window').click(function() {
         if (chrome.app.window.current().isMaximized() || chrome.app.window.current().isFullscreen()) {
             chrome.app.window.current().restore();
         } else {
@@ -3166,7 +3173,7 @@ $(document).ready(function () {
         }
     });
 
-    $('.minimize-window').click(function () {
+    $('.minimize-window').click(function() {
         chrome.app.window.current().minimize();
     });
 });
