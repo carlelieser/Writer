@@ -821,24 +821,36 @@ $(document).ready(function () {
     var deleteIndex;
 
     function openSave(doc) {
-        closeModals(true);
+        closeModals(false);
+        openBg();
         $('.save-dialogue .save-text span').text(doc.name);
         $saveDialogue.show().stop().animate({
-            top: '0'
-        }, 300, beizer);
+            top: '50%',
+            opacity: '1'
+        }, 300, beizer, function(){
+            qlEditor().blur();
+            window.getSelection().removeAllRanges();
+        });
 
         deleteIndex = documents.indexOf(doc);
-        qlEditor().blur();
-        window.getSelection().removeAllRanges();
     }
 
-    function closeSave() {
-        var height = -1 * $saveDialogue.get(0).offsetHeight;
+    function closeSave(blur) {
+        closeBg();
         $saveDialogue.stop().animate({
-            top: height + 'px'
+            top: '55%',
+            opacity: '0'
         }, 300, beizer, function () {
             $(this).hide();
-            qlEditor().focus();
+            if(blur){
+                qlEditor().blur();
+                window.getSelection().removeAllRanges();
+            }else{
+                focusEditor(documentAct(true));
+            focusOnElem();
+            var editorScrollTop = getDoc(documentAct(true)).scrollTop;
+            documentAct().children().first().scrollTop(editorScrollTop);
+            }
         });
     }
 
@@ -864,7 +876,7 @@ $(document).ready(function () {
 
             if (documents.length === 0) {
                 newDoc(true);
-                closeModals();
+                closeModals(true);
             } else {
                 if (!this.docListItem.hasClass('doc-active')) {
                     $('.doc-active').click();
@@ -1200,12 +1212,12 @@ $(document).ready(function () {
 
     function openModal(element, callback) {
         if ($saveDialogue.is(':visible')) {
-            closeSave();
+            closeSave(true);
         }
         if (element == $documentContainer) {
             calcDocSize();
         }
-
+        
         qlEditor().blur();
         window.getSelection().removeAllRanges();
 
@@ -1228,10 +1240,13 @@ $(document).ready(function () {
         }
     }
 
-    function openBg() {
+    function openBg(callback) {
         $bg.show().filter(':not(:animated)').animate({
             opacity: '0.5'
         }, 200);
+        if (callback) {
+            callback();
+        }
     }
 
     function closeBg() {
@@ -1246,25 +1261,23 @@ $(document).ready(function () {
         });
     }
 
-    function closeModal(element) {
+    function closeModal(element, bg, callback) {
         element.filter(':not(:animated)').animate({
             left: '-' + element.width()
         }, 200, beizer, function () {
             $(this).hide();
+            if (callback) {
+                callback();
+            }
         });
-        if ($modal.filter(function () {
-                return $(this).is(':visible');
-            }).length == 1) {
+        if (bg) {
             closeBg();
-        } else {}
+        }
 
     }
 
-    function closeModals(bg) {
-        closeModal($modal);
-        if (bg != true) {
-            closeBg();
-        }
+    function closeModals(bg, callback) {
+        closeModal($modal, bg, callback);
     }
 
     var elemToFocus;
@@ -1338,19 +1351,26 @@ $(document).ready(function () {
             $modal.filter(function () {
                 return $(this).css('z-index') == highestIndex;
             }).each(function () {
-                closeModal($(this));
+                if($modal.filter(function() {
+                    return $(this).is(':visible');
+                }).length == 1){
+                    closeModal($(this), true);
+                }else{
+                    closeModal($(this));
+                }
             });
+        }else{
+            closeSave();
         }
     });
 
     $modalClose.click(function () {
-        var modal = $(this).parent().parent();
-        closeModal(modal);
+        $bg.click();
     });
 
     $new.click(function () {
         newDoc(true);
-        closeModals();
+        closeModals(true);
     });
 
     function readAsArrayBuff(file, entry) {
@@ -1361,7 +1381,7 @@ $(document).ready(function () {
             if (content.indexOf('<w:altChunk r:id="htmlChunk" />') > -1) {
                 content = content.substring(content.lastIndexOf('<!DOCTYPE HTML><html><head></head><body>') + 15, content.lastIndexOf('</body></html>'));
                 newDoc(false, file.name, content, file.size, entry, true, false);
-                closeModals();
+                closeModals(true);
             } else {
                 var secReader = new FileReader();
                 reader.onload = function () {
@@ -1371,7 +1391,7 @@ $(document).ready(function () {
                     }).then(function (result) {
                         content = result.value;
                         newDoc(false, file.name, content, file.size, entry, true, false);
-                        closeModals();
+                        closeModals(true);
                     }).done();
                 }
                 reader.readAsArrayBuffer(file);
@@ -1397,7 +1417,8 @@ $(document).ready(function () {
             } else {
                 newDoc(false, file.name, content, file.size, entry, true, false);
             }
-            closeModals();
+            closeModals(true);
+            closeBg();
         }
 
         reader.readAsText(file);
@@ -1418,7 +1439,7 @@ $(document).ready(function () {
             var entry = value;
             var path = entry.fullPath;
             if (checkForPath(path) == true) {
-                closeModals();
+                closeModals(true);
                 openSnackBar(true, 'is already open.', entry.name);
             } else {
                 entry.file(function (file) {
@@ -1459,14 +1480,14 @@ $(document).ready(function () {
         var doc = getDoc(documentAct(true));
         doc.save();
 
-        closeModals();
+        closeModals(true);
     });
 
     $saveAs.click(function () {
         var doc = getDoc(documentAct(true));
         var name = doc.name;
         ExportToDisk(name);
-        closeModals();
+        closeModals(true);
     });
 
     $print.click(function () {
@@ -1493,7 +1514,7 @@ $(document).ready(function () {
     });
 
     $templatesContainer.children().last().children().click(function () {
-        closeModals();
+        closeModals(true);
     });
 
     var $letter = $('.templates-options > .letter');
@@ -1882,7 +1903,7 @@ $(document).ready(function () {
             "attributes": {
                 "background": "#ffffff"
             },
-            "insert": "Lastname, O. (2010).  Online journal using DOI or digital object identifier. "
+            "insert": "Lastname, O. (2010).  Online journal using DOI or digital object identifier. "
         }, {
             "attributes": {
                 "background": "#ffffff",
@@ -1953,7 +1974,7 @@ $(document).ready(function () {
             },
             "insert": "Subsection heading."
         }, {
-            "insert": " Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat:\n(1) Lorem ipsum dolor sit amet; (2) consectetuer adipiscing elit; (3) sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat; and (4) ut wisi enim ad minim veniam.  (Lorem et al. 14)\n\tNam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.\n"
+            "insert": " Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat:\n(1) Lorem ipsum dolor sit amet; (2) consectetuer adipiscing elit; (3) sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat; and (4) ut wisi enim ad minim veniam.  (Lorem et al. 14)\n\tNam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.\n"
         }, {
             "attributes": {
                 "italic": true
@@ -2017,7 +2038,7 @@ $(document).ready(function () {
                 createDataURL(xhr.response, node);
             }.bind(this);
             xhr.send();
-        }else{
+        } else {
             resizeImage(node);
         }
         node.show();
@@ -2043,14 +2064,21 @@ $(document).ready(function () {
             image.src = img.attr('src');
             if (image.width > windowWidth) {
                 var imageWidth = img.outerWidth();
-                var padding = Number(allEditors().css('padding-left').replace('px', ''));
-                if (margin) {
-                    padding = margin;
-                    padding = windowWidth * (Number(margin.replace('%', '')) / 100);
+                var padding = $('.ql-editor').css('padding-left');
+                var real;
+                if ($('.ql-editor').css('padding-left').indexOf('%') > -1) {
+                    real = windowWidth * (Number(padding.replace('%', '')) / 100);
+                } else {
+                    real = Number(padding.replace('px', ''));
                 }
-                var marginLeft = -1 * padding;
+                if (margin) {
+                    real = margin;
+                    real = windowWidth * (Number(real.replace('%', '')) / 100);
+                }
+                var marginLeft = -1 * real;
                 img.css('width', windowWidth);
                 img.css('margin-left', marginLeft + 'px');
+                img.css('max-width', 'none');
                 addAnim();
             } else {
                 img.css('max-width', '100%');
@@ -2225,7 +2253,7 @@ $(document).ready(function () {
             setDocsActive();
 
             doc.show(index);
-            closeModals();
+            closeModals(true);
         }
     });
 
@@ -2816,6 +2844,7 @@ $(document).ready(function () {
     document.addEventListener('scroll', function (event) {
         var doc = getDoc(documentAct(true));
         doc.scrollTop = qlEditor().scrollTop();
+        qlEditor().get(0).scrollLeft = 0;
     }, true);
 
     function getOS() {
@@ -2867,6 +2896,7 @@ $(document).ready(function () {
             FOCUS = CTRL_KEY && SHIFT_KEY && getKey(e, 70),
             STATISTICS = CTRL_KEY && ALT_KEY && !SHIFT_KEY && getKey(e, 83),
             DELETE = CTRL_KEY && ALT_KEY && getKey(e, 81),
+            OPENDOCS = CTRL_KEY && getKey(e, 68),
             HELP = CTRL_KEY && getKey(e, 191),
             CLOSE = getKey(e, 27);
 
@@ -2922,12 +2952,29 @@ $(document).ready(function () {
         }
 
         if (HELP) {
+            e.preventDefault();
             if ($helpContainer.is(':visible')) {
-                closeNavBar();
-                closeModal($helpContainer);
+                $bg.click();
             } else {
-                openNavBar();
-                openModal($helpContainer);
+                closeModals(false, function () {
+                    openBg(function () {
+                        openNavBar();
+                        openModal($helpContainer);
+                    });
+                });
+            }
+        }
+
+        if (OPENDOCS) {
+            if ($documentContainer.is(':visible')) {
+                $bg.click();
+            } else {
+                closeModals(false, function () {
+                    openBg(function () {
+                        openNavBar();
+                        openModal($documentContainer);
+                    });
+                });
             }
         }
 
