@@ -77,11 +77,3 @@ html, body {
 .statistics-bar div {
     color: #FFF !important;
 }
-
-.save-title{
-    color: #FFF !important;
-}
-
-.save-text{
-    color: rgba(255, 255, 255, 0.7) !important;
-}

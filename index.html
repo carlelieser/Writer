@@ -9,6 +9,8 @@
 
 <body>
 
+    <div class="gdoc-loading-container"></div>
+
     <div class="sidebar-toggle"></div>
     <div class="dumbass-indicator">
         <div class="material-icons">keyboard_arrow_right</div>
@@ -298,6 +300,16 @@
         <div class="document-list modal-content"></div>
     </div>
 
+    <div class="gdocument-container modal">
+        <div class="modal-title-container">
+            <div class="modal-title">Drive</div>
+            <div class="modal-close">
+                <div class="material-icons">close</div>
+            </div>
+        </div>
+        <div class="gdocument-list modal-content"></div>
+    </div>
+
     <div class="file-container modal">
         <div class="modal-title-container">
             <div class="modal-title">File</div>
@@ -487,6 +499,10 @@
             <div class="material-icons">insert_drive_file</div>
             <div class="option-title">File</div>
         </div>
+        <div class="sidebar-option open-gdocuments">
+            <div class="material-icons">account_box</div>
+            <div class="option-title">Drive</div>
+        </div>
         <div class="sidebar-option open-templates">
             <div class="material-icons">attachment</div>
             <div class="option-title">Templates</div>
@@ -526,7 +542,7 @@
     <script type="text/javascript" src="assets/libs/minified/vibrant.min.js"></script>
     <script type="text/javascript" src="assets/js/google-analytics-bundle.js"></script>
     <script type="text/javascript" src="assets/libs/minified/require.min.js"></script>
-    <script type="text/javascript" src="assets/js/app.js"></script>
+    <script type="text/javascript" src="assets/js/app.min.js"></script>
 </body>
 
 </html>

@@ -4,6 +4,43 @@ body {
     padding: 0;
 }
 
+.gdoc-loading-container {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    background-image: url('../sidebar/gdoc-loader.gif');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 30px;
+    position: absolute;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+}
+
+.gdoc-icon {
+    width: 70px;
+    height: 60px;
+    background-image: url('../sidebar/gdoc.png');
+    background-size: 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.gdoc-date {
+    float: right !important;
+    margin-right: 40px;
+}
+
+.gdocument-list {
+    background-image: url('../sidebar/gdoc-loader.gif');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 30px;
+}
+
 .dumbass-indicator {
     width: 80px;
     height: 80px;
@@ -53,6 +90,7 @@ body {
     padding-bottom: 20px;
     padding-left: 30px;
     padding-right: 35px;
+    border-radius: 2px;
     background-color: #FFF;
     box-shadow: -1px 2px 7px 0px rgba(0, 0, 0, 0.1);
     top: 55%;
@@ -79,7 +117,7 @@ body {
     font-family: 'Roboto';
     font-size: 16px;
     color: rgba(0, 0, 0, 0.7);
-    margin-bottom:20px;
+    margin-bottom: 20px;
 }
 
 .save-dialogue .save-buttons {
@@ -514,6 +552,9 @@ body {
     height: 100px;
     top: 0;
     left: 0;
+    padding-left: 20%;
+    padding-right: 20%;
+    box-sizing: border-box;
     position: absolute;
     font-family: 'Roboto';
     border-bottom: 1px solid rgba(0, 0, 0, 0.1)
@@ -524,7 +565,6 @@ body {
 }
 
 .modal-title {
-    width: 60%;
     height: 100%;
     float: left;
     text-align: center;
@@ -532,7 +572,6 @@ body {
 }
 
 .modal-close {
-    width: 40%;
     height: 100%;
     float: right;
     text-align: center;
@@ -668,6 +707,7 @@ body {
 .details-container .details-content>div>.details-amount,
 .help-container .help-content>div>.command {
     height: 60px;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     float: right;
@@ -973,7 +1013,8 @@ body {
 
 .sidebar-option,
 .file-option,
-.templates-option {
+.templates-option,
+.gdoc {
     width: 100%;
     height: 60px;
     line-height: 60px;
@@ -984,21 +1025,28 @@ body {
 
 .sidebar-option div,
 .file-option div,
-.templates-option div {
+.templates-option div,
+.gdoc div {
     display: inline-block;
     vertical-align: middle;
-    float:left;
+    float: left;
 }
 
 .sidebar-option .option-title,
 .file-option .option-title,
-.templates-option .option-title {
+.templates-option .option-title,
+.gdoc .gdoc-title {
     font-family: 'Roboto Med';
+    max-width: 126px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .sidebar-option .material-icons,
 .file-option .material-icons,
-.templates-option .material-icons {
+.templates-option .material-icons,
+.gdoc .material-icons {
     width: 70px;
     height: 60px;
     text-align: center;
@@ -1009,7 +1057,8 @@ body {
 
 .sidebar-option:hover,
 .file-option:hover,
-.templates-option:hover {
+.templates-option:hover,
+.gdoc:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
