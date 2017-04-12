@@ -3059,7 +3059,7 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on('click', '.bg .document-container', function () {
+    $(document).on('click', function () {
         closeOverflow($('.overflow-menu'));
     });
 
