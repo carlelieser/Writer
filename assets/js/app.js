@@ -1,5 +1,5 @@
 // Writer
-// Version 5.4.9
+// Version 5.5.1
 // Author : Carlos E. Santos
 // Made with <3
 $(document).ready(function () {
@@ -821,22 +821,33 @@ $(document).ready(function () {
 
 
         htmlParent.find('ol, ul').each(function () {
-            var indent = ($(this).parentsUntil(htmlParent).length - 1);
+            var indent = ($(this).parentsUntil(htmlParent).length);
 
-            if (indent != -1) {
+            if (indent != -1 && indent != 0) {
                 $(this).children().not('ol').not('ul').attr('class', 'ql-indent-' + indent);
             }
-
-            if (!$(this).parent().is(htmlParent)) {
-                var cnt = $(this).contents();
-                $(this).replaceWith(cnt);
-            }
-
         });
+
 
         htmlParent.find('li').each(function () {
             if ($(this).find('li').length) {
                 $(this).find('li').insertAfter($(this));
+            }
+            if ($(this).parent().attr('class')) {
+                if ($(this).parent().attr('class').indexOf('lst-kix_list_') > -1) {
+                    var indent = $(this).parent().attr('class').match(/-\d/g)[0];
+                    indent = Number(indent.replace('-', ''));
+                    if (indent != -1 && indent != 0) {
+                        $(this).attr('class', 'ql-indent-' + indent);
+                    }
+                }
+            }
+        });
+
+        htmlParent.find('ol, ul').each(function () {
+            if (!$(this).parent().is(htmlParent)) {
+                var cnt = $(this).contents();
+                $(this).replaceWith(cnt);
             }
         });
 
@@ -1022,9 +1033,108 @@ $(document).ready(function () {
             var prop = $(this).attr('class');
             if (prop) {
                 var align = getAlign(prop);
-                $(this).attr('style', 'text-align:' + align + ';');
+                if (align) {
+                    $(this).attr('style', 'text-align:' + align + ';');
+                }
             }
         });
+
+        temp.find('ul, ol').each(function () {
+            var type = '<' + $(this).get(0).nodeName.toLowerCase() + '/>';
+            var items = $(this).find('li');
+            var start = false;
+            var groups = [];
+            var counter = 0;
+
+            items.each(function () {
+                var index = $(this).index();
+                $(this).attr('data', index);
+            });
+
+            items.each(function () {
+                var index = Number($(this).attr('data'));
+                var thisClass = $(this).attr('class');
+                if (thisClass) {
+                    if (thisClass.indexOf('ql-indent-') > -1) {
+                        var thatClass = $(this).parent().find('li[data="' + (index + 1) + '"]').attr('class');
+                        if (start === false) {
+                            start = index;
+                        }
+                        if (thatClass != thisClass) {
+                            end = index + 1;
+                            groups[counter] = {
+                                start: start,
+                                end: end
+                            }
+                            counter++;
+                            start = false;
+                        }
+                    }
+                }
+            });
+
+            var list = $(this);
+
+            groups.forEach(function (value) {
+                var start = value.start;
+                var end = value.end;
+                start = list.find('li[data="' + start + '"]').index();
+                end = list.find('li[data="' + end + '"]').index();
+                var falseEnd = false;
+                if (end == -1) {
+                    list.append('<li data="' + value.end + '"></li>');
+                    end = list.find('li[data="' + value.end + '"]').index();
+
+                    falseEnd = true;
+                }
+                list.children().slice(start, end).wrapAll(type);
+
+                if (falseEnd) {
+                    list.children().last().remove();
+                }
+            });
+        });
+
+        var ulOlCount = temp.find('ul, ol').length;
+        for (var i = 0; i < ulOlCount; i++) {
+            temp.find('ul, ol').each(function () {
+                var type = $(this).get(0).nodeName.toLowerCase();
+                var prev = $(this).prev().children().first().attr('class');
+                var index = $(this).children().first().attr('class');
+                if ($(this).prev().is(type)) {
+                    if (prev) {
+                        var prevNumber = Number(prev.replace('ql-indent-', ''));
+                        var thisNumber = Number(index.replace('ql-indent-', ''));
+                        if (prevNumber < thisNumber) {
+                            $(this).insertAfter($(this).prev().children().last());
+                        }
+                    } else {
+                        $(this).insertAfter($(this).prev().children().last());
+                    }
+                }
+            });
+        }
+
+        temp.find('ul, ol').each(function () {
+            var indent = 0;
+            var first = $(this).children().first();
+            if (first.attr('class')) {
+                indent = Number(first.attr('class').replace('ql-indent-', ''));
+            }
+            var parents = $(this).parentsUntil(temp).length;
+            var type = '<' + $(this).get(0).nodeName.toLowerCase() + '/>';
+            while (parents < indent) {
+                $(this).wrap(type);
+                parents = $(this).parentsUntil(temp).length;
+            }
+            while (parents > indent) {
+                var cnt = $(this).contents();
+                $(this).replaceWith(cnt);
+            }
+        });
+
+        temp.find('*').removeAttr('data');
+        temp.find('*').removeAttr('class');
 
         return temp.html();
     }
