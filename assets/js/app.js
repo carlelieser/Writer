@@ -1,5 +1,5 @@
 // Writer
-// Version 5.5.3
+// Version 5.5.4
 // Author : Carlos E. Santos
 // Made with <3
 $(document).ready(function () {
@@ -764,6 +764,7 @@ $(document).ready(function () {
             if ($(this).attr('style')) {
                 if ($(this).attr('style').indexOf('text-align') > -1) {
                     var prop = getStyle($(this), 'text-align');
+                        prop = prop.trim();
                     $(this).addClass('ql-align-' + prop);
                     $(this).removeAttr('style');
                 }
@@ -1017,9 +1018,14 @@ $(document).ready(function () {
 
     function getAlign(prop) {
         if (prop.indexOf('ql-align-') > -1) {
-            var align = prop.match(/ql-align-[^\s]+/)[0];
-            align = align.replace('ql-align-', '');
-            return align;
+            var align = prop.match(/ql-align-[^\s]+/);
+            if(align != null){
+                align = align[0];
+                align = align.replace('ql-align-', '');
+                return align;
+            }else{
+                return false;
+            }
         }
     }
 
