@@ -1,5 +1,5 @@
 // Writer
-// Version 5.5.2
+// Version 5.5.3
 // Author : Carlos E. Santos
 // Made with <3
 $(document).ready(function () {
@@ -1837,6 +1837,7 @@ $(document).ready(function () {
                 $.get(url, function (data) {
                     var downloadUrl = '';
                     var xhr = new XMLHttpRequest();
+                    openGDOCLoader();
                     if (data.exportLinks) {
                         downloadURL = data.exportLinks['text/html'];
                         xhr.onload = function () {
@@ -1844,6 +1845,7 @@ $(document).ready(function () {
                             content = cleanHTML(content);
                             newDoc(false, data.title, content, '0 KB', false, true, false, id);
                             closeModals(true);
+                            closeGDOCLoader();
                         };
                     } else if (data.downloadUrl) {
                         downloadURL = data.downloadUrl;
@@ -1874,6 +1876,8 @@ $(document).ready(function () {
                     xhr.open('GET', downloadURL);
                     xhr.setRequestHeader('Authorization', 'Bearer ' + token);
                     xhr.send();
+                }).fail(function () {
+                    closeGDOCLoader();
                 });
             });
         }
@@ -2860,6 +2864,10 @@ $(document).ready(function () {
         $('.toggle').each(function () {
             if ($(this).hasClass('toggle-active')) {
                 if ($(this).attr('name') != 'focus') {
+                    $(this).click();
+                }
+            } else {
+                if ($(this).attr('name') == 'focus') {
                     $(this).click();
                 }
             }
