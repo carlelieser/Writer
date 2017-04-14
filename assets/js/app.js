@@ -1,5 +1,5 @@
 // Writer
-// Version 5.5.1
+// Version 5.5.2
 // Author : Carlos E. Santos
 // Made with <3
 $(document).ready(function () {
@@ -703,7 +703,7 @@ $(document).ready(function () {
 
     function getStyle(element, styleProp) {
         var style = element.attr('style');
-        var index = style.lastIndexOf(styleProp + ':') + styleProp.length + 2;
+        var index = style.lastIndexOf(styleProp + ':') + styleProp.length + 1;
         style = style.substring(index, getNextIndex(style, index, ':'));
         style = style.replace(';', '');
         return style;
