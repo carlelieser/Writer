@@ -1,5 +1,5 @@
 // Writer
-// Version 5.5.4
+// Version 5.5.5
 // Author : Carlos E. Santos
 // Made with <3
 $(document).ready(function () {
@@ -461,6 +461,28 @@ $(document).ready(function () {
                         this.quill.formatLine(range, 'code-block', true);
                     }
                 }
+            },
+            indentParagraph: {
+                key: 'BRACKETR',
+                collapsed: true,
+                shiftKey: true,
+                handler: function (range, context) {
+                    if (context.format.indent) {
+                        this.quill.formatLine(range, 'indent', '+1');
+                    } else {
+                        this.quill.formatLine(range, 'indent', '1');
+                    }
+                }
+            },
+            outdentParagraph: {
+                key: 'BRACKETL',
+                collapsed: true,
+                shiftKey: true,
+                handler: function (range, context) {
+                    if (context.format.indent) {
+                        this.quill.formatLine(range, 'indent', '-1');
+                    }
+                }
             }
         }
 
@@ -479,6 +501,11 @@ $(document).ready(function () {
                         align: []
                     }],
                     ['blockquote', 'code-block', 'link', 'image'],
+                    [{
+                        'indent': '-1'
+                    }, {
+                        'indent': '+1'
+                    }],
                     [{
                         'header': 1
                     }, {
@@ -737,7 +764,7 @@ $(document).ready(function () {
     }
 
     function filterCSS(css) {
-        var wanted = ['textDecoration', 'textAlign', 'fontWeight', 'fontStyle'];
+        var wanted = ['textDecoration', 'textAlign', 'fontWeight', 'fontStyle', 'marginLeft'];
         var filtered = {};
         wanted.forEach(function (element) {
             filtered[element] = css[element];
@@ -764,9 +791,22 @@ $(document).ready(function () {
             if ($(this).attr('style')) {
                 if ($(this).attr('style').indexOf('text-align') > -1) {
                     var prop = getStyle($(this), 'text-align');
-                        prop = prop.trim();
+                    prop = prop.trim();
                     $(this).addClass('ql-align-' + prop);
                     $(this).removeAttr('style');
+                }
+            }
+            if ($(this).is('p')) {
+                if ($(this).attr('style')) {
+                    if ($(this).attr('style').indexOf('margin-left') > -1) {
+                        var paragraphIndent = getStyle($(this), 'margin-left');
+                        paragraphIndent = Number(paragraphIndent.replace('pt', ''));
+                        paragraphIndent = Math.floor(paragraphIndent / 36);
+                        if (paragraphIndent != 0) {
+                            $(this).attr('class', 'ql-indent-' + paragraphIndent);
+                            $(this).removeAttr('style');
+                        }
+                    }
                 }
             }
         });
@@ -813,6 +853,16 @@ $(document).ready(function () {
                 if ($(this).css('text-decoration').indexOf('line-through') > -1) {
                     element = createElementHTML('s');
                     $(this).wrap(element);
+                }
+
+                if ($(this).is('p')) {
+                    var paragraphIndent = $(this).css('margin-left');
+                    paragraphIndent = Number(paragraphIndent.replace('px', ''));
+
+                    paragraphIndent = Math.floor(paragraphIndent / 48);
+                    if (paragraphIndent != 0) {
+                        $(this).attr('class', 'ql-indent-' + paragraphIndent);
+                    }
                 }
             });
             htmlParent.html(tempElem.html());
@@ -1019,11 +1069,25 @@ $(document).ready(function () {
     function getAlign(prop) {
         if (prop.indexOf('ql-align-') > -1) {
             var align = prop.match(/ql-align-[^\s]+/);
-            if(align != null){
+            if (align != null) {
                 align = align[0];
                 align = align.replace('ql-align-', '');
                 return align;
-            }else{
+            } else {
+                return false;
+            }
+        }
+    }
+
+    function getMargin(prop) {
+        if (prop.indexOf('ql-indent-') > -1) {
+            var indent = prop.match(/ql-indent-[^\s]+/);
+            if (indent != null) {
+                indent = indent[0];
+                indent = Number(indent.replace('ql-indent-', ''));
+                indent = indent * 36;
+                return indent;
+            } else {
                 return false;
             }
         }
@@ -1038,9 +1102,16 @@ $(document).ready(function () {
         temp.find('*').each(function () {
             var prop = $(this).attr('class');
             if (prop) {
-                var align = getAlign(prop);
+                var align = getAlign(prop)
                 if (align) {
                     $(this).attr('style', 'text-align:' + align + ';');
+                }
+
+                if ($(this).is('p')) {
+                    var indent = getMargin(prop);
+                    if (indent) {
+                        $(this).attr('style', 'margin-left:' + indent + 'pt;');
+                    }
                 }
             }
         });
@@ -1141,7 +1212,6 @@ $(document).ready(function () {
 
         temp.find('*').removeAttr('data');
         temp.find('*').removeAttr('class');
-
         return temp.html();
     }
 
