@@ -533,19 +533,6 @@ $(document).ready(function () {
 
         var timer;
         this.editor.on('text-change', function () {
-            clearTimeout(timer);
-            timer = setTimeout(function () {
-                var _DOC = getDoc($(element).index());
-                var oldText = _DOC.getContent(),
-                    contents;
-                if (isHTML(oldText)) {
-                    contents = editorDOM.html();
-                } else {
-                    contents = editor.getContents();
-                }
-                _DOC.setContents(contents);
-                saveData();
-            }, 2000);
             doc.changed = true;
             if (settings.statistics == true) {
                 calcStats(doc.editor.getText());
@@ -3774,6 +3761,7 @@ $(document).ready(function () {
     }
 
     function closeWindow() {
+        openGDOCLoader();
         var doc = getDoc(documentAct(true)),
             contents = doc.editor.getContents();
         doc.setContents(contents);
