@@ -3222,7 +3222,7 @@ $(document).ready(function () {
             }, 800, beizer, function () {
                 $(this).remove();
             });
-        }, 200);
+        }, 600);
     }
 
     function saveData(which) {

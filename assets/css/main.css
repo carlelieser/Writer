@@ -445,7 +445,20 @@ body {
     background-image: url('../icon-128.png');
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;        
     position: absolute;
+    margin-top: -40px;
+}
+
+.loading-screen .loading-gif{
+    width: 60px;
+    height: 60px;
+    background-image: url('../loading/load-load.gif');
+    background-size: 30px;
+    background-repeat: no-repeat;
+    background-position: center;
+    position:absolute;
+    margin-top: 100px;
 }
 
 .install-screen {
