@@ -3750,6 +3750,21 @@ $(document).ready(function () {
         });
     }
 
+    $(window).on('mouseleave', function (e) {
+        var from = e.toElement;
+        if (!from || from.nodeName == 'HTML') {
+            documents.forEach(function (value) {
+                var doc = value,
+                    contents = doc.editor.getContents();
+                doc.setContents(contents);
+            });
+            setStorage({
+                settings: settings,
+                data: documents
+            });
+        }
+    });
+
     $('.close-window').click(function () {
         closeWindow();
     });
