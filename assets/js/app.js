@@ -1,5 +1,5 @@
 // Writer
-// Version 5.5.6
+// Version 5.5.7
 // Author : Carlos E. Santos
 // Made with <3
 $(document).ready(function () {
@@ -200,7 +200,6 @@ $(document).ready(function () {
 
     function changeSettings(key, val) {
         settings[key] = val;
-        saveData('settings');
     }
 
     function capitalizeFirstLetter(string) {
@@ -1291,7 +1290,6 @@ $(document).ready(function () {
 
     function addDocument(doc) {
         documents.push(doc);
-        saveData('documents');
     }
 
     function createDoc(doc, name, size, active) {
@@ -3225,25 +3223,6 @@ $(document).ready(function () {
         }, 600);
     }
 
-    function saveData(which) {
-        if (which) {
-            if (which == 'settings') {
-                setStorage({
-                    settings: settings
-                });
-            } else {
-                setStorage({
-                    data: documents
-                });
-            }
-        } else {
-            setStorage({
-                settings: settings,
-                data: documents
-            });
-        }
-    }
-
     function getImage(url, callback) {
         var xhr = new XMLHttpRequest();
         xhr.onload = function () {
@@ -3750,18 +3729,26 @@ $(document).ready(function () {
         });
     }
 
+    var screenTimeout;
+
+    $(window).on('mouseenter', function (e){
+        clearTimeout(screenTimeout);
+    });
+
     $(window).on('mouseleave', function (e) {
         var from = e.toElement;
         if (!from || from.nodeName == 'HTML') {
-            documents.forEach(function (value) {
-                var doc = value,
-                    contents = doc.editor.getContents();
-                doc.setContents(contents);
-            });
-            setStorage({
-                settings: settings,
-                data: documents
-            });
+            screenTimeout = setTimeout(function () {
+                documents.forEach(function (value) {
+                    var doc = value,
+                        contents = doc.editor.getContents();
+                    doc.setContents(contents);
+                });
+                setStorage({
+                    settings: settings,
+                    data: documents
+                });
+            }, 400);
         }
     });
 
