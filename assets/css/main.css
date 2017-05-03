@@ -445,20 +445,29 @@ body {
     background-image: url('../icon-128.png');
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: center;        
+    background-position: center;
     position: absolute;
     margin-top: -40px;
 }
 
-.loading-screen .loading-gif{
+.loading-screen .loading-gif {
     width: 60px;
     height: 60px;
     background-image: url('../loading/load-load.gif');
     background-size: 30px;
     background-repeat: no-repeat;
     background-position: center;
-    position:absolute;
+    position: absolute;
     margin-top: 100px;
+}
+
+.loading-screen .loading-footer {
+    bottom: 0;
+    margin-bottom: 60px;
+    font-family: 'Roboto';
+    font-size: 12px;
+    color: rgb(84, 150, 167);
+    position: absolute;
 }
 
 .install-screen {
@@ -1147,13 +1156,15 @@ body {
 }
 
 .ql-editor::-webkit-scrollbar {
-    width: 8px;
+    width: 15px;
     background-color: transparent;
 }
 
 .ql-editor::-webkit-scrollbar-thumb {
     border-radius: 25px;
     background-color: #EFEFEF;
+    border: 5px solid transparent;
+    background-clip: content-box;
 }
 
 .ql-align {
