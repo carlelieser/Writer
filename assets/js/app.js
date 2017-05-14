@@ -1,5 +1,5 @@
 // Writer
-// Version 5.5.8
+// Version 5.5.9
 // Author : Carlos E. Santos
 // Made with <3
 $(document).ready(function () {
@@ -1258,6 +1258,8 @@ $(document).ready(function () {
                             this.truncate(blob.size);
                             return;
                         }
+
+                        doc.setContents('');
                     };
                 });
             });
@@ -1452,6 +1454,10 @@ $(document).ready(function () {
             var scroll = editor.scrollTop();
             var nodePos = getSelectionCoords();
             var endScroll = scroll + nodePos.y - (editor.height() / 2) - 100;
+
+            if (Number.isNaN(endScroll)) {
+                endScroll = scroll;
+            }
 
             if (key) {
                 editor.stop().animate({
@@ -2679,6 +2685,11 @@ $(document).ready(function () {
 
     var src = '/assets/settings/coffee.mp3';
     var audio = new Audio(src);
+    audio.volume = 0.4;
+    audio.addEventListener('ended', function () {
+        this.currentTime = 0;
+        this.play();
+    }, false);
     $coffeeMode.click(function () {
         if (isActive($(this))) {
             audio.play();
@@ -3066,6 +3077,7 @@ $(document).ready(function () {
             var data = JSON.parse(xhr.response);
             var id = data.id;
             doc.fileID = id;
+            doc.setContents('');
             closeGDOCLoader();
         }
         xhr.send(content);
@@ -3794,6 +3806,12 @@ $(document).ready(function () {
         clearTimeout(screenTimeout);
     });
 
+    function resetDocContent() {
+        documents.forEach(function (doc) {
+            doc.setContents('');
+        });
+    }
+
     $(window).on('mouseleave', function (e) {
         var from = e.toElement;
         if (!from || from.nodeName == 'HTML') {
@@ -3806,7 +3824,7 @@ $(document).ready(function () {
                 setStorage({
                     settings: settings,
                     data: documents
-                });
+                }, resetDocContent);
             }, 400);
         }
     });
