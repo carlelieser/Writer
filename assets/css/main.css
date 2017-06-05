@@ -2,6 +2,7 @@ html,
 body {
     margin: 0;
     padding: 0;
+    background-color: #FBFBFB;
 }
 
 .gdoc-loading-container {
@@ -801,7 +802,7 @@ body {
 .feedback-container .feedback-content input:valid~label {
     top: -18px;
     font-size: 12px;
-    color: #51ad9a;
+    color: #1ddb99;
 }
 
 
@@ -820,7 +821,7 @@ body {
     width: 0;
     bottom: 1px;
     position: absolute;
-    background: #52ae9e;
+    background: #1ddb99;
     transition: 0.2s ease all;
 }
 
@@ -848,13 +849,13 @@ body {
     display: block;
     margin-left: 20px;
     text-decoration: none;
-    color: #21d6b2;
+    color: #1ddb99;
 }
 
 .submit-button {
     width: 300px;
     height: 50px;
-    background-color: #21d6b2;
+    background-color: #1ddb99;
     text-transform: uppercase;
     font-family: 'Roboto Med';
     font-size: 14px;
@@ -1028,8 +1029,9 @@ body {
 }
 
 .sidebar .divider {
-    width: 100%;
+    width: 86%;
     height: 1px;
+    margin: 0 auto;
     background-color: rgba(0, 0, 0, 0.1);
 }
 
@@ -1087,6 +1089,103 @@ body {
 .sidebar::-webkit-scrollbar {
     width: 0px;
     background-color: transparent;
+}
+
+#goal-progress {
+    width: 100%;
+    height: 290px;
+    padding-top: 60px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 60px;
+    box-sizing: border-box;
+}
+
+.goal-options-checkmark {
+    position: fixed;
+    z-index: 150;
+    color: #1ddb99;
+    font-size: 100px !important;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    display: none;
+}
+
+.goal-options-bg {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    background-color: #FFF;
+    opacity: 0;
+    z-index: 100;
+    display: none;
+}
+
+.set-goal {
+    width: 100%;
+    height: 60px;
+    padding-left: 50px;
+    padding-right: 20px;
+    text-transform: capitalize;
+    line-height: 60px;
+    font-family: 'Roboto';
+    font-size: 14px;
+}
+
+.set-goal-button {
+    width: 300px;
+    height: 50px;
+    background-color: #1ddb99;
+    text-transform: uppercase;
+    font-family: 'Roboto Med';
+    font-size: 14px;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 2px;
+    box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.2);
+    color: rgba(0, 0, 0, 0.7);
+    margin: 10px auto;
+}
+
+.disclaimer {
+    width: 300px;
+    margin: 0 auto;
+    font-family: 'Roboto';
+    font-size: 12px;
+    font-style: italic;
+    color: #929292;
+}
+
+.reset-goal-button {
+    width: 300px;
+    height: 50px;
+    background-color: #f25231;
+    text-transform: uppercase;
+    font-family: 'Roboto Med';
+    font-size: 14px;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 2px;
+    box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.2);
+    color: rgba(0, 0, 0, 0.7);
+    margin: 10px auto 50px;
+}
+
+.words-to-complete {
+    width: 117px;
+    height: 30px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    border-bottom: 2px solid #1ddb99;
+    margin-left: 10px;
+    font-family: 'Roboto';
+    font-size: 14px;
+    transition: all .2s ease-out;
 }
 
 .bg {
@@ -1200,7 +1299,8 @@ body {
     color: inherit;
 }
 
-.snackbar {
+.snackbar,
+.goal-snackbar {
     width: auto;
     height: 24px;
     line-height: 24px;

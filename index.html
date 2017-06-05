@@ -66,7 +66,7 @@
     <div class="loading-screen">
         <div class="loading-icon"></div>
         <div class="loading-gif"></div>
-        <div class="loading-footer">v.5.5.9<span class="loading-online"></span></div>
+        <div class="loading-footer">v.6.0.0<span class="loading-online"></span></div>
     </div>
 
     <div class="install-screen">
@@ -89,13 +89,16 @@
         <div class="chars">0</div>
     </div>
 
+    <div class="goal-snackbar">
+        <span>Goal Completed!</span>
+    </div>
+
     <div class="snackbar">
         <div class="snackbar-doc-title"></div>
         <span></span>
     </div>
 
-    <div class="main-container" data-intro="This is your workspace, get productive here!">
-    </div>
+    <div class="main-container"></div>
 
     <div class="details-container modal">
         <div class="modal-title-container">
@@ -483,6 +486,27 @@
         </div>
     </div>
 
+    <div class="goal-container modal">
+        <div class="modal-title-container">
+            <div class="modal-title">Writing Goals</div>
+            <div class="modal-close">
+                <div class="material-icons">close</div>
+            </div>
+        </div>
+        <div class="goal-options modal-content">
+            <div class="goal-options-checkmark material-icons">check</div>
+            <div class="goal-options-bg"></div>
+            <div id="goal-progress"></div>
+            <div class="disclaimer">*Results are based on the document from which you started the goal on.</div>
+            <div class="set-goal">
+                <span>Words to complete today:</span>
+                <input class="words-to-complete" type="number" placeholder="500"/>
+            </div>
+            <div class="set-goal-button">Set New Goal</div>
+            <div class="reset-goal-button">Reset Goal</div>            
+        </div>
+    </div>
+
     <div class="sidebar modal">
         <div class="user-profile">
             <div class="user-profile-bg"></div>
@@ -526,6 +550,10 @@
             <div class="material-icons">info</div>
             <div class="option-title">Details</div>
         </div>
+        <div class="sidebar-option open-goals">
+            <div class="material-icons">today</div>
+            <div class="option-title">Writing Goals</div>
+        </div>
         <div class="divider"></div>
         <div class="sidebar-option open-settings">
             <div class="material-icons">settings</div>
@@ -551,6 +579,7 @@
     <script type="text/javascript" src="assets/libs/minified/jquery.bez.min.js"></script>
     <script type="text/javascript" src="assets/libs/quill/quill.min.js"></script>
     <script type="text/javascript" src="assets/libs/minified/vibrant.min.js"></script>
+    <script type="text/javascript" src="assets/libs/minified/progressbar.min.js"></script>    
     <script type="text/javascript" src="assets/js/google-analytics-bundle.js"></script>
     <script type="text/javascript" src="assets/libs/minified/require.min.js"></script>
     <script type="text/javascript" src="assets/js/app.min.js"></script>

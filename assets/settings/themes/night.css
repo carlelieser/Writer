@@ -1,5 +1,6 @@
-html, body {
-    background-color: #1b1b1b;
+html,
+body {
+    background-color: #1b1b1b !important;
 }
 
 .dumbass-indicator {
@@ -57,7 +58,8 @@ html, body {
     fill: #212121;
 }
 
-.snackbar {
+.snackbar,
+.goal-snackbar {
     background-color: #EFEFEF !important;
     color: #000 !important;
 }

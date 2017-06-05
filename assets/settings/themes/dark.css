@@ -1,50 +1,59 @@
-
-.modal{
+.modal {
     background-color: #272727 !important;
 }
 
-.navigation-container{
+.navigation-container {
     background-color: #313131 !important;
 }
 
-.navigation-container .close-window-line{
+.navigation-container .close-window-line {
     background-color: #FFF !important;
 }
 
-.navigation-container .maximize-square{
+.navigation-container .maximize-square {
     border: 1px solid #FFF !important;
 }
 
-.navigation-container .minimize-line{
+.navigation-container .minimize-line {
     background-color: #FFF !important;
 }
 
-.sidebar-option, .file-option, .templates-option, .gdoc, .settings-title, .settings-title-second, .option > div, .modal .material-icons, .active{
+.sidebar-option,
+.file-option,
+.templates-option,
+.gdoc,
+.settings-title,
+.settings-title-second,
+.option>div,
+.modal .material-icons:not(.goal-options-checkmark),
+.active {
     color: rgba(255, 255, 255, 0.8) !important;
     opacity: 1 !important;
 }
 
-.document-title, .modal-title{
+.document-title,
+.modal-title {
     color: rgba(255, 255, 255, 1) !important;
 }
 
-.document-title::selection{
+.document-title::selection {
     background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-.document-size, .settings-description{
+.document-size,
+.settings-description {
     color: rgba(255, 255, 255, 0.6) !important;
 }
 
-.doc-active{
-    background-color:#585858 !important;
+.doc-active {
+    background-color: #585858 !important;
 }
 
-.active{
+.active {
     background-color: rgba(136, 136, 136, 0.2) !important;
 }
 
-.option{
+.option {
     background-color: rgb(53, 53, 53) !important;
 }
 
@@ -52,27 +61,42 @@
     background-color: #313131 !important;
 }
 
-.snackbar{
+.snackbar,
+.goal-snackbar {
     background-color: #313131 !important;
 }
 
-.toggle-active{
+.toggle-active {
     background-color: #3a3a3a !important;
 }
 
-.toggle-active .toggle-circle{
+.toggle-active .toggle-circle {
     background-color: #525252 !important;
 }
 
-.details-amount, .command, .feedback-email, .feedback-subject, .feedback-message{
-    color:rgb(255, 255, 255) !important;
+.details-amount,
+.command,
+.feedback-email,
+.feedback-subject,
+.feedback-message {
+    color: rgb(255, 255, 255) !important;
 }
 
-.details-title, .command-title{
-    color: rgba(255,255,255, 0.7) !important;
+.details-title,
+.command-title {
+    color: rgba(255, 255, 255, 0.7) !important;
 }
 
-.overflow-menu{
+.overflow-menu {
     background-color: #4a4a4a !important;
     color: #FFF;
+}
+
+.set-goal,
+.set-goal input {
+    color: #FFF;
+}
+
+.goal-options-bg {
+    background-color: #000 !important;
 }

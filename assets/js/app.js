@@ -1,5 +1,5 @@
 // Writer
-// Version 5.5.9
+// Version 6.0.0
 // Author : Carlos E. Santos
 // Made with <3
 $(document).ready(function () {
@@ -16,6 +16,7 @@ $(document).ready(function () {
         $documentList = $('.document-list'),
         $gDocList = $('.gdocument-list'),
         $mainContainer = $('.main-container'),
+        $goalContainer = $('.goal-container'),
         $navBar = $('.navigation-container'),
         $sideBar = $('.sidebar'),
         $sideToggle = $('.dumbass-indicator'),
@@ -62,6 +63,7 @@ $(document).ready(function () {
         $file = $('.open-file'),
         $templates = $('.open-templates'),
         $gDocs = $('.open-gdocuments'),
+        $goals = $('.open-goals'),
         $modalClose = $('.modal-close');
 
     var $new = $('.new'),
@@ -70,7 +72,8 @@ $(document).ready(function () {
         $saveAs = $('.save-as'),
         $print = $('.print');
 
-    var $snackBar = $('.snackbar');
+    var $snackBar = $('.snackbar'),
+        $goalSnackBar = $('.goal-snackbar');
 
     var $statisticsBar = $('.statistics-bar');
 
@@ -285,6 +288,25 @@ $(document).ready(function () {
     function replaceClass(element, classOne, classTwo) {
         element.removeClass(classOne);
         element.addClass(classTwo);
+    }
+
+    var goalSnackBarTime;
+
+    function openGoalSnackBar() {
+        $goalSnackBar.show().stop().animate({
+            bottom: '0'
+        }, 500, beizer, function () {
+            goalSnackBarTime = setTimeout(closeGoalSnackBar, 3000);
+        });
+    }
+
+    function closeGoalSnackBar() {
+        $goalSnackBar.animate({
+            bottom: '-' + ($goalSnackBar.height() + 100) + 'px'
+        }, 500, beizer, function () {
+            $(this).hide();
+            clearTimeout(goalSnackBarTime);
+        });
     }
 
     var _DOC;
@@ -539,6 +561,15 @@ $(document).ready(function () {
             }
             if ($saveDialogue.is(':visible')) {
                 closeSave();
+            }
+            if (goalExists) {
+                goalCompleted = getWords(doc.editor.getText());
+                goalCompleted = goalCompleted - goalStart;
+                var complete = goalCompleted / goalTarget;
+
+                if (complete == 1) {
+                    openGoalSnackBar();
+                }
             }
         });
 
@@ -938,7 +969,7 @@ $(document).ready(function () {
         this.editor.history.clear();
     }
 
-    Doc.prototype.load = function (name, content, size, savedFileEntry, changed, id) {
+    Doc.prototype.load = function (name, content, size, savedFileEntry, changed, id, hasGoal) {
         this.setName(name);
         this.setContents(content);
         this.setEditorContents(content);
@@ -946,6 +977,7 @@ $(document).ready(function () {
         this.setFileEntry(savedFileEntry);
         this.changed = changed;
         this.fileID = id;
+        this.hasGoal = hasGoal;
     }
 
     Doc.prototype.loadFile = function (name, size, fileEntry, changed) {
@@ -1298,11 +1330,11 @@ $(document).ready(function () {
         doc.create(name, size, active);
     }
 
-    function loadDoc(doc, name, content, size, savedFileEntry, changed, id) {
-        doc.load(name, content, size, savedFileEntry, changed, id);
+    function loadDoc(doc, name, content, size, savedFileEntry, changed, id, hasGoal) {
+        doc.load(name, content, size, savedFileEntry, changed, id, hasGoal);
     }
 
-    function newDoc(newString, name, content, size, savedFileEntry, active, changed, id) {
+    function newDoc(newString, name, content, size, savedFileEntry, active, changed, id, hasGoal) {
         var file = new Doc();
         if (newString != false) {
             name = 'untitled';
@@ -1315,7 +1347,7 @@ $(document).ready(function () {
             addDocument(file);
         } else {
             createDoc(file, name, size, active);
-            loadDoc(file, name, content, size, savedFileEntry, changed, id);
+            loadDoc(file, name, content, size, savedFileEntry, changed, id, hasGoal);
             addDocument(file);
             loadImages();
         }
@@ -1959,6 +1991,155 @@ $(document).ready(function () {
 
     $gDocs.click(function () {
         openModal($gDocumentContainer, loadGDocs);
+    });
+
+    var goalCompleted = 0;
+    var goalTarget = 0;
+
+    var circle = new ProgressBar.Circle('#goal-progress', {
+        strokeWidth: 4,
+        color: '#1ddb99',
+        trailColor: 'rgba(0,0,0,0.05)',
+        svgStyle: {
+            width: '200px',
+            height: '200px',
+            left: '50%',
+            position: 'absolute',
+            marginLeft: '-100px'
+        },
+        text: {
+            style: {
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                marginTop: '15px',
+                fontFamily: 'Roboto',
+                fontSize: '18px'
+            }
+        },
+        duration: 1000,
+        easing: 'easeInOut',
+        step: function (state, bar) {
+            bar.setText(Math.round(bar.value() * 100) + ' %');
+        }
+    });
+
+    function calculateGoal(completed, goal) {
+        var percent = completed / goal;
+        if (percent > 1) {
+            percent = 1;
+        }
+        return percent;
+    }
+
+    function renderGoal() {
+        if (goalExists) {
+            if (getDoc(documentAct(true)).hasGoal) {
+                goalCompleted = getWords(getDoc(documentAct(true)).editor.getText());
+                goalCompleted = goalCompleted - goalStart;
+                var complete = calculateGoal(goalCompleted, goalTarget);
+
+                circle.animate(complete);
+            }
+        }
+    }
+
+    $goals.click(function () {
+        openModal($goalContainer, renderGoal);
+    });
+
+    function goalSet() {
+        $('.words-to-complete').css('border-color', '#1ddb99');
+        $('.goal-options-bg').show().stop().animate({
+            opacity: '0.7'
+        }, 200);
+        $('.goal-options-checkmark').show().stop().animate({
+            opacity: '1',
+            top: '50%'
+        }, 300, function () {
+            setTimeout(function () {
+                $('.goal-options-bg').stop().animate({
+                    opacity: '0'
+                }, 200, function () {
+                    $(this).hide();
+                });
+                $('.goal-options-checkmark').stop().animate({
+                    opacity: '0',
+                    top: '60%'
+                }, 300, function () {
+                    $(this).hide();
+                });
+            }, 800);
+        });
+    }
+
+    var goalExists = false;
+    var goalStart = 0;
+
+    function saveGoals() {
+        setStorage({
+            exists: goalExists,
+            start: goalStart,
+            target: goalTarget
+        });
+    }
+
+    function loadGoals() {
+        getStorage({
+            exists: 'goalExists',
+            start: 'goalStart',
+            target: 'goalTarget'
+        }, function (goals) {
+            var tempExists = goals.exists;
+            var tempStart = goals.start;
+            var tempTarget = goals.target;
+
+            if (tempExists != 'goalExists' || tempStart != 'goalStart' || tempTarget != 'goalTarget') {
+                goalExists = tempExists;
+                goalStart = tempStart;
+                goalTarget = tempTarget;
+
+                if (goalTarget === 0) {
+                    goalTarget = '';
+                }
+                $('.words-to-complete').val(goalTarget);
+            }
+        });
+    }
+
+
+    $('.set-goal-button').click(function () {
+        var target = $('.words-to-complete').val();
+        if (target !== '') {
+            goalTarget = target;
+            goalExists = true;
+            circle.animate(0);
+            goalSet();
+
+            var doc = getDoc(documentAct(true));
+            var text = doc.editor.getText();
+            doc.hasGoal = true;
+            goalStart = getWords(text);
+
+            saveGoals();
+        } else {
+            goalExists = false;
+            $('.words-to-complete').css('border-color', '#db1d1d');
+        }
+    });
+
+    $('.reset-goal-button').click(function () {
+        goalStart = 0;
+        goalTarget = 0;
+        goalExists = false;
+        $('.words-to-complete').val('');
+        circle.animate(0);
+
+        var doc = getDoc(documentAct(true));
+        doc.hasGoal = false;
+
+        saveGoals();
     });
 
     var $letter = $('.templates-options > .letter');
@@ -3273,7 +3454,93 @@ $(document).ready(function () {
     }
 
     function hostReachable() {
-        return $.get('https://www.google.com/');
+        return $.get('http://blank.org/');
+    }
+
+    function initiateSignIn(token, callback) {
+        $.get('https://www.googleapis.com/plus/v1/people/me?access_token=' + token, function (profile) {
+            var coverURL = profile.cover;
+            var imageURL = profile.image.url;
+            var name = profile.displayName;
+
+            getImage(imageURL, function (data) {
+                $('.user-image').css('background-image', 'url(' + data + ')');
+            });
+
+            if (!coverURL) {
+                $('.user-profile').css('background-color', '#4885ed');
+                $('.user-info').css('color', '#FFF');
+                $('.fallback-signin').hide();
+                $('.sign-out').css({
+                    backgroundColor: 'rgb(33, 52, 92)',
+                    color: '#FFF'
+                });
+                $('.sign-out .material-icons').css('color', '#FFF');
+                $('.user-profile-body').show();
+                setStorage({
+                    installed: true,
+                    signIn: true
+                });
+
+                if (callback) {
+                    $installScreen.stop().animate({
+                        top: '-100%'
+                    }, 800, beizer, function () {
+                        $(this).remove();
+                    });
+                    callback();
+                }
+            } else {
+                coverURL = coverURL.coverPhoto.url;
+                getImage(coverURL, function (data) {
+                    $('.user-profile').css('background-image', 'url(' + data + ')');
+                    var img = document.createElement('img');
+                    img.addEventListener('load', function () {
+                        var vibrant = new Vibrant(img);
+                        var color = vibrant.DarkMutedSwatch;
+                        if (color) {
+                            color = color.rgb;
+                        } else {
+                            color = vibrant.DarkVibrantSwatch.rgb;
+                        }
+                        var realColor = color.join(',');
+                        var ideal = idealTextColor(color);
+                        $('.user-info').css('color', ideal);
+
+                        $('.fallback-signin').hide();
+                        $('.sign-out').css({
+                            backgroundColor: 'rgb(' + realColor + ')',
+                            color: ideal
+                        });
+                        $('.sign-out .material-icons').css('color', ideal);
+                        $('.user-profile-body').show();
+
+                        setStorage({
+                            installed: true,
+                            signIn: true
+                        });
+
+                        if (callback) {
+                            $installScreen.stop().animate({
+                                top: '-100%'
+                            }, 800, beizer, function () {
+                                $(this).remove();
+                            });
+                            callback();
+                        }
+
+                    });
+                    img.setAttribute('src', data);
+                });
+            }
+
+            $('.user-name').text(name);
+            chrome.identity.getProfileUserInfo(function (info) {
+                $('.user-email').text(info.email);
+            })
+        }).fail(function () {
+            revokeToken();
+        });
     }
 
     function getToken(install, load, callback) {
@@ -3291,99 +3558,23 @@ $(document).ready(function () {
             requestAccess(true, function (token) {
                 current_token = token;
                 if (chrome.runtime.lastError) {
-                    if (install === false) {
-                        revokeToken();
+                    if (token) {
+                        if (install === false) {
+                            revokeToken();
+                        }
                     } else {
-                        loadScreen();
-                        $installScreen.show();
-                        setStorage({
-                            installed: false
-                        });
-                    }
-                } else {
-                    $.get('https://www.googleapis.com/plus/v1/people/me?access_token=' + token, function (profile) {
-                        var coverURL = profile.cover;
-                        var imageURL = profile.image.url;
-                        var name = profile.displayName;
-
-                        getImage(imageURL, function (data) {
-                            $('.user-image').css('background-image', 'url(' + data + ')');
-                        });
-
-                        if (!coverURL) {
-                            $('.user-profile').css('background-color', '#4885ed');
-                            $('.user-info').css('color', '#FFF');
-                            $('.fallback-signin').hide();
-                            $('.sign-out').css({
-                                backgroundColor: 'rgb(33, 52, 92)',
-                                color: '#FFF'
-                            });
-                            $('.sign-out .material-icons').css('color', '#FFF');
-                            $('.user-profile-body').show();
-                            setStorage({
-                                installed: true,
-                                signIn: true
-                            });
-
-                            if (callback) {
-                                $installScreen.stop().animate({
-                                    top: '-100%'
-                                }, 800, beizer, function () {
-                                    $(this).remove();
-                                });
-                                callback();
-                            }
+                        if (install === false) {
+                            console.log('User declined.');
                         } else {
-                            coverURL = coverURL.coverPhoto.url;
-                            getImage(coverURL, function (data) {
-                                $('.user-profile').css('background-image', 'url(' + data + ')');
-                                var img = document.createElement('img');
-                                img.addEventListener('load', function () {
-                                    var vibrant = new Vibrant(img);
-                                    var color = vibrant.DarkMutedSwatch;
-                                    if (color) {
-                                        color = color.rgb;
-                                    } else {
-                                        color = vibrant.DarkVibrantSwatch.rgb;
-                                    }
-                                    var realColor = color.join(',');
-                                    var ideal = idealTextColor(color);
-                                    $('.user-info').css('color', ideal);
-
-                                    $('.fallback-signin').hide();
-                                    $('.sign-out').css({
-                                        backgroundColor: 'rgb(' + realColor + ')',
-                                        color: ideal
-                                    });
-                                    $('.sign-out .material-icons').css('color', ideal);
-                                    $('.user-profile-body').show();
-
-                                    setStorage({
-                                        installed: true,
-                                        signIn: true
-                                    });
-
-                                    if (callback) {
-                                        $installScreen.stop().animate({
-                                            top: '-100%'
-                                        }, 800, beizer, function () {
-                                            $(this).remove();
-                                        });
-                                        callback();
-                                    }
-
-                                });
-                                img.setAttribute('src', data);
+                            loadScreen();
+                            $installScreen.show();
+                            setStorage({
+                                installed: false
                             });
                         }
-
-                        $('.user-name').text(name);
-                        chrome.identity.getProfileUserInfo(function (info) {
-                            $('.user-email').text(info.email);
-                        })
-                    }).fail(function () {
-                        revokeToken();
-                    });
+                    }
+                } else {
+                    initiateSignIn(token, callback);
                 }
             });
         }).fail(function () {
@@ -3753,9 +3944,10 @@ $(document).ready(function () {
                         var size = thisData.size;
                         var savedFileEntry = thisData.savedFileEntry;
                         var active = thisData.isActive;
+                        var hasGoal = thisData.hasGoal;
                         var changed = thisData.changed;
                         var id = thisData.fileID;
-                        newDoc(false, name, content, size, savedFileEntry, active, changed, id);
+                        newDoc(false, name, content, size, savedFileEntry, active, changed, id, hasGoal);
 
                         documentAct().children().first().children().css('opacity', '0.6');
                         documentAct().children().first().children().first().css('opacity', '1');
@@ -3765,6 +3957,8 @@ $(document).ready(function () {
                             openLaunchData();
                             loadSettings(settings);
                             loadScreen();
+
+                            loadGoals();
                         }
                     });
                 }
