@@ -1369,12 +1369,12 @@ $(document).ready(function () {
     // var typeAudio;
     $(document).on('keyup', '.ql-editor', function (e) {
 
-        var navKeys = [37, 38, 39, 40, 13];
-        if (navKeys.indexOf(e.keyCode) > -1) {
-            editorScroll(true);
-        } else {
-            editorScroll(false);
-        }
+        // var navKeys = [37, 38, 39, 40, 13];
+        // if (navKeys.indexOf(e.keyCode) > -1) {
+        //     editorScroll(true);
+        // } else {
+        //     editorScroll(false);
+        // }
         closeNavBar();
         focusOnElem();
     });
@@ -1402,7 +1402,7 @@ $(document).ready(function () {
         if ($saveDialogue.is(':visible')) {
             closeSave();
         }
-        editorScroll();
+        // editorScroll();
         focusOnElem();
     });
 
@@ -1472,34 +1472,34 @@ $(document).ready(function () {
         };
     }
 
-    function editorScroll(key) {
-        setTimeout(function () {
-            var editor = qlEditor();
-            var scroll = editor.scrollTop();
-            var nodePos = getSelectionCoords();
-            var endScroll = scroll + nodePos.y - (editor.height() / 2) - 100;
+    // function editorScroll(key) {
+    //     setTimeout(function () {
+    //         var editor = qlEditor();
+    //         var scroll = editor.scrollTop();
+    //         var nodePos = getSelectionCoords();
+    //         var endScroll = scroll + nodePos.y - (editor.height() / 2) - 100;
 
-            if (Number.isNaN(endScroll)) {
-                endScroll = scroll;
-            }
+    //         if (Number.isNaN(endScroll)) {
+    //             endScroll = scroll;
+    //         }
 
-            if (key) {
-                editor.stop().animate({
-                    scrollTop: endScroll
-                }, 300, beizer, function () {
-                    var doc = getDoc(documentAct(true));
-                    doc.scrollTop = endScroll;
-                });
-            } else {
-                editor.filter(':not(:animated)').animate({
-                    scrollTop: endScroll
-                }, 300, beizer, function () {
-                    var doc = getDoc(documentAct(true));
-                    doc.scrollTop = endScroll;
-                });
-            }
-        }, 1);
-    }
+    //         if (key) {
+    //             editor.stop().animate({
+    //                 scrollTop: endScroll
+    //             }, 300, beizer, function () {
+    //                 var doc = getDoc(documentAct(true));
+    //                 doc.scrollTop = endScroll;
+    //             });
+    //         } else {
+    //             editor.filter(':not(:animated)').animate({
+    //                 scrollTop: endScroll
+    //             }, 300, beizer, function () {
+    //                 var doc = getDoc(documentAct(true));
+    //                 doc.scrollTop = endScroll;
+    //             });
+    //         }
+    //     }, 1);
+    // }
 
     function getSelectionContainerElement() {
         var range, sel, container;
