@@ -5,6 +5,40 @@ body {
     background-color: #FBFBFB;
 }
 
+.upgrade-app{
+    background-color: #1ddb99 !important;
+}
+
+.disabled{
+    color: #919191 !important;
+    pointer-events: none;
+}
+
+.disabled .material-icons{
+    color: #919191 !important;
+}
+
+.disabled-toggle{
+    background-color: #e6e3e3 !important;
+    pointer-events: none;
+}
+
+.disabled-toggle .toggle-circle{
+    background-color: #d8d8d8 !important;
+}
+
+.disabled-option{
+    pointer-events: none;
+}
+
+.disabled-option .settings-title-second{
+    color: #919191 !important;
+}
+
+.disabled-option .settings-description{
+    color: #919191 !important;
+}
+
 .gdoc-loading-container {
     width: 100%;
     height: 100%;
@@ -320,7 +354,7 @@ body {
     width: 100%;
     height: 170px;
     background-color: #000;
-    opacity: 0.3;
+    opacity: 0;
     top: 0;
     left: 0;
     position: absolute;
@@ -530,6 +564,11 @@ body {
     box-shadow: none;
     transition: all .2s ease;
     cursor: pointer;
+}
+
+.install-screen .install-screen-button .material-icons{
+    line-height: 50px !important;
+    float:right;
 }
 
 .install-screen .install-screen-button:hover {

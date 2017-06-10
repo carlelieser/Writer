@@ -74,10 +74,9 @@
         </div>
         <div class="install-content">
             <div class="install-screen-button-container">
-                <div class="signin-button install-screen-button">Sign In With
-                    <div class="google-icon"></div>
+                <div class="continue-button install-screen-button">Get Started
+                    <div class="material-icons">keyboard_arrow_right</div>
                 </div>
-                <div class="continue-button install-screen-button">Continue</div>
             </div>
         </div>
     </div>
@@ -236,24 +235,12 @@
                 <div class="command">&#8984; + P / CTRL + P</div>
             </div>
             <div class="command-container">
-                <div class="command-title">Coffee</div>
-                <div class="command">&#8984; + SHIFT + C / CTRL + SHIFT + C</div>
-            </div>
-            <div class="command-container">
                 <div class="command-title">Night</div>
                 <div class="command">&#8984; + SHIFT + N / CTRL + SHIFT + N</div>
             </div>
             <div class="command-container">
-                <div class="command-title">Statistics</div>
-                <div class="command">&#8984; + ALT + S / CTRL + ALT + S</div>
-            </div>
-            <div class="command-container">
                 <div class="command-title">Focus</div>
                 <div class="command">&#8984; + SHIFT + F / CTRL + SHIFT + F</div>
-            </div>
-            <div class="command-container">
-                <div class="command-title">Typewriter</div>
-                <div class="command">&#8984; + T / CTRL + T</div>
             </div>
             <div class="command-container">
                 <div class="command-title">Close Document</div>
@@ -297,8 +284,6 @@
                 <div class="group">
                     <button class="submit-button">Submit</button>
                 </div>
-
-                <a href="https://chrome.google.com/webstore/detail/writer/hlddiopdeghmcmdjjmpdegemnojihpib/reviews?hl=en-US" target="_blank">or write a review.</a>
 
             </form>
         </div>
@@ -409,24 +394,24 @@
                 </div>
             </div>
             <div class="settings-option hasToggle">
-                <div class="settings-title">Statistics</div>
-                <div class="toggle toggle-inactive statistics" name="statistics">
-                    <div class="toggle-circle"></div>
-                </div>
-            </div>
-            <div class="settings-option hasToggle">
                 <div class="settings-title">Focus</div>
                 <div class="toggle toggle-inactive focus" name="focus">
                     <div class="toggle-circle"></div>
                 </div>
             </div>
             <div class="settings-option hasToggle">
-                <div class="settings-title">Typewriter Sounds</div>
-                <div class="toggle toggle-inactive type" name="type">
+                <div class="settings-title">Statistics</div>
+                <div class="toggle toggle-inactive statistics disabled-toggle" name="statistics">
                     <div class="toggle-circle"></div>
                 </div>
             </div>
-            <div class="settings-option noToggle">
+            <div class="settings-option hasToggle">
+                <div class="settings-title">Typewriter Sounds</div>
+                <div class="toggle toggle-inactive type disabled-toggle" name="type">
+                    <div class="toggle-circle"></div>
+                </div>
+            </div>
+            <div class="settings-option noToggle disabled-option">
                 <div class="settings-title-second">Theme</div>
                 <div class="settings-description">Choose a theme.</div>
                 <div class="option theme-options">
@@ -510,9 +495,6 @@
     <div class="sidebar modal">
         <div class="user-profile">
             <div class="user-profile-bg"></div>
-            <div class="fallback-signin">Sign In With
-                <div class="google-icon"></div>
-            </div>
             <div class="user-profile-body">
                 <div class="user-image-container">
                     <div class="user-image"></div>
@@ -530,13 +512,13 @@
             <div class="material-icons">exit_to_app</div>
             <div class="option-title">Sign Out</div>
         </div>
+        <div class="sidebar-option upgrade-app">
+            <div class="material-icons">store</div>
+            <div class="option-title">Upgrade to Premium</div>
+        </div>
         <div class="sidebar-option open-file">
             <div class="material-icons">insert_drive_file</div>
             <div class="option-title">File</div>
-        </div>
-        <div class="sidebar-option open-gdocuments">
-            <div class="material-icons">account_box</div>
-            <div class="option-title">Drive</div>
         </div>
         <div class="sidebar-option open-templates">
             <div class="material-icons">attachment</div>
@@ -550,7 +532,11 @@
             <div class="material-icons">info</div>
             <div class="option-title">Details</div>
         </div>
-        <div class="sidebar-option open-goals">
+        <div class="sidebar-option open-gdocuments disabled">
+            <div class="material-icons">account_box</div>
+            <div class="option-title">Drive</div>
+        </div>
+        <div class="sidebar-option open-goals disabled">
             <div class="material-icons">today</div>
             <div class="option-title">Writing Goals</div>
         </div>
@@ -579,8 +565,7 @@
     <script type="text/javascript" src="assets/libs/minified/jquery.bez.min.js"></script>
     <script type="text/javascript" src="assets/libs/quill/quill.min.js"></script>
     <script type="text/javascript" src="assets/libs/minified/vibrant.min.js"></script>
-    <script type="text/javascript" src="assets/libs/minified/progressbar.min.js"></script>    
-    <script type="text/javascript" src="assets/js/google-analytics-bundle.js"></script>
+    <script type="text/javascript" src="assets/libs/minified/progressbar.min.js"></script>  
     <script type="text/javascript" src="assets/libs/minified/require.min.js"></script>
     <script type="text/javascript" src="assets/js/app.min.js"></script>
 </body>
