@@ -4,10 +4,6 @@
 // Made with <3
 $(document).ready(function () {
 
-    $('.upgrade-app').click(function () {
-        window.open('https://www.carloselieser.com/writer');
-    });
-
     require.config({
         paths: {
             'upndown': '/assets/libs/upndown/lib/upndown.bundle.min'
@@ -127,55 +123,55 @@ $(document).ready(function () {
         }
     ];
 
-    // function createAudio(path) {
-    //     var keyAudio = new Audio(path);
-    //     return keyAudio;
-    // }
+    function createAudio(path) {
+        var keyAudio = new Audio(path);
+        return keyAudio;
+    }
 
-    // var randomNumber;
+    var randomNumber;
 
-    // function getRandomInt(min, max) {
-    //     var number = Math.floor(Math.random() * (max - min + 1)) + min;
-    //     while (number == randomNumber) {
-    //         number = Math.floor(Math.random() * (max - min + 1)) + min;
-    //     }
+    function getRandomInt(min, max) {
+        var number = Math.floor(Math.random() * (max - min + 1)) + min;
+        while (number == randomNumber) {
+            number = Math.floor(Math.random() * (max - min + 1)) + min;
+        }
 
-    //     randomNumber = number;
-    //     return number;
-    // }
+        randomNumber = number;
+        return number;
+    }
 
-    // function getSpecialAudio(enter) {
-    //     if (enter) {
-    //         return typeWriterSounds.special.enter;
-    //     } else {
-    //         return typeWriterSounds.special.space;
-    //     }
-    // }
+    function getSpecialAudio(enter) {
+        if (enter) {
+            return typeWriterSounds.special.enter;
+        } else {
+            return typeWriterSounds.special.space;
+        }
+    }
 
-    // function getRandomAudio() {
-    //     var random = getRandomInt(0, 8);
-    //     var keys = typeWriterSounds.keys;
-    //     var key = keys[random];
-    //     return keys[random];
-    // }
+    function getRandomAudio() {
+        var random = getRandomInt(0, 8);
+        var keys = typeWriterSounds.keys;
+        var key = keys[random];
+        return keys[random];
+    }
 
-    // var typeWriterSounds = {
-    //     keys: {
-    //         0: createAudio('/assets/settings/typewriter/type1A.mp3'),
-    //         1: createAudio('/assets/settings/typewriter/type1B.mp3'),
-    //         2: createAudio('/assets/settings/typewriter/type1C.mp3'),
-    //         3: createAudio('/assets/settings/typewriter/type1D.mp3'),
-    //         4: createAudio('/assets/settings/typewriter/type1E.mp3'),
-    //         5: createAudio('/assets/settings/typewriter/type2A.mp3'),
-    //         6: createAudio('/assets/settings/typewriter/type2B.mp3'),
-    //         7: createAudio('/assets/settings/typewriter/type2C.mp3'),
-    //         8: createAudio('/assets/settings/typewriter/type2D.mp3'),
-    //     },
-    //     special: {
-    //         enter: createAudio('/assets/settings/typewriter/enter.mp3'),
-    //         space: createAudio('/assets/settings/typewriter/space.mp3')
-    //     }
-    // }
+    var typeWriterSounds = {
+        keys: {
+            0: createAudio('/assets/settings/typewriter/type1A.mp3'),
+            1: createAudio('/assets/settings/typewriter/type1B.mp3'),
+            2: createAudio('/assets/settings/typewriter/type1C.mp3'),
+            3: createAudio('/assets/settings/typewriter/type1D.mp3'),
+            4: createAudio('/assets/settings/typewriter/type1E.mp3'),
+            5: createAudio('/assets/settings/typewriter/type2A.mp3'),
+            6: createAudio('/assets/settings/typewriter/type2B.mp3'),
+            7: createAudio('/assets/settings/typewriter/type2C.mp3'),
+            8: createAudio('/assets/settings/typewriter/type2D.mp3'),
+        },
+        special: {
+            enter: createAudio('/assets/settings/typewriter/enter.mp3'),
+            space: createAudio('/assets/settings/typewriter/space.mp3')
+        }
+    }
 
     var defaults = {
         type: false,
@@ -262,7 +258,7 @@ $(document).ready(function () {
         docAct().click();
     }
 
-    var newDocumentString = '<div class="document-item"><div class="material-icons">insert_drive_file</div><input readonly=true class="document-title" type="text"/><div class="doc-overflow"><div class="material-icons">more_vert</div></div><div class="overflow-menu"><div class="doc-rename">Rename</div><div class="doc-delete">Close</div></div><div class="document-size"></div></div>';
+    var newDocumentString = '<div class="document-item"><div class="material-icons">insert_drive_file</div><input readonly=true class="document-title" type="text"/><div class="doc-overflow"><div class="material-icons">more_vert</div></div><div class="overflow-menu"><div class="doc-rename">Rename</div><div class="doc-upload">Upload</div><div class="doc-delete">Close</div></div><div class="document-size"></div></div>';
     var mainDocumentString = '<div class="document document-active"></div>';
 
     $('.sidebar, .settings-container, .document-container, .bg, .option, .snackbar, .gdoc-loading-container').hide();
@@ -557,11 +553,23 @@ $(document).ready(function () {
         var timer;
         this.editor.on('text-change', function () {
             doc.changed = true;
+            if (settings.statistics == true) {
+                calcStats(doc.editor.getText());
+            }
             if ($('.tutorial-container').is(':visible')) {
                 nextTutorial();
             }
             if ($saveDialogue.is(':visible')) {
                 closeSave();
+            }
+            if (goalExists) {
+                goalCompleted = getWords(doc.editor.getText());
+                goalCompleted = goalCompleted - goalStart;
+                var complete = goalCompleted / goalTarget;
+
+                if (complete == 1) {
+                    openGoalSnackBar();
+                }
             }
         });
 
@@ -1366,7 +1374,7 @@ $(document).ready(function () {
         return extension;
     }
 
-    // var typeAudio;
+    var typeAudio;
     $(document).on('keyup', '.ql-editor', function (e) {
 
         // var navKeys = [37, 38, 39, 40, 13];
@@ -1379,24 +1387,24 @@ $(document).ready(function () {
         focusOnElem();
     });
 
-    // $(document).on('keydown', '.ql-editor', function (e) {
-    //     if (settings.type) {
-    //         var navKeys = [37, 38, 39, 40];
-    //         if (navKeys.indexOf(e.keyCode) == -1) {
-    //             if (getCntKey(e) || getAltKey(e) || getShiftKey(e)) {} else {
-    //                 if (getKey(e, 13)) {
-    //                     typeAudio = getSpecialAudio(true);
-    //                 } else if (getKey(e, 32)) {
-    //                     typeAudio = getSpecialAudio();
-    //                 } else {
-    //                     typeAudio = getRandomAudio();
-    //                 }
-    //                 typeAudio.currentTime = 0;
-    //                 typeAudio.play();
-    //             }
-    //         }
-    //     }
-    // });
+    $(document).on('keydown', '.ql-editor', function (e) {
+        if (settings.type) {
+            var navKeys = [37, 38, 39, 40];
+            if (navKeys.indexOf(e.keyCode) == -1) {
+                if (getCntKey(e) || getAltKey(e) || getShiftKey(e)) {} else {
+                    if (getKey(e, 13)) {
+                        typeAudio = getSpecialAudio(true);
+                    } else if (getKey(e, 32)) {
+                        typeAudio = getSpecialAudio();
+                    } else {
+                        typeAudio = getRandomAudio();
+                    }
+                    typeAudio.currentTime = 0;
+                    typeAudio.play();
+                }
+            }
+        }
+    });
 
     $(document).on('click select', '.ql-editor', function () {
         if ($saveDialogue.is(':visible')) {
@@ -1856,283 +1864,283 @@ $(document).ready(function () {
         closeModals(true);
     });
 
-    // function updateQueryStringParameter(uri, key, value) {
-    //     var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
-    //     var separator = uri.indexOf('?') !== -1 ? "&" : "?";
-    //     if (uri.match(re)) {
-    //         return uri.replace(re, '$1' + key + "=" + value + '$2');
-    //     } else {
-    //         return uri + separator + key + "=" + value;
-    //     }
-    // }
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
+        } else {
+            return uri + separator + key + "=" + value;
+        }
+    }
 
-    // String.prototype.replaceAt = function (index, replacement) {
-    //     return this.substr(0, index) + replacement + this.substr(index + replacement.length);
-    // }
+    String.prototype.replaceAt = function (index, replacement) {
+        return this.substr(0, index) + replacement + this.substr(index + replacement.length);
+    }
 
-    // function constructHTML(array) {
-    //     var htmlString = '';
-    //     var itemString = '<div class="gdoc-icon"></div><div class="gdoc-title"></div><div class="gdoc-date"></div>';
-    //     var tempElem = $(document.createElement('div'));
-    //     array.forEach(function (object) {
-    //         var thisElem = $(document.createElement('div'));
-    //         thisElem.html(itemString);
-    //         var docTitle = object.title;
-    //         var date = object.modifiedDate;
-    //         var readableDate = new Date(Date.parse(date));
-    //         readableDate = readableDate.toDateString();
-    //         readableDate = readableDate.substring(readableDate.indexOf(' ') + 1, readableDate.length);
-    //         readableDate = readableDate.replaceAt(readableDate.lastIndexOf(' '), ',');
-    //         readableDate = readableDate.replace(',', ', ');
-    //         thisElem.attr('class', 'gdoc');
-    //         thisElem.attr('data', object.id);
-    //         thisElem.find('.gdoc-title').text(docTitle);
-    //         thisElem.find('.gdoc-date').text(readableDate);
-    //         tempElem.append(thisElem);
-    //     });
+    function constructHTML(array) {
+        var htmlString = '';
+        var itemString = '<div class="gdoc-icon"></div><div class="gdoc-title"></div><div class="gdoc-date"></div>';
+        var tempElem = $(document.createElement('div'));
+        array.forEach(function (object) {
+            var thisElem = $(document.createElement('div'));
+            thisElem.html(itemString);
+            var docTitle = object.title;
+            var date = object.modifiedDate;
+            var readableDate = new Date(Date.parse(date));
+            readableDate = readableDate.toDateString();
+            readableDate = readableDate.substring(readableDate.indexOf(' ') + 1, readableDate.length);
+            readableDate = readableDate.replaceAt(readableDate.lastIndexOf(' '), ',');
+            readableDate = readableDate.replace(',', ', ');
+            thisElem.attr('class', 'gdoc');
+            thisElem.attr('data', object.id);
+            thisElem.find('.gdoc-title').text(docTitle);
+            thisElem.find('.gdoc-date').text(readableDate);
+            tempElem.append(thisElem);
+        });
 
-    //     return tempElem.html();
-    // }
+        return tempElem.html();
+    }
 
-    // function loadGDocs() {
-    //     requestAccess(false, function (token) {
-    //         var url = 'https://www.googleapis.com/drive/v2/files';
-    //         url = updateQueryStringParameter(url, 'maxResults', 50);
-    //         url = updateQueryStringParameter(url, 'q', 'mimeType="application/vnd.google-apps.document" and trashed=false');
-    //         url = updateQueryStringParameter(url, 'access_token', token);
-    //         $.get(url, function (files) {
-    //             var files = files.items;
-    //             var html = constructHTML(files);
-    //             $gDocList.html(html);
-    //             $gDocList.css('background-image', 'none');
-    //         });
-    //     });
-    // }
+    function loadGDocs() {
+        requestAccess(false, function (token) {
+            var url = 'https://www.googleapis.com/drive/v2/files';
+            url = updateQueryStringParameter(url, 'maxResults', 50);
+            url = updateQueryStringParameter(url, 'q', 'mimeType="application/vnd.google-apps.document" and trashed=false');
+            url = updateQueryStringParameter(url, 'access_token', token);
+            $.get(url, function (files) {
+                var files = files.items;
+                var html = constructHTML(files);
+                $gDocList.html(html);
+                $gDocList.css('background-image', 'none');
+            });
+        });
+    }
 
-    // function docIDExists(id) {
-    //     var exists = function (element) {
-    //         if (element.fileID == id) {
-    //             return element;
-    //         }
-    //     };
+    function docIDExists(id) {
+        var exists = function (element) {
+            if (element.fileID == id) {
+                return element;
+            }
+        };
 
-    //     return documents.find(exists);
-    // }
+        return documents.find(exists);
+    }
 
-    // function loadGFile(id) {
-    //     var gdocExists = docIDExists(id);
-    //     if (gdocExists) {
-    //         gdocExists.docListItem.click();
-    //     } else {
-    //         requestAccess(false, function (token) {
-    //             var url = 'https://www.googleapis.com/drive/v2/files/' + id;
-    //             url = updateQueryStringParameter(url, 'access_token', token);
-    //             $.get(url, function (data) {
-    //                 var downloadUrl = '';
-    //                 var xhr = new XMLHttpRequest();
-    //                 openGDOCLoader();
-    //                 if (data.exportLinks) {
-    //                     downloadURL = data.exportLinks['text/html'];
-    //                     xhr.onload = function () {
-    //                         var content = xhr.response;
-    //                         content = cleanHTML(content);
-    //                         newDoc(false, data.title, content, '0 KB', false, true, false, id);
-    //                         closeModals(true);
-    //                         closeGDOCLoader();
-    //                     };
-    //                 } else if (data.downloadUrl) {
-    //                     downloadURL = data.downloadUrl;
-    //                     xhr.onload = function () {
-    //                         var content = xhr.response;
-    //                         var extension = getExtension(data.title);
+    function loadGFile(id) {
+        var gdocExists = docIDExists(id);
+        if (gdocExists) {
+            gdocExists.docListItem.click();
+        } else {
+            requestAccess(false, function (token) {
+                var url = 'https://www.googleapis.com/drive/v2/files/' + id;
+                url = updateQueryStringParameter(url, 'access_token', token);
+                $.get(url, function (data) {
+                    var downloadUrl = '';
+                    var xhr = new XMLHttpRequest();
+                    openGDOCLoader();
+                    if (data.exportLinks) {
+                        downloadURL = data.exportLinks['text/html'];
+                        xhr.onload = function () {
+                            var content = xhr.response;
+                            content = cleanHTML(content);
+                            newDoc(false, data.title, content, '0 KB', false, true, false, id);
+                            closeModals(true);
+                            closeGDOCLoader();
+                        };
+                    } else if (data.downloadUrl) {
+                        downloadURL = data.downloadUrl;
+                        xhr.onload = function () {
+                            var content = xhr.response;
+                            var extension = getExtension(data.title);
 
-    //                         switch (extension) {
-    //                             case 'html':
-    //                             case 'htm':
-    //                             case 'txt':
-    //                             case 'wtr':
-    //                             default:
-    //                                 content = cleanHTML(content);
-    //                                 newDoc(false, data.title, content, '0 KB', false, true, false, id);
-    //                                 break;
-    //                             case 'md':
-    //                                 content = convertNewLines(content);
-    //                                 content = marked(content);
-    //                                 content = cleanHTML(content);
-    //                                 newDoc(false, data.title, content, '0 KB', false, true, false, id);
-    //                                 break;
+                            switch (extension) {
+                                case 'html':
+                                case 'htm':
+                                case 'txt':
+                                case 'wtr':
+                                default:
+                                    content = cleanHTML(content);
+                                    newDoc(false, data.title, content, '0 KB', false, true, false, id);
+                                    break;
+                                case 'md':
+                                    content = convertNewLines(content);
+                                    content = marked(content);
+                                    content = cleanHTML(content);
+                                    newDoc(false, data.title, content, '0 KB', false, true, false, id);
+                                    break;
 
-    //                         }
-    //                         closeModals(true);
-    //                     };
-    //                 }
-    //                 xhr.open('GET', downloadURL);
-    //                 xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-    //                 xhr.send();
-    //             }).fail(function () {
-    //                 closeGDOCLoader();
-    //             });
-    //         });
-    //     }
-    // }
+                            }
+                            closeModals(true);
+                        };
+                    }
+                    xhr.open('GET', downloadURL);
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                    xhr.send();
+                }).fail(function () {
+                    closeGDOCLoader();
+                });
+            });
+        }
+    }
 
-    // $(document).on('click', '.gdoc', function () {
-    //     var id = $(this).attr('data');
-    //     loadGFile(id);
-    // });
+    $(document).on('click', '.gdoc', function () {
+        var id = $(this).attr('data');
+        loadGFile(id);
+    });
 
-    // $gDocs.click(function () {
-    //     openModal($gDocumentContainer, loadGDocs);
-    // });
+    $gDocs.click(function () {
+        openModal($gDocumentContainer, loadGDocs);
+    });
 
-    // var goalCompleted = 0;
-    // var goalTarget = 0;
+    var goalCompleted = 0;
+    var goalTarget = 0;
 
-    // var circle = new ProgressBar.Circle('#goal-progress', {
-    //     strokeWidth: 4,
-    //     color: '#1ddb99',
-    //     trailColor: 'rgba(0,0,0,0.05)',
-    //     svgStyle: {
-    //         width: '200px',
-    //         height: '200px',
-    //         left: '50%',
-    //         position: 'absolute',
-    //         marginLeft: '-100px'
-    //     },
-    //     text: {
-    //         style: {
-    //             position: 'absolute',
-    //             top: '50%',
-    //             left: '50%',
-    //             transform: 'translate(-50%, -50%)',
-    //             marginTop: '15px',
-    //             fontFamily: 'Roboto',
-    //             fontSize: '18px'
-    //         }
-    //     },
-    //     duration: 1000,
-    //     easing: 'easeInOut',
-    //     step: function (state, bar) {
-    //         bar.setText(Math.round(bar.value() * 100) + ' %');
-    //     }
-    // });
+    var circle = new ProgressBar.Circle('#goal-progress', {
+        strokeWidth: 4,
+        color: '#1ddb99',
+        trailColor: 'rgba(0,0,0,0.05)',
+        svgStyle: {
+            width: '200px',
+            height: '200px',
+            left: '50%',
+            position: 'absolute',
+            marginLeft: '-100px'
+        },
+        text: {
+            style: {
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                marginTop: '15px',
+                fontFamily: 'Roboto',
+                fontSize: '18px'
+            }
+        },
+        duration: 1000,
+        easing: 'easeInOut',
+        step: function (state, bar) {
+            bar.setText(Math.round(bar.value() * 100) + ' %');
+        }
+    });
 
-    // function calculateGoal(completed, goal) {
-    //     var percent = completed / goal;
-    //     if (percent > 1) {
-    //         percent = 1;
-    //     }
-    //     return percent;
-    // }
+    function calculateGoal(completed, goal) {
+        var percent = completed / goal;
+        if (percent > 1) {
+            percent = 1;
+        }
+        return percent;
+    }
 
-    // function renderGoal() {
-    //     if (goalExists) {
-    //         if (getDoc(documentAct(true)).hasGoal) {
-    //             goalCompleted = getWords(getDoc(documentAct(true)).editor.getText());
-    //             goalCompleted = goalCompleted - goalStart;
-    //             var complete = calculateGoal(goalCompleted, goalTarget);
+    function renderGoal() {
+        if (goalExists) {
+            if (getDoc(documentAct(true)).hasGoal) {
+                goalCompleted = getWords(getDoc(documentAct(true)).editor.getText());
+                goalCompleted = goalCompleted - goalStart;
+                var complete = calculateGoal(goalCompleted, goalTarget);
 
-    //             circle.animate(complete);
-    //         }
-    //     }
-    // }
+                circle.animate(complete);
+            }
+        }
+    }
 
-    // $goals.click(function () {
-    //     openModal($goalContainer, renderGoal);
-    // });
+    $goals.click(function () {
+        openModal($goalContainer, renderGoal);
+    });
 
-    // function goalSet() {
-    //     $('.words-to-complete').css('border-color', '#1ddb99');
-    //     $('.goal-options-bg').show().stop().animate({
-    //         opacity: '0.7'
-    //     }, 200);
-    //     $('.goal-options-checkmark').show().stop().animate({
-    //         opacity: '1',
-    //         top: '50%'
-    //     }, 300, function () {
-    //         setTimeout(function () {
-    //             $('.goal-options-bg').stop().animate({
-    //                 opacity: '0'
-    //             }, 200, function () {
-    //                 $(this).hide();
-    //             });
-    //             $('.goal-options-checkmark').stop().animate({
-    //                 opacity: '0',
-    //                 top: '60%'
-    //             }, 300, function () {
-    //                 $(this).hide();
-    //             });
-    //         }, 800);
-    //     });
-    // }
+    function goalSet() {
+        $('.words-to-complete').css('border-color', '#1ddb99');
+        $('.goal-options-bg').show().stop().animate({
+            opacity: '0.7'
+        }, 200);
+        $('.goal-options-checkmark').show().stop().animate({
+            opacity: '1',
+            top: '50%'
+        }, 300, function () {
+            setTimeout(function () {
+                $('.goal-options-bg').stop().animate({
+                    opacity: '0'
+                }, 200, function () {
+                    $(this).hide();
+                });
+                $('.goal-options-checkmark').stop().animate({
+                    opacity: '0',
+                    top: '60%'
+                }, 300, function () {
+                    $(this).hide();
+                });
+            }, 800);
+        });
+    }
 
-    // var goalExists = false;
-    // var goalStart = 0;
+    var goalExists = false;
+    var goalStart = 0;
 
-    // function saveGoals() {
-    //     setStorage({
-    //         exists: goalExists,
-    //         start: goalStart,
-    //         target: goalTarget
-    //     });
-    // }
+    function saveGoals() {
+        setStorage({
+            exists: goalExists,
+            start: goalStart,
+            target: goalTarget
+        });
+    }
 
-    // function loadGoals() {
-    //     getStorage({
-    //         exists: 'goalExists',
-    //         start: 'goalStart',
-    //         target: 'goalTarget'
-    //     }, function (goals) {
-    //         var tempExists = goals.exists;
-    //         var tempStart = goals.start;
-    //         var tempTarget = goals.target;
+    function loadGoals() {
+        getStorage({
+            exists: 'goalExists',
+            start: 'goalStart',
+            target: 'goalTarget'
+        }, function (goals) {
+            var tempExists = goals.exists;
+            var tempStart = goals.start;
+            var tempTarget = goals.target;
 
-    //         if (tempExists != 'goalExists' || tempStart != 'goalStart' || tempTarget != 'goalTarget') {
-    //             goalExists = tempExists;
-    //             goalStart = tempStart;
-    //             goalTarget = tempTarget;
+            if (tempExists != 'goalExists' || tempStart != 'goalStart' || tempTarget != 'goalTarget') {
+                goalExists = tempExists;
+                goalStart = tempStart;
+                goalTarget = tempTarget;
 
-    //             if (goalTarget === 0) {
-    //                 goalTarget = '';
-    //             }
-    //             $('.words-to-complete').val(goalTarget);
-    //         }
-    //     });
-    // }
+                if (goalTarget === 0) {
+                    goalTarget = '';
+                }
+                $('.words-to-complete').val(goalTarget);
+            }
+        });
+    }
 
 
-    // $('.set-goal-button').click(function () {
-    //     var target = $('.words-to-complete').val();
-    //     if (target !== '') {
-    //         goalTarget = target;
-    //         goalExists = true;
-    //         circle.animate(0);
-    //         goalSet();
+    $('.set-goal-button').click(function () {
+        var target = $('.words-to-complete').val();
+        if (target !== '') {
+            goalTarget = target;
+            goalExists = true;
+            circle.animate(0);
+            goalSet();
 
-    //         var doc = getDoc(documentAct(true));
-    //         var text = doc.editor.getText();
-    //         doc.hasGoal = true;
-    //         goalStart = getWords(text);
+            var doc = getDoc(documentAct(true));
+            var text = doc.editor.getText();
+            doc.hasGoal = true;
+            goalStart = getWords(text);
 
-    //         saveGoals();
-    //     } else {
-    //         goalExists = false;
-    //         $('.words-to-complete').css('border-color', '#db1d1d');
-    //     }
-    // });
+            saveGoals();
+        } else {
+            goalExists = false;
+            $('.words-to-complete').css('border-color', '#db1d1d');
+        }
+    });
 
-    // $('.reset-goal-button').click(function () {
-    //     goalStart = 0;
-    //     goalTarget = 0;
-    //     goalExists = false;
-    //     $('.words-to-complete').val('');
-    //     circle.animate(0);
+    $('.reset-goal-button').click(function () {
+        goalStart = 0;
+        goalTarget = 0;
+        goalExists = false;
+        $('.words-to-complete').val('');
+        circle.animate(0);
 
-    //     var doc = getDoc(documentAct(true));
-    //     doc.hasGoal = false;
+        var doc = getDoc(documentAct(true));
+        doc.hasGoal = false;
 
-    //     saveGoals();
-    // });
+        saveGoals();
+    });
 
     var $letter = $('.templates-options > .letter');
     var $notes = $('.templates-options > .notes');
@@ -3138,7 +3146,7 @@ $(document).ready(function () {
 
     function openOverflow(element) {
         element.show().stop().animate({
-            height: '120px'
+            height: '180px'
         }, 300, beizer);
     }
 
@@ -3197,171 +3205,171 @@ $(document).ready(function () {
         $('.gdoc-loading-container').fadeOut('fast');
     }
 
-    // var MediaUploader = function (options) {
-    //     this.file = options.file;
-    //     this.contentType = options.contentType || this.file.type || 'application/octet-stream';
-    //     this.fileId = options.fileId;
-    //     this.metadata = options.metadata || {
-    //         'title': options.name,
-    //         'mimeType': this.contentType
-    //     };
-    //     this.token = options.token;
-    //     this.offset = options.offset || 0;
-    //     this.url = options.url;
-    //     if (!this.url) {
-    //         var params = options.params || {};
-    //         params.uploadType = 'resumable';
-    //         params.convert = true;
-    //         this.url = this.buildUrl_(options.fileId, params);
-    //     }
-    //     this.httpMethod = this.fileId ? 'PUT' : 'POST';
-    // }
+    var MediaUploader = function (options) {
+        this.file = options.file;
+        this.contentType = options.contentType || this.file.type || 'application/octet-stream';
+        this.fileId = options.fileId;
+        this.metadata = options.metadata || {
+            'title': options.name,
+            'mimeType': this.contentType
+        };
+        this.token = options.token;
+        this.offset = options.offset || 0;
+        this.url = options.url;
+        if (!this.url) {
+            var params = options.params || {};
+            params.uploadType = 'resumable';
+            params.convert = true;
+            this.url = this.buildUrl_(options.fileId, params);
+        }
+        this.httpMethod = this.fileId ? 'PUT' : 'POST';
+    }
 
-    // MediaUploader.prototype.upload = function (doc) {
-    //     var self = this;
-    //     var xhr = new XMLHttpRequest();
+    MediaUploader.prototype.upload = function (doc) {
+        var self = this;
+        var xhr = new XMLHttpRequest();
 
-    //     xhr.open(this.httpMethod, this.url, true);
-    //     xhr.setRequestHeader('Authorization', 'Bearer ' + this.token);
-    //     xhr.setRequestHeader('Content-Type', 'application/json');
-    //     xhr.setRequestHeader('X-Upload-Content-Length', this.file.size);
-    //     xhr.setRequestHeader('X-Upload-Content-Type', this.contentType);
+        xhr.open(this.httpMethod, this.url, true);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + this.token);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('X-Upload-Content-Length', this.file.size);
+        xhr.setRequestHeader('X-Upload-Content-Type', this.contentType);
 
-    //     xhr.onload = function (e) {
-    //         var location = e.target.getResponseHeader('Location');
-    //         openGDOCLoader();
-    //         this.url = location;
-    //         this.sendFile_(doc);
-    //     }.bind(this);
-    //     xhr.send(JSON.stringify(this.metadata));
-    // };
+        xhr.onload = function (e) {
+            var location = e.target.getResponseHeader('Location');
+            openGDOCLoader();
+            this.url = location;
+            this.sendFile_(doc);
+        }.bind(this);
+        xhr.send(JSON.stringify(this.metadata));
+    };
 
-    // MediaUploader.prototype.sendFile_ = function (doc) {
-    //     var content = this.file;
-    //     var end = this.file.size;
+    MediaUploader.prototype.sendFile_ = function (doc) {
+        var content = this.file;
+        var end = this.file.size;
 
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.open('PUT', this.url, true);
-    //     xhr.setRequestHeader('Content-Type', this.contentType);
-    //     xhr.setRequestHeader('Content-Range', 'bytes ' + this.offset + '-' + (end - 1) + '/' + this.file.size);
-    //     xhr.setRequestHeader('X-Upload-Content-Type', this.file.type);
+        var xhr = new XMLHttpRequest();
+        xhr.open('PUT', this.url, true);
+        xhr.setRequestHeader('Content-Type', this.contentType);
+        xhr.setRequestHeader('Content-Range', 'bytes ' + this.offset + '-' + (end - 1) + '/' + this.file.size);
+        xhr.setRequestHeader('X-Upload-Content-Type', this.file.type);
 
-    //     xhr.onload = function () {
-    //         var data = JSON.parse(xhr.response);
-    //         var id = data.id;
-    //         doc.fileID = id;
-    //         doc.setContents('');
-    //         closeGDOCLoader();
-    //     }
-    //     xhr.send(content);
-    // };
+        xhr.onload = function () {
+            var data = JSON.parse(xhr.response);
+            var id = data.id;
+            doc.fileID = id;
+            doc.setContents('');
+            closeGDOCLoader();
+        }
+        xhr.send(content);
+    };
 
-    // MediaUploader.prototype.buildQuery_ = function (params) {
-    //     params = params || {};
-    //     return Object.keys(params).map(function (key) {
-    //         return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
-    //     }).join('&');
-    // };
+    MediaUploader.prototype.buildQuery_ = function (params) {
+        params = params || {};
+        return Object.keys(params).map(function (key) {
+            return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+        }).join('&');
+    };
 
-    // MediaUploader.prototype.buildUrl_ = function (id, params) {
-    //     var url = 'https://www.googleapis.com/upload/drive/v2/files/';
-    //     if (id) {
-    //         url += id;
-    //     }
-    //     var query = this.buildQuery_(params);
-    //     if (query) {
-    //         url += '?' + query;
-    //     }
-    //     return url;
-    // };
+    MediaUploader.prototype.buildUrl_ = function (id, params) {
+        var url = 'https://www.googleapis.com/upload/drive/v2/files/';
+        if (id) {
+            url += id;
+        }
+        var query = this.buildQuery_(params);
+        if (query) {
+            url += '?' + query;
+        }
+        return url;
+    };
 
-    // function createUploader(content, token, doc) {
-    //     $.get('https://www.googleapis.com/drive/v2/files/' + doc.fileID + '?access_token=' + token, function (response) {
-    //         var trashed = response.labels.trashed;
-    //         var config = {};
-    //         if (trashed) {
-    //             config = {
-    //                 file: content,
-    //                 name: doc.name,
-    //                 token: token
-    //             }
-    //         } else {
-    //             config = {
-    //                 file: content,
-    //                 name: doc.name,
-    //                 fileId: doc.fileID,
-    //                 token: token
-    //             }
-    //         }
-    //         var uploader = new MediaUploader(config);
-    //         uploader.upload(doc);
-    //     }).fail(function () {
-    //         var config = {
-    //             file: content,
-    //             name: doc.name,
-    //             token: token
-    //         }
-    //         var uploader = new MediaUploader(config);
-    //         uploader.upload(doc);
-    //     });
-    // }
+    function createUploader(content, token, doc) {
+        $.get('https://www.googleapis.com/drive/v2/files/' + doc.fileID + '?access_token=' + token, function (response) {
+            var trashed = response.labels.trashed;
+            var config = {};
+            if (trashed) {
+                config = {
+                    file: content,
+                    name: doc.name,
+                    token: token
+                }
+            } else {
+                config = {
+                    file: content,
+                    name: doc.name,
+                    fileId: doc.fileID,
+                    token: token
+                }
+            }
+            var uploader = new MediaUploader(config);
+            uploader.upload(doc);
+        }).fail(function () {
+            var config = {
+                file: content,
+                name: doc.name,
+                token: token
+            }
+            var uploader = new MediaUploader(config);
+            uploader.upload(doc);
+        });
+    }
 
-    // function requestAccess(interactive, callback) {
-    //     chrome.identity.getAuthToken({
-    //         'interactive': interactive
-    //     }, callback);
-    // }
+    function requestAccess(interactive, callback) {
+        chrome.identity.getAuthToken({
+            'interactive': interactive
+        }, callback);
+    }
 
-    // $(document).on('click', '.doc-upload', function () {
-    //     var index = $(this).parent().parent().index();
-    //     var doc = getDoc(index);
-    //     requestAccess(false, function (token) {
-    //         var extension = getExtension(doc.name);
+    $(document).on('click', '.doc-upload', function () {
+        var index = $(this).parent().parent().index();
+        var doc = getDoc(index);
+        requestAccess(false, function (token) {
+            var extension = getExtension(doc.name);
 
-    //         var content;
-    //         var blob;
+            var content;
+            var blob;
 
-    //         var editorContents = doc.editor.getContents();
-    //         doc.setContents(editorContents);
+            var editorContents = doc.editor.getContents();
+            doc.setContents(editorContents);
 
-    //         switch (extension) {
-    //             case 'html':
-    //             case 'htm':
-    //             case 'wtr':
-    //             case 'docx':
-    //             default:
-    //                 content = cleanStyles(qlEditor().html());
-    //                 blob = new Blob([content], {
-    //                     'type': 'text/html'
-    //                 });
-    //                 createUploader(blob, token, doc);
-    //                 break;
-    //             case 'md':
-    //                 require(['upndown'], function (upndown) {
-    //                     var und = new upndown();
-    //                     und.convert(cleanStyles(qlEditor().html()), function (err, markdown) {
-    //                         if (err) {
-    //                             console.log(err);
-    //                         } else {
-    //                             content = markdown;
-    //                             blob = new Blob([content], {
-    //                                 'type': 'text/plain'
-    //                             });
-    //                             createUploader(blob, token, doc);
-    //                         }
-    //                     });
-    //                 });
-    //                 break;
-    //             case 'txt':
-    //                 content = doc.editor.getText();
-    //                 blob = new Blob([content], {
-    //                     'type': 'text/plain'
-    //                 });
-    //                 createUploader(blob, token, doc);
-    //                 break;
-    //         }
-    //     });
-    // });
+            switch (extension) {
+                case 'html':
+                case 'htm':
+                case 'wtr':
+                case 'docx':
+                default:
+                    content = cleanStyles(qlEditor().html());
+                    blob = new Blob([content], {
+                        'type': 'text/html'
+                    });
+                    createUploader(blob, token, doc);
+                    break;
+                case 'md':
+                    require(['upndown'], function (upndown) {
+                        var und = new upndown();
+                        und.convert(cleanStyles(qlEditor().html()), function (err, markdown) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                content = markdown;
+                                blob = new Blob([content], {
+                                    'type': 'text/plain'
+                                });
+                                createUploader(blob, token, doc);
+                            }
+                        });
+                    });
+                    break;
+                case 'txt':
+                    content = doc.editor.getText();
+                    blob = new Blob([content], {
+                        'type': 'text/plain'
+                    });
+                    createUploader(blob, token, doc);
+                    break;
+            }
+        });
+    });
 
     $(document).on('keyup', '.document-title', function (e) {
         var index = $(this).parent().index();
@@ -3435,110 +3443,140 @@ $(document).ready(function () {
         return ((255 - bgDelta) < nThreshold) ? "#000000" : "#ffffff";
     }
 
-    // function revokeToken() {
-    //     chrome.identity.removeCachedAuthToken({
-    //         token: current_token
-    //     }, function () {});
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.open('GET', 'https://accounts.google.com/o/oauth2/revoke?token=' +
-    //         current_token);
-    //     xhr.send();
-    // }
-
-    function hostReachable() {
-        return $.get('http://google.com/');
+    function revokeToken() {
+        chrome.identity.removeCachedAuthToken({
+            token: current_token
+        }, function () {});
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://accounts.google.com/o/oauth2/revoke?token=' +
+            current_token);
+        xhr.send();
     }
 
-    // function initiateSignIn(token, callback) {
-    //     $.get('https://www.googleapis.com/plus/v1/people/me?access_token=' + token, function (profile) {
-    //         var coverURL = profile.cover;
-    //         var imageURL = profile.image.url;
-    //         var name = profile.displayName;
+    function hostReachable() {
+        return $.get('http://blank.org/');
+    }
 
-    //         getImage(imageURL, function (data) {
-    //             $('.user-image').css('background-image', 'url(' + data + ')');
-    //         });
+    function initiateSignIn(token, callback) {
+        $.get('https://www.googleapis.com/plus/v1/people/me?access_token=' + token, function (profile) {
+            var coverURL = profile.cover;
+            var imageURL = profile.image.url;
+            var name = profile.displayName;
 
-    //         if (!coverURL) {
-    //             $('.user-profile').css('background-color', '#4885ed');
-    //             $('.user-info').css('color', '#FFF');
-    //             $('.fallback-signin').hide();
-    //             $('.sign-out').css({
-    //                 backgroundColor: 'rgb(33, 52, 92)',
-    //                 color: '#FFF'
-    //             });
-    //             $('.sign-out .material-icons').css('color', '#FFF');
-    //             $('.user-profile-body').show();
-    //             setStorage({
-    //                 installed: true,
-    //                 signIn: true
-    //             });
+            getImage(imageURL, function (data) {
+                $('.user-image').css('background-image', 'url(' + data + ')');
+            });
 
-    //             if (callback) {
-    //                 $installScreen.stop().animate({
-    //                     top: '-100%'
-    //                 }, 800, beizer, function () {
-    //                     $(this).remove();
-    //                 });
-    //                 callback();
-    //             }
-    //         } else {
-    //             coverURL = coverURL.coverPhoto.url;
-    //             getImage(coverURL, function (data) {
-    //                 $('.user-profile').css('background-image', 'url(' + data + ')');
-    //                 var img = document.createElement('img');
-    //                 img.addEventListener('load', function () {
-    //                     var vibrant = new Vibrant(img);
-    //                     var color = vibrant.DarkMutedSwatch;
-    //                     if (color) {
-    //                         color = color.rgb;
-    //                     } else {
-    //                         color = vibrant.DarkVibrantSwatch.rgb;
-    //                     }
-    //                     var realColor = color.join(',');
-    //                     var ideal = idealTextColor(color);
-    //                     $('.user-info').css('color', ideal);
+            if (!coverURL) {
+                $('.user-profile').css('background-color', '#4885ed');
+                $('.user-info').css('color', '#FFF');
+                $('.fallback-signin').hide();
+                $('.sign-out').css({
+                    backgroundColor: 'rgb(33, 52, 92)',
+                    color: '#FFF'
+                });
+                $('.sign-out .material-icons').css('color', '#FFF');
+                $('.user-profile-body').show();
+                setStorage({
+                    installed: true,
+                    signIn: true
+                });
 
-    //                     $('.fallback-signin').hide();
-    //                     $('.sign-out').css({
-    //                         backgroundColor: 'rgb(' + realColor + ')',
-    //                         color: ideal
-    //                     });
-    //                     $('.sign-out .material-icons').css('color', ideal);
-    //                     $('.user-profile-body').show();
+                if (callback) {
+                    $installScreen.stop().animate({
+                        top: '-100%'
+                    }, 800, beizer, function () {
+                        $(this).remove();
+                    });
+                    callback();
+                }
+            } else {
+                coverURL = coverURL.coverPhoto.url;
+                getImage(coverURL, function (data) {
+                    $('.user-profile').css('background-image', 'url(' + data + ')');
+                    var img = document.createElement('img');
+                    img.addEventListener('load', function () {
+                        var vibrant = new Vibrant(img);
+                        var color = vibrant.DarkMutedSwatch;
+                        if (color) {
+                            color = color.rgb;
+                        } else {
+                            color = vibrant.DarkVibrantSwatch.rgb;
+                        }
+                        var realColor = color.join(',');
+                        var ideal = idealTextColor(color);
+                        $('.user-info').css('color', ideal);
 
-    //                     setStorage({
-    //                         installed: true,
-    //                         signIn: true
-    //                     });
+                        $('.fallback-signin').hide();
+                        $('.sign-out').css({
+                            backgroundColor: 'rgb(' + realColor + ')',
+                            color: ideal
+                        });
+                        $('.sign-out .material-icons').css('color', ideal);
+                        $('.user-profile-body').show();
 
-    //                     if (callback) {
-    //                         $installScreen.stop().animate({
-    //                             top: '-100%'
-    //                         }, 800, beizer, function () {
-    //                             $(this).remove();
-    //                         });
-    //                         callback();
-    //                     }
+                        setStorage({
+                            installed: true,
+                            signIn: true
+                        });
 
-    //                 });
-    //                 img.setAttribute('src', data);
-    //             });
-    //         }
+                        if (callback) {
+                            $installScreen.stop().animate({
+                                top: '-100%'
+                            }, 800, beizer, function () {
+                                $(this).remove();
+                            });
+                            callback();
+                        }
 
-    //         $('.user-name').text(name);
-    //         chrome.identity.getProfileUserInfo(function (info) {
-    //             $('.user-email').text(info.email);
-    //         })
-    //     }).fail(function () {
-    //         revokeToken();
-    //     });
-    // }
+                    });
+                    img.setAttribute('src', data);
+                });
+            }
+
+            $('.user-name').text(name);
+            chrome.identity.getProfileUserInfo(function (info) {
+                $('.user-email').text(info.email);
+            })
+        }).fail(function () {
+            revokeToken();
+        });
+    }
 
     function getToken(install, load, callback) {
         hostReachable().then(function () {
+
             $('.loading-online').text(' - Online');
-            realLoad();
+
+            var gService = analytics.getService('Writer');
+            gService.getConfig().addCallback(function (config) {
+                config.setTrackingPermitted(true);
+            });
+            var gTracker = gService.getTracker('UA-96857701-1');
+            gTracker.sendAppView('MainView');
+
+            requestAccess(true, function (token) {
+                current_token = token;
+                if (chrome.runtime.lastError) {
+                    if (token) {
+                        if (install === false) {
+                            revokeToken();
+                        }
+                    } else {
+                        if (install === false) {
+                            console.log('User declined.');
+                        } else {
+                            loadScreen();
+                            $installScreen.show();
+                            setStorage({
+                                installed: false
+                            });
+                        }
+                    }
+                } else {
+                    initiateSignIn(token, callback);
+                }
+            });
         }).fail(function () {
             console.log('No Internet Connection.');
             $('.loading-online').text(' - Offline');
@@ -3547,19 +3585,20 @@ $(document).ready(function () {
                 realLoad();
             }
 
-            // applySignOut();
+            applySignOut();
         });
+
     }
 
-    // window.addEventListener('online', function () {
-    //     getToken(false, false);
-    // });
+    window.addEventListener('online', function () {
+        getToken(false, false);
+    });
 
-    // window.addEventListener('offline', function () {
-    //     getToken(false, false);
-    // });
+    window.addEventListener('offline', function () {
+        getToken(false, false);
+    });
 
-    // var current_token;
+    var current_token;
 
     function loadData(callback) {
         getStorage({
@@ -3572,18 +3611,22 @@ $(document).ready(function () {
                 loadScreen();
                 $installScreen.show();
             } else {
-                getToken(false, true, realLoad);
+                if (signIn === false) {
+                    realLoad();
+                } else {
+                    getToken(false, true, realLoad);
+                }
             }
         });
     }
 
-    // $('.signin-button').click(function () {
-    //     getToken(true, false, realLoad);
-    // });
+    $('.signin-button').click(function () {
+        getToken(true, false, realLoad);
+    });
 
-    // $('.fallback-signin').click(function () {
-    //     getToken(false, false);
-    // });
+    $('.fallback-signin').click(function () {
+        getToken(false, false);
+    });
 
     $('.continue-button').click(function () {
         $installScreen.stop().animate({
@@ -3720,10 +3763,10 @@ $(document).ready(function () {
             $coffeeMode.click();
         }
 
-        // if (TYPE) {
-        //     e.preventDefault();
-        //     $typeWriter.click();
-        // }
+        if (TYPE) {
+            e.preventDefault();
+            $typeWriter.click();
+        }
 
         if (NIGHTMODE) {
             e.preventDefault();
@@ -3734,9 +3777,9 @@ $(document).ready(function () {
             $focus.click();
         }
 
-        // if (STATISTICS) {
-        //     $statistics.click();
-        // }
+        if (STATISTICS) {
+            $statistics.click();
+        }
 
         if (CLOSE) {
             e.preventDefault();
@@ -3757,18 +3800,18 @@ $(document).ready(function () {
             }
         }
 
-        // if (OPENDOCS) {
-        //     if ($documentContainer.is(':visible')) {
-        //         $bg.click();
-        //     } else {
-        //         closeModals(false, function () {
-        //             openBg(function () {
-        //                 openNavBar();
-        //                 openModal($documentContainer);
-        //             });
-        //         });
-        //     }
-        // }
+        if (OPENDOCS) {
+            if ($documentContainer.is(':visible')) {
+                $bg.click();
+            } else {
+                closeModals(false, function () {
+                    openBg(function () {
+                        openNavBar();
+                        openModal($documentContainer);
+                    });
+                });
+            }
+        }
 
         if (DELETE) {
             var doc = getDoc(documentAct(true));
@@ -3802,44 +3845,44 @@ $(document).ready(function () {
         display: 'none'
     });
 
-    // function openSignOut() {
-    //     $('.arrow-down .material-icons').css('transform', 'rotate(180deg)');
-    //     $('.sign-out').show().stop().animate({
-    //         height: '60px'
-    //     }, 200, beizer);
-    // }
+    function openSignOut() {
+        $('.arrow-down .material-icons').css('transform', 'rotate(180deg)');
+        $('.sign-out').show().stop().animate({
+            height: '60px'
+        }, 200, beizer);
+    }
 
-    // function closeSignOut() {
-    //     $('.arrow-down .material-icons').css('transform', 'rotate(0deg)');
-    //     $('.sign-out').stop().animate({
-    //         height: '0px'
-    //     }, 200, beizer, function () {
-    //         $(this).hide();
-    //     });
-    // }
+    function closeSignOut() {
+        $('.arrow-down .material-icons').css('transform', 'rotate(0deg)');
+        $('.sign-out').stop().animate({
+            height: '0px'
+        }, 200, beizer, function () {
+            $(this).hide();
+        });
+    }
 
-    // function applySignOut() {
-    //     $('.user-profile').css('background-image', 'url(../assets/sidebar/fallback.png)');
-    //     $('.user-profile-body').hide();
-    //     $('.fallback-signin').show();
-    // }
+    function applySignOut() {
+        $('.user-profile').css('background-image', 'url(../assets/sidebar/fallback.png)');
+        $('.user-profile-body').hide();
+        $('.fallback-signin').show();
+    }
 
-    // $('.arrow-down').click(function () {
-    //     if ($('.sign-out').is(':visible')) {
-    //         closeSignOut();
-    //     } else {
-    //         openSignOut();
-    //     }
-    // });
+    $('.arrow-down').click(function () {
+        if ($('.sign-out').is(':visible')) {
+            closeSignOut();
+        } else {
+            openSignOut();
+        }
+    });
 
-    // $('.sign-out').click(function () {
-    //     revokeToken();
-    //     closeSignOut();
-    //     applySignOut();
-    //     setStorage({
-    //         signIn: false
-    //     });
-    // });
+    $('.sign-out').click(function () {
+        revokeToken();
+        closeSignOut();
+        applySignOut();
+        setStorage({
+            signIn: false
+        });
+    });
 
     function setStorage(storage, callback) {
         chrome.storage.local.set(storage, callback);
@@ -3915,7 +3958,7 @@ $(document).ready(function () {
                             loadSettings(settings);
                             loadScreen();
 
-                            // loadGoals();
+                            loadGoals();
                         }
                     });
                 }

@@ -1,0 +1,101 @@
+.modal {
+    background-color: #364d4e !important;
+}
+
+.navigation-container {
+    background-color: #5a7e80 !important;
+}
+
+.navigation-container .close-window-line {
+    background-color: #FFF !important;
+}
+
+.navigation-container .maximize-square {
+    border: 1px solid #FFF !important;
+}
+
+.navigation-container .minimize-line {
+    background-color: #FFF !important;
+}
+
+.sidebar-option,
+.file-option,
+.templates-option,
+.gdoc,
+.settings-title,
+.settings-title-second,
+.option>div,
+.modal .material-icons:not(.goal-options-checkmark),
+.active {
+    color: rgba(255, 255, 255, 0.8) !important;
+    opacity: 1 !important;
+}
+
+.doc-active {
+    background-color: #567a7b !important;
+}
+
+.document-title,
+.modal-title {
+    color: rgba(255, 255, 255, 1) !important;
+}
+
+.document-title::selection {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.document-size,
+.settings-description {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.active {
+    background-color: rgb(84, 140, 144) !important;
+}
+
+.option {
+    background-color: rgb(71, 103, 105) !important;
+}
+
+.option>div:not(.active):hover {
+    background-color: rgba(187, 187, 187, 0.2) !important;
+}
+
+.snackbar,
+.goal-snackbar {
+    background-color: #364d4e !important;
+}
+
+.toggle-active {
+    background-color: #547c7d !important;
+}
+
+.toggle-active .toggle-circle {
+    background-color: #77b4b7 !important;
+}
+
+.details-amount,
+.command,
+.feedback-email,
+.feedback-subject,
+.feedback-message {
+    color: rgb(255, 255, 255) !important;
+}
+
+.details-title,
+.command-title {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.feedback-content label {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.set-goal,
+.set-goal input {
+    color: #FFF;
+}
+
+.goal-options-bg {
+    background-color: #000 !important;
+}
