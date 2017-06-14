@@ -9436,6 +9436,18 @@
                             this.root.style.top = top - verticalShift + 'px';
                             this.root.classList.add('ql-flip');
                         }
+                        if (rootBounds.left > 0 && rootBounds.left < (reference.width / 2) || rootBounds.left === 0) {
+                            shift = 120;
+                            this.root.style.left = left + shift + 'px';
+                        }
+
+                        var editorPadding = Number($('.ql-editor').css('padding-left').replace('%', ''));
+                        var windowWidth = $(window).width();
+                        var screenOffset = (windowWidth * editorPadding) / 100;
+                        if (rootBounds.left > 0 && rootBounds.left < screenOffset) {
+                            shift = 120;
+                            this.root.style.left = left + shift + 'px';
+                        }
                         return shift;
                     }
                 }, {
