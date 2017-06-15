@@ -3719,7 +3719,7 @@ $(document).ready(function () {
     }
 
     function hostReachable() {
-        return $.get('https://blank.org/');
+        return window.navigator.onLine;
     }
 
     function initiateSignIn(token, callback) {
@@ -3809,8 +3809,7 @@ $(document).ready(function () {
     }
 
     function getToken(install, load, callback) {
-        hostReachable().then(function () {
-
+        if (hostReachable()) {
             $('.loading-online').text(' - Online');
 
             var gService = analytics.getService('Writer');
@@ -3842,7 +3841,7 @@ $(document).ready(function () {
                     initiateSignIn(token, callback);
                 }
             });
-        }).fail(function () {
+        } else {
             console.log('No Internet Connection.');
             $('.loading-online').text(' - Offline');
             if (load) {
@@ -3851,7 +3850,7 @@ $(document).ready(function () {
             }
 
             applySignOut();
-        });
+        }
 
     }
 
