@@ -51,7 +51,6 @@ body {
     position: absolute;
     z-index: 50;
     background-color: #FFF;
-    box-shadow: -1px 2px 7px 0px rgba(0, 0, 0, 0.1);
     border-radius: 100%;
     cursor: pointer;
     transition: all .3s ease;
@@ -1256,12 +1255,13 @@ body {
 
 .ql-editor::-webkit-scrollbar {
     width: 15px;
+    opacity: 0;
     background-color: transparent;
 }
 
 .ql-editor::-webkit-scrollbar-thumb {
     border-radius: 25px;
-    background-color: #EFEFEF;
+    background-color: rgba(0,0,0,0.2);
     border: 5px solid transparent;
     background-clip: content-box;
 }

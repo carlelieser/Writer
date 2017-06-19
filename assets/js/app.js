@@ -44,6 +44,7 @@ $(document).ready(function () {
     var $fontChildren = $('.font-options').children(),
         $sizeChildren = $('.font-size-options').children(),
         $themeChildren = $('.theme-options').children(),
+        $workBgChildren = $('.workbg-options').children(),
         $lineChildren = $('.line-options').children(),
         $marginChildren = $('.margin-options').children();
 
@@ -185,6 +186,7 @@ $(document).ready(function () {
         font: 'Droid Serif',
         size: '14px',
         theme: 'default',
+        workbg: 'default',
         line: 'double',
         margin: 'medium'
     }
@@ -200,6 +202,7 @@ $(document).ready(function () {
         font: 'Droid Serif',
         size: '14px',
         theme: 'default',
+        workbg: 'default',
         line: 'double',
         margin: 'medium'
     }
@@ -217,7 +220,7 @@ $(document).ready(function () {
         for (var key in config) {
             if (config.hasOwnProperty(key)) {
                 var value = config[key];
-                var excluded = ['font', 'size', 'theme', 'margin', 'line'];
+                var excluded = ['font', 'size', 'theme', 'workbg', 'margin', 'line'];
 
                 if (excluded.indexOf(key) > -1) {
                     var correspondingDropdown;
@@ -3160,15 +3163,28 @@ $(document).ready(function () {
         $('.ql-editor *').css('transition', 'all .2s ease');
     }
 
+    var themes = ['dark.css', 'turquoise.css', 'midnight.css'];
+
     function loadStyles(name) {
+        var themeArray = themes.slice();
+        themeArray.splice(themeArray.indexOf(name));
+
+        removeStyles(themeArray);
+
         var string = '<link type="text/css" rel="stylesheet" href="assets/settings/themes/' + name + '"/>';
         if ($('link[href="' + name + '"]').length < 1) {
             $('head').append(string);
         }
     }
 
-    function removeStyles(name) {
-        $('link[href="assets/settings/themes/' + name + '"]').remove();
+    function removeStyles(arrayOfNames) {
+        if (typeof arrayOfNames === 'string') {
+            $('link[href="assets/settings/themes/' + arrayOfNames + '"]').remove();
+        } else {
+            arrayOfNames.forEach(function (item) {
+                $('link[href="assets/settings/themes/' + item + '"]').remove();
+            });
+        }
     }
 
     $nightMode.click(function () {
@@ -3280,19 +3296,26 @@ $(document).ready(function () {
         var theme = $(this).text();
         switch (theme) {
             case 'Default':
-                removeStyles('dark.css');
-                removeStyles('turquoise.css');
+                removeStyles(['midnight.css', 'dark.css', 'turquoise.css']);
                 break;
             case 'Dark':
                 loadStyles('dark.css');
-                removeStyles('turquoise.css');
                 break;
             case 'Turquoise':
                 loadStyles('turquoise.css');
-                removeStyles('dark.css');
+                break;
+            case 'Midnight':
+                loadStyles('midnight.css');
                 break;
         }
         changeSettings('theme', theme);
+    });
+
+    $workBgChildren.click(function () {
+        var workbg = $(this).text();
+        var color = $(this).attr('hex');
+        $('html').css('background-color', color);
+        changeSettings('workbg', workbg);
     });
 
     $lineChildren.click(function () {
@@ -3339,21 +3362,15 @@ $(document).ready(function () {
     function loadDefaults() {
         $('.toggle').each(function () {
             if ($(this).hasClass('toggle-active')) {
-                if ($(this).attr('name') != 'focus') {
-                    $(this).click();
-                }
-            } else {
-                if ($(this).attr('name') == 'focus') {
-                    $(this).click();
-                }
+                $(this).click();
             }
         });
 
-        $('.default-theme').click();
-        $('.droid').click();
-        $('.14px').click();
-        $('.double-line').click();
-        $('.medium-margin').click();
+        $editorScrollToggle.click();
+        $focus.click();
+
+        var settingDefaults = '.default-theme, .default-workbg, .droid, .14px, .double-line, .medium-margin';
+        $(settingDefaults).click();
 
         $optionContainer.each(function () {
             $(this).css('height', '0px');
