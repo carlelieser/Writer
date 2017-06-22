@@ -66,7 +66,7 @@
     <div class="loading-screen">
         <div class="loading-icon"></div>
         <div class="loading-gif"></div>
-        <div class="loading-footer">v.6.0.3<span class="loading-online"></span></div>
+        <div class="loading-footer">v.6.0.4<span class="loading-online"></span></div>
     </div>
 
     <div class="install-screen">
@@ -324,6 +324,37 @@
         <div class="gdocument-list modal-content"></div>
     </div>
 
+    <div class="simplenote-container modal">
+        <div class="modal-title-container">
+            <div class="modal-title">Simple Note</div>
+            <div class="modal-close">
+                <div class="material-icons">close</div>
+            </div>
+        </div>
+        <div class="simplenote-list modal-content">
+            <form>
+
+                <div class="group">
+                    <input class="simplenote-email" type="email" required name="email">
+                    <span class="bar"></span>
+                    <label>Email</label>
+                </div>
+
+                <div class="group">
+                    <input class="simplenote-password" type="password" required name="password">
+                    <span class="bar"></span>
+                    <label>Password</label>
+                </div>
+
+                <div class="group">
+                    <button class="simplenote-login-button">Login</button>
+                </div>
+                <a href="https://app.simplenote.com/signup/" target="_blank">or create an account.</a>
+            </form>
+            <div class="simplenote-notes"></div>
+        </div>
+    </div>
+
     <div class="file-container modal">
         <div class="modal-title-container">
             <div class="modal-title">File</div>
@@ -575,9 +606,14 @@
             <div class="material-icons">info</div>
             <div class="option-title">Details</div>
         </div>
+        <div class="divider"></div>
         <div class="sidebar-option open-goals">
             <div class="material-icons">today</div>
             <div class="option-title">Writing Goals</div>
+        </div>
+        <div class="sidebar-option open-SimpleNote">
+            <div class="material-icons">note</div>
+            <div class="option-title">Simple Note</div>
         </div>
         <div class="divider"></div>
         <div class="sidebar-option open-settings">
@@ -604,7 +640,7 @@
     <script type="text/javascript" src="assets/libs/minified/jquery.bez.min.js"></script>
     <script type="text/javascript" src="assets/libs/quill/quill.min.js"></script>
     <script type="text/javascript" src="assets/libs/minified/vibrant.min.js"></script>
-    <script type="text/javascript" src="assets/libs/minified/progressbar.min.js"></script>    
+    <script type="text/javascript" src="assets/libs/minified/progressbar.min.js"></script>
     <script type="text/javascript" src="assets/js/google-analytics-bundle.js"></script>
     <script type="text/javascript" src="assets/libs/minified/require.min.js"></script>
     <script type="text/javascript" src="assets/js/app.min.js"></script>

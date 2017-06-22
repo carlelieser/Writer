@@ -5,6 +5,25 @@ body {
     background-color: #FBFBFB;
 }
 
+.simplenote-icon {
+    width: 70px;
+    height: 60px;
+    background-image: url('../sidebar/simplenote.png');
+    background-size: 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.simplenote-tag {
+    padding-right: 30px;
+    float: right !important;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.simplenote-title {
+    max-width: 220px !important;
+}
+
 .gdoc-loading-container {
     width: 100%;
     height: 100%;
@@ -741,18 +760,22 @@ body {
     width: 450px !important;
 }
 
-.feedback-container .feedback-content .group {
+.feedback-container .feedback-content .group,
+.simplenote-list .group {
     position: relative;
     margin-left: 20px;
     margin-top: 40px;
 }
 
-.feedback-container .feedback-content textarea {
+.feedback-container .feedback-content textarea,
+.simplenote-list textarea {
     height: 58px;
 }
 
 .feedback-container .feedback-content input,
-.feedback-container .feedback-content textarea {
+.simplenote-list input,
+.feedback-container .feedback-content textarea,
+.simplenote-list textarea {
     font-size: 16px;
     display: block;
     width: 300px;
@@ -766,15 +789,19 @@ body {
 }
 
 .feedback-container .feedback-content input:focus,
-.feedback-container .feedback-content textarea:focus {
+.simplenote-list input:focus,
+.feedback-container .feedback-content textarea:focus,
+.simplenote-list textarea:focus {
     outline: none;
 }
 
-.feedback-content form {
+.feedback-content form,
+.simplenote-list form {
     padding-left: 15px;
 }
 
-.feedback-container .feedback-content label {
+.feedback-container .feedback-content label,
+.simplenote-list label {
     color: #999;
     font-size: 16px;
     font-weight: normal;
@@ -789,16 +816,24 @@ body {
 /* active state */
 
 .feedback-container .feedback-content input:focus,
+.simplenote-list input:focus,
 .feedback-container .feedback-content input:valid,
+.simplenote-list input:valid,
 .feedback-container .feedback-content textarea:focus,
-.feedback-container .feedback-content textarea:valid {
+.simplenote-list textarea:focus,
+.feedback-container .feedback-content textarea:valid,
+.simplenote-list textarea:valid {
     border-bottom: 1px solid transparent;
 }
 
 .feedback-container .feedback-content input:focus~label,
+.simplenote-list input:focus~label,
 .feedback-container .feedback-content textarea:focus~label,
+.simplenote-list textarea:focus~label,
 .feedback-container .feedback-content textarea:valid~label,
-.feedback-container .feedback-content input:valid~label {
+.simplenote-list textarea:valid~label,
+.feedback-container .feedback-content input:valid~label,
+.simplenote-list input:valid~label {
     top: -18px;
     font-size: 12px;
     color: #1ddb99;
@@ -807,13 +842,15 @@ body {
 
 /* BOTTOM BARS ================================= */
 
-.feedback-container .feedback-content .bar {
+.feedback-container .feedback-content .bar,
+.simplenote-list .bar {
     position: relative;
     display: block;
     width: 300px;
 }
 
 .feedback-container .feedback-content .bar:before,
+.simplenote-list .bar:before,
 .bar:after {
     content: '';
     height: 2px;
@@ -824,11 +861,13 @@ body {
     transition: 0.2s ease all;
 }
 
-.feedback-container .feedback-content .bar:before {
+.feedback-container .feedback-content .bar:before,
+.simplenote-list .bar:before {
     left: 50%;
 }
 
-.feedback-container .feedback-content .bar:after {
+.feedback-container .feedback-content .bar:after,
+.simplenote-list .bar:after {
     right: 50%;
 }
 
@@ -836,13 +875,17 @@ body {
 /* active state */
 
 .feedback-container .feedback-content input:focus~.bar:before,
+.simplenote-list input:focus~.bar:before,
 .feedback-container .feedback-content input:focus~.bar:after,
+.simplenote-list input:focus~.bar:after,
 .feedback-container .feedback-content textarea:focus~.bar:before,
-.feedback-container .feedback-content textarea:focus~.bar:after {
+.simplenote-list textarea:focus~.bar:before,
+.feedback-container .feedback-content textarea:focus~.bar:after,
+.simplenote-list textarea:focus~.bar:after {
     width: 50%;
 }
 
-.feedback-content a {
+.feedback-content a, .simplenote-list a{
     margin-top: 20px;
     height: 40px;
     display: block;
@@ -851,7 +894,8 @@ body {
     color: #1ddb99;
 }
 
-.submit-button {
+.submit-button,
+.simplenote-login-button {
     width: 300px;
     height: 50px;
     background-color: #1ddb99;
@@ -1037,7 +1081,8 @@ body {
 .sidebar-option,
 .file-option,
 .templates-option,
-.gdoc {
+.gdoc,
+.simplenote-note {
     width: 100%;
     height: 60px;
     line-height: 60px;
@@ -1049,7 +1094,8 @@ body {
 .sidebar-option div,
 .file-option div,
 .templates-option div,
-.gdoc div {
+.gdoc div,
+.simplenote-note div {
     display: inline-block;
     vertical-align: middle;
     float: left;
@@ -1058,7 +1104,8 @@ body {
 .sidebar-option .option-title,
 .file-option .option-title,
 .templates-option .option-title,
-.gdoc .gdoc-title {
+.gdoc .gdoc-title,
+.simplenote-note .simplenote-title {
     font-family: 'Roboto Med';
     max-width: 126px;
     text-overflow: ellipsis;
@@ -1081,7 +1128,8 @@ body {
 .sidebar-option:hover,
 .file-option:hover,
 .templates-option:hover,
-.gdoc:hover {
+.gdoc:hover,
+.simplenote-note:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
@@ -1261,7 +1309,7 @@ body {
 
 .ql-editor::-webkit-scrollbar-thumb {
     border-radius: 25px;
-    background-color: rgba(0,0,0,0.2);
+    background-color: rgba(0, 0, 0, 0.2);
     border: 5px solid transparent;
     background-clip: content-box;
 }

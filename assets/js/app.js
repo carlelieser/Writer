@@ -15,6 +15,7 @@ $(document).ready(function () {
         $topBar = $('.top-bar'),
         $documentList = $('.document-list'),
         $gDocList = $('.gdocument-list'),
+        $simpleNoteList = $('.simplenote-list'),
         $mainContainer = $('.main-container'),
         $goalContainer = $('.goal-container'),
         $navBar = $('.navigation-container'),
@@ -50,6 +51,7 @@ $(document).ready(function () {
 
     var $documentContainer = $('.document-container'),
         $gDocumentContainer = $('.gdocument-container'),
+        $simpleNoteContainer = $('.simplenote-container'),
         $settingsContainer = $('.settings-container'),
         $feedBackContainer = $('.feedback-container'),
         $detailsContainer = $('.details-container'),
@@ -58,6 +60,7 @@ $(document).ready(function () {
         $templatesContainer = $('.templates-container');
 
     var $docButton = $('.open-documents'),
+        $simpleNoteButton = $('.open-SimpleNote'),
         $settingsButton = $('.open-settings'),
         $feedback = $('.open-feedback'),
         $details = $('.open-details'),
@@ -86,6 +89,10 @@ $(document).ready(function () {
         $message = $('.feedback-message');
 
     var beizer = $.bez([.17, .67, .29, 1.01]);
+
+    var $SNEmail = $('.simplenote-email'),
+        $SNPassword = $('.simplenote-password'),
+        $SNLoginButton = $('.simplenote-login-button');
 
     var accepts = [{
             description: 'Writer Document (*.wtr)',
@@ -559,6 +566,12 @@ $(document).ready(function () {
         var timer;
         this.editor.on('text-change', function () {
             doc.changed = true;
+            if (doc.simpleID) {
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    uploadNote(doc.editor.getText(), doc.simpleID);
+                }, 2000);
+            }
             if (settings.statistics == true) {
                 calcStats(doc.editor.getText());
             }
@@ -975,7 +988,7 @@ $(document).ready(function () {
         this.editor.history.clear();
     }
 
-    Doc.prototype.load = function (name, content, size, savedFileEntry, changed, id, hasGoal) {
+    Doc.prototype.load = function (name, content, size, savedFileEntry, changed, id, hasGoal, simpleID) {
         this.setName(name);
         this.setContents(content);
         this.setEditorContents(content);
@@ -984,6 +997,7 @@ $(document).ready(function () {
         this.changed = changed;
         this.fileID = id;
         this.hasGoal = hasGoal;
+        this.simpleID = simpleID;
     }
 
     Doc.prototype.loadFile = function (name, size, fileEntry, changed) {
@@ -1336,11 +1350,11 @@ $(document).ready(function () {
         doc.create(name, size, active);
     }
 
-    function loadDoc(doc, name, content, size, savedFileEntry, changed, id, hasGoal) {
-        doc.load(name, content, size, savedFileEntry, changed, id, hasGoal);
+    function loadDoc(doc, name, content, size, savedFileEntry, changed, id, hasGoal, simpleID) {
+        doc.load(name, content, size, savedFileEntry, changed, id, hasGoal, simpleID);
     }
 
-    function newDoc(newString, name, content, size, savedFileEntry, active, changed, id, hasGoal) {
+    function newDoc(newString, name, content, size, savedFileEntry, active, changed, id, hasGoal, simpleID) {
         var file = new Doc();
         if (newString != false) {
             name = 'untitled';
@@ -1353,7 +1367,7 @@ $(document).ready(function () {
             addDocument(file);
         } else {
             createDoc(file, name, size, active);
-            loadDoc(file, name, content, size, savedFileEntry, changed, id, hasGoal);
+            loadDoc(file, name, content, size, savedFileEntry, changed, id, hasGoal, simpleID);
             addDocument(file);
             loadImages();
         }
@@ -1684,6 +1698,188 @@ $(document).ready(function () {
         openModal($documentContainer);
     });
 
+    $simpleNoteButton.click(function () {
+        getStorage({
+            credentials: 'credentials'
+        }, function (simpleNote) {
+            var email = simpleNote.credentials.email;
+            var password = simpleNote.credentials.password;
+
+            if (simpleNote.credentials == 'credentials') {
+                $simpleNoteList.children('form').show();
+                $('.simplenote-notes').hide();
+            } else {
+                credentials = simpleNote.credentials;
+                initiateSimpleNote(true);
+                $simpleNoteList.children('form').hide();
+                $('.simplenote-notes').show();
+            }
+
+            openModal($simpleNoteContainer, function () {
+                $SNEmail.focus();
+            });
+        });
+    });
+
+    var root = "https://simple-note.appspot.com/api/",
+        root2 = "https://simple-note.appspot.com/api2/",
+        credentials = {};
+
+    function uploadNote(content, key) {
+        jQuery.ajax({
+            type: 'POST',
+            url: root2 + 'data/' + key + credentials.authURLadd,
+            data: encodeURIComponent(JSON.stringify({
+                content: content
+            })),
+            dataType: 'json',
+            complete: function (jqXHR, textStatus) {
+                console.log('success');
+            }
+        });
+    }
+
+    function appendNotes(string) {
+        $simpleNoteList.children('.simplenote-notes').html(string);
+    }
+
+    function loadNotes(data) {
+        var noteString = '';
+        var items = 0;
+        data.forEach(function (item, index) {
+            jQuery.ajax({
+                url: root2 + 'data/' + item.key + credentials.authURLadd,
+                dataType: 'json',
+                complete: function (jqXHR) {
+                    var noteData = JSON.parse(jqXHR.responseText);
+                    var noteContent = noteData.content;
+                    var newContent = noteContent.split('\n')[0].substring(0, 86);
+                    var tag = noteData.tags[0];
+                    if (!tag) {
+                        tag = '';
+                    }
+                    noteString += `<div class="simplenote-note" content="${noteContent}" key="${noteData.key}">
+                        <div class="simplenote-icon"></div>
+                        <div class="simplenote-title">${newContent}</div>
+                        <div class="simplenote-tag">${tag}</div>
+                    </div>`;
+
+                    items++;
+                    if (items === data.length) {
+                        appendNotes(noteString);
+                        closeGDOCLoader();
+                    }
+                }
+            });
+        });
+    }
+
+    function getNotes(key) {
+        jQuery.ajax({
+            url: root2 + 'index/' + key + credentials.authURLadd,
+            dataType: 'json',
+            complete: function (jqXHR, textStatus) {
+                var result = JSON.parse(jqXHR.responseText);
+                var data = result.data;
+
+                var notDeleted = function (x) {
+                    return x.deleted === 0;
+                };
+
+                var filtered = data.filter(notDeleted);
+                loadNotes(filtered);
+            }
+        });
+    }
+
+    function authSimpleNote(credentials, callback) {
+        openGDOCLoader();
+        jQuery.ajax({
+            type: 'POST',
+            url: root + 'login',
+            data: btoa('email=' + credentials.email +
+                '&password=' + credentials.password),
+            dataType: 'text',
+            success: function (response) {
+                console.log('login success', response);
+                $('.simplenote-notes').show();
+                $simpleNoteList.children('form').hide();
+                credentials.token = response;
+                credentials.tokenTime = new Date();
+                credentials.authURLadd = '?email=' + escape(credentials.email) +
+                    '&auth=' + credentials.token;
+                setStorage({
+                    credentials: credentials
+                });
+                callback(credentials.token);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('login error', jqXHR, textStatus, errorThrown);
+                $simpleNoteList.children('form').show();
+                $('.simplenote-notes').hide();
+                closeGDOCLoader();
+                credentials.token = null;
+            }
+        });
+    }
+
+    function initiateSimpleNote(auto) {
+        if (auto) {
+            authSimpleNote(credentials, getNotes);
+        } else {
+            var email = $SNEmail.val();
+            var password = $SNPassword.val();
+
+            credentials.email = email;
+            credentials.password = password;
+
+            setStorage({
+                credentials: credentials
+            }, function () {
+                authSimpleNote(credentials, getNotes);
+            });
+        }
+    }
+
+    $SNPassword.keyup(function (e) {
+        if (e.keyCode == 13) {
+            initiateSimpleNote();
+        }
+    });
+
+    $SNLoginButton.click(function () {
+        initiateSimpleNote();
+    });
+
+    function simpleNoteExists(key) {
+        var exists = function (element) {
+            if (element.simpleID == key) {
+                return element;
+            }
+        };
+
+        return documents.find(exists);
+    }
+
+    $(document).on('click', '.simplenote-note', function () {
+        var content = $(this).attr('content');
+        var key = $(this).attr('key');
+        var name = content.trim().substring(0, 12);
+
+        var doc = simpleNoteExists(key);
+        if (doc) {
+            if (doc.editor.getText() == content) {
+                simpleNoteExists(key).docListItem.click();
+            } else {
+                doc.setEditorContents(content);
+                simpleNoteExists(key).docListItem.click();
+            }
+        } else {
+            newDoc(false, name, content, '0', false, true, false, false, false, key);
+            closeModals(true);
+        }
+    });
+
     $settingsButton.click(function () {
         openModal($settingsContainer);
     });
@@ -1886,6 +2082,16 @@ $(document).ready(function () {
         return this.substr(0, index) + replacement + this.substr(index + replacement.length);
     }
 
+    function getReadableDateString(dateString) {
+        var readableDate = dateString;
+        readableDate = readableDate.toDateString();
+        readableDate = readableDate.substring(readableDate.indexOf(' ') + 1, readableDate.length);
+        readableDate = readableDate.replaceAt(readableDate.lastIndexOf(' '), ',');
+        readableDate = readableDate.replace(',', ', ');
+
+        return readableDate;
+    }
+
     function constructHTML(array) {
         var htmlString = '';
         var itemString = '<div class="gdoc-icon"></div><div class="gdoc-title"></div><div class="gdoc-date"></div>';
@@ -1895,11 +2101,8 @@ $(document).ready(function () {
             thisElem.html(itemString);
             var docTitle = object.title;
             var date = object.modifiedDate;
-            var readableDate = new Date(Date.parse(date));
-            readableDate = readableDate.toDateString();
-            readableDate = readableDate.substring(readableDate.indexOf(' ') + 1, readableDate.length);
-            readableDate = readableDate.replaceAt(readableDate.lastIndexOf(' '), ',');
-            readableDate = readableDate.replace(',', ', ');
+            var readableDate = getReadableDateString(new Date(Date.parse(date)));
+
             thisElem.attr('class', 'gdoc');
             thisElem.attr('data', object.id);
             thisElem.find('.gdoc-title').text(docTitle);
@@ -4226,9 +4429,10 @@ $(document).ready(function () {
                         var savedFileEntry = thisData.savedFileEntry;
                         var active = thisData.isActive;
                         var hasGoal = thisData.hasGoal;
+                        var simpleID = thisData.simpleID;
                         var changed = thisData.changed;
                         var id = thisData.fileID;
-                        newDoc(false, name, content, size, savedFileEntry, active, changed, id, hasGoal);
+                        newDoc(false, name, content, size, savedFileEntry, active, changed, id, hasGoal, simpleID);
 
                         documentAct().children().first().children().css('opacity', '0.6');
                         documentAct().children().first().children().first().css('opacity', '1');
@@ -4240,6 +4444,14 @@ $(document).ready(function () {
                             loadScreen();
 
                             loadGoals();
+
+                            getStorage({
+                                credentials: 'credentials'
+                            }, function (simpleNote) {
+                                if (simpleNote.credentials != 'credentials') {
+                                    credentials = simpleNote.credentials;
+                                }
+                            });
                         }
                     });
                 }

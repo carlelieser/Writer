@@ -18,10 +18,15 @@
     background-color: #FFF !important;
 }
 
+.simplenote-tag {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
 .sidebar-option,
 .file-option,
 .templates-option,
 .gdoc,
+.simplenote-note,
 .settings-title,
 .settings-title-second,
 .option>div,
