@@ -72,6 +72,7 @@ $(document).ready(function () {
         $modalClose = $('.modal-close');
 
     var $new = $('.new'),
+        $newSimpleNote = $('.new-simpleNote'),
         $open = $('.open'),
         $save = $('.save'),
         $saveAs = $('.save-as'),
@@ -1725,7 +1726,7 @@ $(document).ready(function () {
         root2 = "https://simple-note.appspot.com/api2/",
         credentials = {};
 
-    function uploadNote(content, key) {
+    function uploadNote(content, key, callback) {
         jQuery.ajax({
             type: 'POST',
             url: root2 + 'data/' + key + credentials.authURLadd,
@@ -1735,6 +1736,9 @@ $(document).ready(function () {
             dataType: 'json',
             complete: function (jqXHR, textStatus) {
                 console.log('success');
+                if (callback) {
+                    callback('untitled note', key);
+                }
             }
         });
     }
@@ -1754,6 +1758,9 @@ $(document).ready(function () {
                     var noteData = JSON.parse(jqXHR.responseText);
                     var noteContent = noteData.content;
                     var newContent = noteContent.split('\n')[0].substring(0, 86);
+                    if (newContent === '') {
+                        newContent = 'untitled';
+                    }
                     var tag = noteData.tags[0];
                     if (!tag) {
                         tag = '';
@@ -1918,6 +1925,23 @@ $(document).ready(function () {
     $new.click(function () {
         newDoc(true);
         closeModals(true);
+    });
+
+    function makeKey(length) {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < length; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    }
+
+    $newSimpleNote.click(function () {
+        uploadNote('', makeKey(10), function (name, key) {
+            closeModals(true);
+            newDoc(false, name, '', '0', false, true, false, false, false, key);
+        });
     });
 
     function readAsArrayBuff(file, entry) {
