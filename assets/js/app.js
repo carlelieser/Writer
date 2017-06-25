@@ -81,6 +81,8 @@ $(document).ready(function () {
     var $snackBar = $('.snackbar'),
         $goalSnackBar = $('.goal-snackbar');
 
+    var $logOutSimpleNote = $('.logout-simplenote-button');
+
     var $statisticsBar = $('.statistics-bar');
 
     var $saveDialogue = $('.save-dialogue');
@@ -1706,7 +1708,7 @@ $(document).ready(function () {
             var email = simpleNote.credentials.email;
             var password = simpleNote.credentials.password;
 
-            if (simpleNote.credentials == 'credentials') {
+            if (simpleNote.credentials == 'credentials' || simpleNote.credentials.length === 0) {
                 $simpleNoteList.children('form').show();
                 $('.simplenote-notes').hide();
             } else {
@@ -1737,26 +1739,45 @@ $(document).ready(function () {
             complete: function (jqXHR, textStatus) {
                 console.log('success');
                 if (callback) {
-                    callback('untitled note', key);
+                    callback(key);
                 }
             }
         });
     }
 
-    function appendNotes(string) {
-        $simpleNoteList.children('.simplenote-notes').html(string);
+    $.fn.reverseChildren = function () {
+        return this.each(function () {
+            var $this = $(this);
+            $this.children().each(function () {
+                $this.prepend(this)
+            });
+        });
+    };
+
+    function appendNotes(fragment) {
+        var $SNList = $simpleNoteList.children('.simplenote-notes');
+        var sortedDivs = fragment.children().sort(function (a, b) {
+            return +$(a).attr('time') - +$(b).attr('time');
+        });
+
+        $SNList.html(sortedDivs).reverseChildren();
     }
 
     function loadNotes(data) {
-        var noteString = '';
         var items = 0;
-        data.forEach(function (item, index) {
+        var fragment = $(document.createDocumentFragment());
+        data.forEach(function (item, index, array) {
             jQuery.ajax({
                 url: root2 + 'data/' + item.key + credentials.authURLadd,
                 dataType: 'json',
                 complete: function (jqXHR) {
                     var noteData = JSON.parse(jqXHR.responseText);
+                    console.log(noteData);
                     var noteContent = noteData.content;
+                    var noteTime = noteData.modifydate;
+                    if (!noteTime) {
+                        noteTime = noteData.createdate;
+                    }
                     var newContent = noteContent.split('\n')[0].substring(0, 86);
                     if (newContent === '') {
                         newContent = 'untitled';
@@ -1765,15 +1786,20 @@ $(document).ready(function () {
                     if (!tag) {
                         tag = '';
                     }
-                    noteString += `<div class="simplenote-note" content="${noteContent}" key="${noteData.key}">
-                        <div class="simplenote-icon"></div>
-                        <div class="simplenote-title">${newContent}</div>
-                        <div class="simplenote-tag">${tag}</div>
-                    </div>`;
+                    var noteElement = $(document.createElement('div'));
+
+                    noteElement.attr('class', 'simplenote-note');
+                    noteElement.attr('content', noteContent);
+                    noteElement.attr('key', noteData.key);
+                    noteElement.attr('time', noteTime);
+
+                    noteElement.html(`<div class="simplenote-icon"></div><div class="simplenote-title">${newContent}</div><div class="simplenote-tag">${tag}</div>`);
+
+                    fragment.append(noteElement);
 
                     items++;
-                    if (items === data.length) {
-                        appendNotes(noteString);
+                    if (items === array.length) {
+                        appendNotes(fragment);
                         closeGDOCLoader();
                     }
                 }
@@ -1783,20 +1809,48 @@ $(document).ready(function () {
 
     function getNotes(key) {
         jQuery.ajax({
-            url: root2 + 'index/' + key + credentials.authURLadd,
+            url: root2 + 'index' + credentials.authURLadd + '&length=100&since=0',
             dataType: 'json',
             complete: function (jqXHR, textStatus) {
                 var result = JSON.parse(jqXHR.responseText);
                 var data = result.data;
-
                 var notDeleted = function (x) {
-                    return x.deleted === 0;
+                    return (x.deleted === 0);
                 };
 
                 var filtered = data.filter(notDeleted);
                 loadNotes(filtered);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('error fetching notes', jqXHR, textStatus, errorThrown);
+                closeGDOCLoader();
             }
         });
+    }
+
+    function saveCredentials() {
+        setStorage({
+            credentials: credentials
+        });
+    }
+
+    function resetLogInDetails() {
+        $SNEmail.val('');
+        $SNPassword.val('');
+    }
+
+    function logOutofSimpleNote(callback) {
+        credentials = {};
+        $simpleNoteList.children('form').show();
+        $('.simplenote-notes').html('').hide();
+        resetLogInDetails();
+        saveCredentials();
+
+        closeGDOCLoader();
+
+        if (callback) {
+            callback();
+        }
     }
 
     function authSimpleNote(credentials, callback) {
@@ -1815,17 +1869,16 @@ $(document).ready(function () {
                 credentials.tokenTime = new Date();
                 credentials.authURLadd = '?email=' + escape(credentials.email) +
                     '&auth=' + credentials.token;
-                setStorage({
-                    credentials: credentials
-                });
+                saveCredentials();
                 callback(credentials.token);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log('login error', jqXHR, textStatus, errorThrown);
+                credentials = {};
                 $simpleNoteList.children('form').show();
-                $('.simplenote-notes').hide();
+                $('.simplenote-notes').html('').hide();
+                saveCredentials();
                 closeGDOCLoader();
-                credentials.token = null;
             }
         });
     }
@@ -1929,18 +1982,36 @@ $(document).ready(function () {
 
     function makeKey(length) {
         var text = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
 
-        for (var i = 0; i < length; i++)
+        for (var i = 0; i < length; i++) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
-
+        }
         return text;
     }
 
     $newSimpleNote.click(function () {
-        uploadNote('', makeKey(10), function (name, key) {
+        var date = new Date();
+        var readableDate = getReadableDateString(date);
+        var readableTime = date;
+        var hours = readableTime.getHours();
+        var hourType = hours < 12 ? "AM" : "PM";
+        if (hours > 12) {
+            hours -= 12;
+        }
+        if (hours === 0) {
+            hours = 12;
+        }
+        var minutes = readableTime.getMinutes();
+        if (minutes < 10) {
+            minutes = '0' + minutes;
+        }
+        readableTime = `${hours}:${minutes} ${hourType}`;
+        var name = `Writer Note - ${readableDate} - ${readableTime}`;
+        var content = name + '\n';
+        uploadNote(content, makeKey(32), function (key) {
             closeModals(true);
-            newDoc(false, name, '', '0', false, true, false, false, false, key);
+            newDoc(false, name, content, '0', false, true, false, false, false, key);
         });
     });
 
@@ -3605,8 +3676,15 @@ $(document).ready(function () {
         });
     }
 
-    $('.reset-button').click(function () {
-        loadDefaults();
+    $('.reset-button').click(loadDefaults);
+
+    $logOutSimpleNote.click(function () {
+        logOutofSimpleNote(function () {
+            openGDOCLoader();
+            setTimeout(function () {
+                closeGDOCLoader(closeModal($settingsContainer));
+            }, 800);
+        });
     });
 
     function openDropdown(dropdown) {
@@ -3710,8 +3788,12 @@ $(document).ready(function () {
         });
     }
 
-    function closeGDOCLoader() {
-        $('.gdoc-loading-container').fadeOut('fast');
+    function closeGDOCLoader(callback) {
+        $('.gdoc-loading-container').fadeOut('fast', function () {
+            if (callback) {
+                callback();
+            }
+        });
     }
 
     var MediaUploader = function (options) {

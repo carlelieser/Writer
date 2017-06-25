@@ -774,8 +774,7 @@ body {
 
 .feedback-container .feedback-content input,
 .simplenote-list input,
-.feedback-container .feedback-content textarea,
-.simplenote-list textarea {
+.feedback-container .feedback-content textarea{
     font-size: 16px;
     display: block;
     width: 300px;
@@ -790,8 +789,7 @@ body {
 
 .feedback-container .feedback-content input:focus,
 .simplenote-list input:focus,
-.feedback-container .feedback-content textarea:focus,
-.simplenote-list textarea:focus {
+.feedback-container .feedback-content textarea:focus{
     outline: none;
 }
 
@@ -820,18 +818,14 @@ body {
 .feedback-container .feedback-content input:valid,
 .simplenote-list input:valid,
 .feedback-container .feedback-content textarea:focus,
-.simplenote-list textarea:focus,
-.feedback-container .feedback-content textarea:valid,
-.simplenote-list textarea:valid {
+.feedback-container .feedback-content textarea:valid{
     border-bottom: 1px solid transparent;
 }
 
 .feedback-container .feedback-content input:focus~label,
 .simplenote-list input:focus~label,
 .feedback-container .feedback-content textarea:focus~label,
-.simplenote-list textarea:focus~label,
 .feedback-container .feedback-content textarea:valid~label,
-.simplenote-list textarea:valid~label,
 .feedback-container .feedback-content input:valid~label,
 .simplenote-list input:valid~label {
     top: -18px;
@@ -879,13 +873,12 @@ body {
 .feedback-container .feedback-content input:focus~.bar:after,
 .simplenote-list input:focus~.bar:after,
 .feedback-container .feedback-content textarea:focus~.bar:before,
-.simplenote-list textarea:focus~.bar:before,
-.feedback-container .feedback-content textarea:focus~.bar:after,
-.simplenote-list textarea:focus~.bar:after {
+.feedback-container .feedback-content textarea:focus~.bar:after{
     width: 50%;
 }
 
-.feedback-content a, .simplenote-list a{
+.feedback-content a,
+.simplenote-list a {
     margin-top: 20px;
     height: 40px;
     display: block;
@@ -904,6 +897,7 @@ body {
     font-size: 14px;
     text-align: center;
     line-height: 50px;
+    margin-top: -10px;
     border: none;
     border-radius: 2px;
     box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.2);
@@ -912,7 +906,8 @@ body {
 }
 
 .settings-container .settings-list .settings-option,
-.reset-button {
+.reset-button,
+.logout-simplenote-button {
     width: 100%;
     float: left;
     display: block;
@@ -925,7 +920,8 @@ body {
 }
 
 .settings-container .settings-list .noToggle,
-.reset-button {
+.reset-button,
+.logout-simplenote-button {
     height: auto;
     min-height: 80px;
 }
