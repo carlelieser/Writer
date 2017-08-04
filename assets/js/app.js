@@ -1,5 +1,5 @@
 // Writer
-// Version 6.0.1
+// Version 6.0.6
 // Author : Carlos E. Santos
 // Made with <3
 $(document).ready(function () {
@@ -502,10 +502,14 @@ $(document).ready(function () {
                 collapsed: true,
                 shiftKey: true,
                 handler: function (range, context) {
-                    if (context.format.indent) {
-                        this.quill.formatLine(range, 'indent', '+1');
-                    } else {
-                        this.quill.formatLine(range, 'indent', '1');
+                    if (context.format['code-block'] === undefined) {
+                        if (context.format.indent) {
+                            this.quill.formatLine(range, 'indent', '+1');
+                        } else {
+                            this.quill.formatLine(range, 'indent', '1');
+                        }
+                    }else{
+                        return true;
                     }
                 }
             },
@@ -514,8 +518,12 @@ $(document).ready(function () {
                 collapsed: true,
                 shiftKey: true,
                 handler: function (range, context) {
-                    if (context.format.indent) {
-                        this.quill.formatLine(range, 'indent', '-1');
+                    if (context.format['code-block'] === undefined) {
+                        if (context.format.indent) {
+                            this.quill.formatLine(range, 'indent', '-1');
+                        }
+                    }else{
+                        return true;
                     }
                 }
             }
