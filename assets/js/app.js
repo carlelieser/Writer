@@ -508,7 +508,7 @@ $(document).ready(function () {
                         } else {
                             this.quill.formatLine(range, 'indent', '1');
                         }
-                    }else{
+                    } else {
                         return true;
                     }
                 }
@@ -522,7 +522,7 @@ $(document).ready(function () {
                         if (context.format.indent) {
                             this.quill.formatLine(range, 'indent', '-1');
                         }
-                    }else{
+                    } else {
                         return true;
                     }
                 }
@@ -4587,17 +4587,21 @@ $(document).ready(function () {
 
     function closeWindow() {
         openGDOCLoader(function () {
-            documents.forEach(function (value) {
-                var doc = value,
-                    contents = doc.editor.getContents();
-                doc.setContents(contents);
-            });
-            setStorage({
-                settings: settings,
-                data: documents
-            }, function () {
+            if (!$installScreen.is(':visible')) {
+                documents.forEach(function (value) {
+                    var doc = value,
+                        contents = doc.editor.getContents();
+                    doc.setContents(contents);
+                });
+                setStorage({
+                    settings: settings,
+                    data: documents
+                }, function () {
+                    chrome.app.window.current().close();
+                });
+            } else {
                 chrome.app.window.current().close();
-            });
+            }
         });
     }
 
@@ -4616,17 +4620,19 @@ $(document).ready(function () {
     $(window).on('mouseleave', function (e) {
         var from = e.toElement;
         if (!from || from.nodeName == 'HTML') {
-            screenTimeout = setTimeout(function () {
-                documents.forEach(function (value) {
-                    var doc = value,
-                        contents = doc.editor.getContents();
-                    doc.setContents(contents);
-                });
-                setStorage({
-                    settings: settings,
-                    data: documents
-                }, resetDocContent);
-            }, 400);
+            if (!$installScreen.is(':visible')) {
+                screenTimeout = setTimeout(function () {
+                    documents.forEach(function (value) {
+                        var doc = value,
+                            contents = doc.editor.getContents();
+                        doc.setContents(contents);
+                    });
+                    setStorage({
+                        settings: settings,
+                        data: documents
+                    }, resetDocContent);
+                }, 400);
+            }
         }
     });
 
