@@ -1,5 +1,5 @@
 // Writer
-// Version 6.0.6
+// Version 6.0.7
 // Author : Carlos E. Santos
 // Made with <3
 $(document).ready(function () {
@@ -4052,8 +4052,8 @@ $(document).ready(function () {
         xhr.send();
     }
 
-    function hostReachable() {
-        return window.navigator.onLine;
+    function hostReachable(success, failure) {
+        $.get('https://www.blank.org/', success).fail(failure);
     }
 
     function initiateSignIn(token, callback) {
@@ -4143,7 +4143,7 @@ $(document).ready(function () {
     }
 
     function getToken(install, load, callback) {
-        if (hostReachable()) {
+        hostReachable(function () {
             $('.loading-online').text(' - Online');
 
             var gService = analytics.getService('Writer');
@@ -4175,7 +4175,7 @@ $(document).ready(function () {
                     initiateSignIn(token, callback);
                 }
             });
-        } else {
+        }, function () {
             console.log('No Internet Connection.');
             $('.loading-online').text(' - Offline');
             if (load) {
@@ -4184,8 +4184,7 @@ $(document).ready(function () {
             }
 
             applySignOut();
-        }
-
+        });
     }
 
     window.addEventListener('online', function () {
@@ -4587,7 +4586,7 @@ $(document).ready(function () {
 
     function closeWindow() {
         openGDOCLoader(function () {
-            if (!$installScreen.is(':visible')) {
+            if (!$loadingScreen.is(':visible')) {
                 documents.forEach(function (value) {
                     var doc = value,
                         contents = doc.editor.getContents();
@@ -4620,7 +4619,7 @@ $(document).ready(function () {
     $(window).on('mouseleave', function (e) {
         var from = e.toElement;
         if (!from || from.nodeName == 'HTML') {
-            if (!$installScreen.is(':visible')) {
+            if (!$loadingScreen.is(':visible')) {
                 screenTimeout = setTimeout(function () {
                     documents.forEach(function (value) {
                         var doc = value,
