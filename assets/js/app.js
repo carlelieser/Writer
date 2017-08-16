@@ -4053,7 +4053,7 @@ $(document).ready(function () {
     }
 
     function hostReachable(success, failure) {
-        $.get('https://www.blank.org/', success).fail(failure);
+        $.get('https://www.google.com/', success).fail(failure);
     }
 
     function initiateSignIn(token, callback) {
