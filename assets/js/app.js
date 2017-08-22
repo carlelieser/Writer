@@ -274,7 +274,7 @@ $(document).ready(function () {
         docAct().click();
     }
 
-    var newDocumentString = '<div class="document-item"><div class="material-icons">insert_drive_file</div><input readonly=true class="document-title" type="text"/><div class="doc-overflow"><div class="material-icons">more_vert</div></div><div class="overflow-menu"><div class="doc-rename">Rename</div><div class="doc-upload">Upload</div><div class="doc-delete">Close</div></div><div class="document-size"></div></div>';
+    var newDocumentString = '<div class="document-item"><div class="material-icons">insert_drive_file</div><input readonly=true class="document-title" type="text"/><div class="document-size"></div></div>';
     var mainDocumentString = '<div class="document document-active"></div>';
 
     $('.sidebar, .settings-container, .document-container, .bg, .option, .snackbar, .gdoc-loading-container').hide();
@@ -3472,11 +3472,11 @@ $(document).ready(function () {
     var themes = ['dark.css', 'turquoise.css', 'midnight.css'];
 
     function loadStyles(name) {
-        var themeArray = themes.slice();
-        themeArray.splice(themeArray.indexOf(name));
+        if (name != 'night.css') {
+            var themeArray = themes.slice();
 
-        removeStyles(themeArray);
-
+            removeStyles(themeArray);
+        }
         var string = '<link type="text/css" rel="stylesheet" href="assets/settings/themes/' + name + '"/>';
         if ($('link[href="' + name + '"]').length < 1) {
             $('head').append(string);
@@ -3739,10 +3739,21 @@ $(document).ready(function () {
         input.select();
     }
 
-    function openOverflow(element) {
+    function openOverflow(element, x, y, documentIndex) {
+        if (x > 253) {
+            x -= 140;
+        }
+        if ((y + 180) > $(window).height()) {
+            y -= (y + 180) - $(window).height();
+        }
+        element.css({
+            left: x,
+            top: y
+        });
         element.show().stop().animate({
             height: '180px'
         }, 300, beizer);
+        element.attr('index', documentIndex);
     }
 
     function closeOverflow(element, callback) {
@@ -3756,12 +3767,14 @@ $(document).ready(function () {
         }
     }
 
-    $(document).on('click', '.doc-overflow', function (e) {
+    $(document).on('contextmenu', '.document-item', function (e) {
         e.stopPropagation();
-        var thisOverflow = $(this).parent().find('.overflow-menu');
+        e.preventDefault();
+        var thisOverflow = $('.overflow-menu');
+        var index = $(this).index();
         closeOverflow($('.overflow-menu'), function () {
-            openOverflow(thisOverflow);
-        })
+            openOverflow(thisOverflow, e.pageX, e.pageY, index);
+        });
     })
 
 
@@ -3774,13 +3787,13 @@ $(document).ready(function () {
 
     $(document).on('click', '.doc-delete', function (e) {
         e.stopPropagation();
-        var index = $(this).parent().parent().index();
+        var index = $(this).parent().attr('index');
         var doc = getDoc(index);
         deleteDoc(doc);
     });
 
     $(document).on('click', '.doc-rename', function () {
-        undoReadOnly($(this).parent().parent().find('input'));
+        undoReadOnly($('.document-item').eq($(this).parent().attr('index')).find('input'));
     });
 
     function openGDOCLoader(callback) {
@@ -3920,7 +3933,7 @@ $(document).ready(function () {
     }
 
     $(document).on('click', '.doc-upload', function () {
-        var index = $(this).parent().parent().index();
+        var index = $(this).parent().attr('index');
         var doc = getDoc(index);
         requestAccess(false, function (token) {
             var extension = getExtension(doc.name);
