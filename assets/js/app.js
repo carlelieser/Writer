@@ -1,5 +1,5 @@
 // Writer
-// Version 6.0.7
+// Version 6.0.9
 // Author : Carlos E. Santos
 // Made with <3
 $(document).ready(function () {
@@ -1780,7 +1780,6 @@ $(document).ready(function () {
                 dataType: 'json',
                 complete: function (jqXHR) {
                     var noteData = JSON.parse(jqXHR.responseText);
-                    console.log(noteData);
                     var noteContent = noteData.content;
                     var noteTime = noteData.modifydate;
                     if (!noteTime) {
@@ -3950,7 +3949,7 @@ $(document).ready(function () {
                 case 'wtr':
                 case 'docx':
                 default:
-                    content = cleanStyles(qlEditor().html());
+                    content = cleanStyles(doc.editorDOM.html());
                     blob = new Blob([content], {
                         'type': 'text/html'
                     });
@@ -3959,7 +3958,7 @@ $(document).ready(function () {
                 case 'md':
                     require(['upndown'], function (upndown) {
                         var und = new upndown();
-                        und.convert(cleanStyles(qlEditor().html()), function (err, markdown) {
+                        und.convert(cleanStyles(doc.editorDOM.html()), function (err, markdown) {
                             if (err) {
                                 console.log(err);
                             } else {
