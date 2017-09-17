@@ -1,5 +1,5 @@
 // Writer
-// Version 6.0.9
+// Version 6.1.0
 // Author : Carlos E. Santos
 // Made with <3
 $(document).ready(function () {
@@ -1101,7 +1101,8 @@ $(document).ready(function () {
                 if (!this.docListItem.hasClass('doc-active')) {
                     $('.doc-active').click();
                 } else {
-                    if (index - 1 == documents.length - 1) {
+                    deletedDoc = true;
+                    if (index == documents.length) {
                         $documentList.children().last().click();
                     } else {
                         $documentList.children().eq(index).click();
@@ -3399,9 +3400,19 @@ $(document).ready(function () {
         });
     }
 
+    var deletedDoc = false;
     $(document).on('click', '.document-item', function () {
         if ($('.overflow-menu').is(':visible')) {
             closeOverflow($('.overflow-menu'));
+            if (deletedDoc == true) {
+                var index = $(this).index();
+                var doc = getDoc(index);
+                setDocsActive();
+
+                doc.show(index);
+                closeModals(true);
+                deletedDoc = false;
+            }
         } else {
             var index = $(this).index();
             var doc = getDoc(index);
