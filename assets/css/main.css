@@ -1289,6 +1289,7 @@ body {
     cursor: default;
     line-height: 2;
     transition: all .2s ease;
+    color: rgba(0, 0, 0, 0.8);
 }
 
 .ql-editor * {
@@ -1336,6 +1337,18 @@ body {
 .ql-editor ul,
 .ql-editor li>* {
     opacity: 1 !important;
+}
+
+.ql-editor h1,
+.ql-editor h2 {
+    -webkit-margin-before: 0px !important;
+    -webkit-margin-after: 0px !important;
+    line-height: 1.5 !important;
+}
+
+.ql-editor h2 {
+    font-weight: normal !important;
+    opacity: 0.6 !important;
 }
 
 .ql-editor img {
